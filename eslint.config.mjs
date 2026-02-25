@@ -18,6 +18,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['.next/', 'node_modules/', 'components/ui/'],
+    ignores: ['.next/', 'out/', 'node_modules/', 'components/ui/'],
   }
 )
