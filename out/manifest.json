@@ -1,0 +1,21 @@
+{
+  "name": "Umais Ali — SEO Executive",
+  "short_name": "Umais Ali",
+  "description": "SEO Executive helping businesses grow through organic search. Technical audits, keyword strategy, content optimization, and link building that delivers real results.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1c1917",
+  "theme_color": "#1c1917",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
