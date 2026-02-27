@@ -74,7 +74,7 @@ export function About() {
           >
             <div className="relative aspect-3/4 overflow-hidden rounded-2xl bg-secondary">
               <Image
-                src="/images/portrait.jpg"
+                src="/images/portrait.png"
                 alt="Portrait of Umais Ali"
                 fill
                 className="object-cover"
