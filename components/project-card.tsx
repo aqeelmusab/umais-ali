@@ -36,7 +36,7 @@ export function ProjectCard({
         horizontal ? "md:grid md:grid-cols-2 md:gap-8 md:items-center" : ""
       } ${
         isInView ? "animate-fade-up" : "opacity-0"
-      } stagger-${(index % 4) + 1}`}
+      } ${["stagger-1", "stagger-2", "stagger-3", "stagger-4"][index % 4]}`}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -52,7 +52,7 @@ export function ProjectCard({
       <div className="relative aspect-4/3 overflow-hidden rounded-xl bg-secondary">
         <Image
           src={image}
-          alt={title}
+          alt={`Screenshot of the ${title} project`}
           fill
           className="object-cover transition-all duration-700 ease-out group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 50vw"

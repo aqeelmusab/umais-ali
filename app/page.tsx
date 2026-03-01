@@ -38,7 +38,11 @@ const jsonLd = {
         'Site Migration',
         'Core Web Vitals',
       ],
-      sameAs: [],
+      sameAs: [
+        'https://linkedin.com/in/umaisali',
+        'https://x.com/umaisali',
+        'https://github.com/umaisali',
+      ],
     },
     {
       '@type': 'ProfilePage',

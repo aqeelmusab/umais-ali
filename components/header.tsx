@@ -1,9 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import { Menu, X } from "lucide-react"
 import { Logo } from "@/components/logo"
+import { useScrollLock } from "@/lib/use-scroll-lock"
+import { useFocusTrap } from "@/lib/use-focus-trap"
 
 const navLinks = [
   { label: "Work", href: "#work" },
@@ -11,9 +13,15 @@ const navLinks = [
   { label: "Contact", href: "#contact" },
 ]
 
+const STAGGER = ["stagger-1", "stagger-2", "stagger-3"]
+
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+
+  useScrollLock(isMobileMenuOpen)
+  useFocusTrap(menuRef, isMobileMenuOpen)
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20)
@@ -21,10 +29,16 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
+  const closeMenu = useCallback(() => setIsMobileMenuOpen(false), [])
+
   useEffect(() => {
-    document.body.style.overflow = isMobileMenuOpen ? "hidden" : ""
-    return () => { document.body.style.overflow = "" }
-  }, [isMobileMenuOpen])
+    if (!isMobileMenuOpen) return
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeMenu()
+    }
+    document.addEventListener("keydown", handleKeyDown)
+    return () => document.removeEventListener("keydown", handleKeyDown)
+  }, [isMobileMenuOpen, closeMenu])
 
   return (
     <>
@@ -85,6 +99,7 @@ export function Header() {
 
       {/* Mobile menu */}
       <div
+        ref={menuRef}
         className={`fixed inset-0 z-60 bg-background/98 backdrop-blur-xl transition-all duration-500 md:hidden ${
           isMobileMenuOpen
             ? "opacity-100 pointer-events-auto"
@@ -92,20 +107,21 @@ export function Header() {
         }`}
         role="dialog"
         aria-modal={isMobileMenuOpen}
+        aria-hidden={!isMobileMenuOpen}
         aria-label="Navigation menu"
       >
         <div className="flex items-center justify-between px-6 py-5">
           <Link
             href="/"
             className="flex items-center gap-1.5"
-            onClick={() => setIsMobileMenuOpen(false)}
+            onClick={closeMenu}
           >
             <Logo />
           </Link>
           <button
             type="button"
             className="flex items-center justify-center w-10 h-10 rounded-full text-foreground hover:bg-foreground/5"
-            onClick={() => setIsMobileMenuOpen(false)}
+            onClick={closeMenu}
             aria-label="Close menu"
           >
             <X className="h-5 w-5" />
@@ -117,17 +133,17 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              onClick={() => setIsMobileMenuOpen(false)}
+              onClick={closeMenu}
               className={`text-4xl font-serif tracking-tight text-foreground py-3 border-b border-border transition-all duration-500 hover:text-primary ${
                 isMobileMenuOpen ? "animate-fade-up" : "opacity-0"
-              } stagger-${index + 1}`}
+              } ${STAGGER[index]}`}
             >
               {link.label}
             </Link>
           ))}
           <Link
             href="#contact"
-            onClick={() => setIsMobileMenuOpen(false)}
+            onClick={closeMenu}
             className={`mt-8 inline-flex items-center justify-center h-14 px-10 text-base font-medium text-primary-foreground bg-primary rounded-full transition-all duration-500 hover:brightness-110 ${
               isMobileMenuOpen ? "animate-fade-up" : "opacity-0"
             } stagger-4`}

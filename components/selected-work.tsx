@@ -1,9 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import { ProjectCard } from "@/components/project-card"
 import { ProjectModal, type Project } from "@/components/project-modal"
 import { useInView } from "@/components/use-in-view"
+import { MODAL_TRANSITION_MS } from "@/lib/constants"
 
 const projects: Project[] = [
   {
@@ -82,19 +83,34 @@ export function SelectedWork() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const { ref: sectionRef, isInView } = useInView()
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Clean up timeout on unmount to prevent state updates on unmounted component
+  useEffect(() => {
+    return () => {
+      if (closeTimeoutRef.current) clearTimeout(closeTimeoutRef.current)
+    }
+  }, [])
 
   const currentIndex = selectedProject
     ? projects.findIndex((p) => p.id === selectedProject.id)
     : -1
 
   const openProject = (project: Project) => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current)
+      closeTimeoutRef.current = null
+    }
     setSelectedProject(project)
     setIsModalOpen(true)
   }
 
   const closeProject = () => {
     setIsModalOpen(false)
-    setTimeout(() => setSelectedProject(null), 300)
+    closeTimeoutRef.current = setTimeout(() => {
+      setSelectedProject(null)
+      closeTimeoutRef.current = null
+    }, MODAL_TRANSITION_MS)
   }
 
   const goToPrev = () => {

@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
 import { X, ArrowLeft, ArrowRight } from "lucide-react"
+import { useScrollLock } from "@/lib/use-scroll-lock"
+import { useFocusTrap } from "@/lib/use-focus-trap"
 
 export interface Project {
   id: number
@@ -39,8 +41,13 @@ export function ProjectModal({
 }: ProjectModalProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
   const prevProjectId = useRef(project?.id)
+  const modalRef = useRef<HTMLDivElement>(null)
 
-  // Reset image loaded state when project changes (derived, no effect setState)
+  useScrollLock(isOpen)
+  useFocusTrap(modalRef, isOpen)
+
+  // Reset image loaded state when project changes (derived state in render —
+  // triggers a synchronous re-render, which React supports for this pattern)
   if (project?.id !== prevProjectId.current) {
     prevProjectId.current = project?.id
     if (imageLoaded) setImageLoaded(false)
@@ -58,10 +65,8 @@ export function ProjectModal({
   useEffect(() => {
     if (!isOpen) return
     document.addEventListener("keydown", handleKeyDown)
-    document.body.style.overflow = "hidden"
     return () => {
       document.removeEventListener("keydown", handleKeyDown)
-      document.body.style.overflow = ""
     }
   }, [isOpen, handleKeyDown])
 
@@ -69,11 +74,13 @@ export function ProjectModal({
 
   return (
     <div
+      ref={modalRef}
       className={`fixed inset-0 z-70 flex items-end justify-center transition-all duration-300 md:items-center ${
         isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
       role="dialog"
       aria-modal={isOpen}
+      aria-hidden={!isOpen}
       aria-label={`Project: ${project.title}`}
     >
       {/* Backdrop */}
@@ -111,7 +118,6 @@ export function ProjectModal({
               }`}
               sizes="(max-width: 768px) 100vw, 768px"
               onLoad={() => setImageLoaded(true)}
-              priority
             />
             {/* Gradient overlay at bottom of image */}
             <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-card to-transparent" />

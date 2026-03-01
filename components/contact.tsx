@@ -4,9 +4,9 @@ import { useInView } from "@/components/use-in-view"
 import { ArrowUpRight, Mail } from "lucide-react"
 
 const socialLinks = [
-  { label: "LinkedIn", href: "#" },
-  { label: "X / Twitter", href: "#" },
-  { label: "GitHub", href: "#" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/umaisali" },
+  { label: "X / Twitter", href: "https://x.com/umaisali" },
+  { label: "GitHub", href: "https://github.com/umaisali" },
 ]
 
 export function Contact() {
@@ -106,10 +106,13 @@ export function Contact() {
                   <a
                     key={link.label}
                     href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="group inline-flex items-center gap-2 text-base text-foreground transition-colors hover:text-primary"
                   >
                     {link.label}
                     <ArrowUpRight className="h-3.5 w-3.5 text-muted-foreground opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    <span className="sr-only">(opens in new tab)</span>
                   </a>
                 ))}
               </div>

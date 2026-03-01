@@ -35,7 +35,7 @@ export function Footer() {
 
         {/* Right */}
         <p className="text-xs text-muted-foreground">
-          &copy; 2026 Umais Ali. All rights reserved.
+          &copy; {new Date().getFullYear()} Umais Ali. All rights reserved.
         </p>
       </div>
     </footer>

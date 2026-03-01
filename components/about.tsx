@@ -117,7 +117,7 @@ export function About() {
               key={item.label}
               className={`flex flex-col gap-2 transition-all duration-700 ${
                 highlightsInView ? "animate-fade-up" : "opacity-0"
-              } stagger-${index + 1}`}
+              } ${["stagger-1", "stagger-2", "stagger-3", "stagger-4"][index]}`}
             >
               <p className="text-3xl font-semibold tracking-tight text-foreground md:text-4xl">
                 {item.value}
@@ -136,7 +136,7 @@ export function About() {
         <div className="relative py-8" style={{ maskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)', WebkitMaskImage: 'linear-gradient(to right, transparent, black 8%, black 92%, transparent)' }}>
           <div className="flex">
             {[0, 1].map((copy) => (
-              <div key={copy} className="flex shrink-0 animate-marquee">
+              <div key={copy} className="flex shrink-0 animate-marquee" aria-hidden={copy === 1 ? "true" : undefined}>
                 {skills.map((skill) => (
                   <span
                     key={`${skill}-${copy}`}
@@ -170,7 +170,7 @@ export function About() {
               key={exp.period}
               className={`group flex flex-col gap-2 border-b border-border/50 py-6 px-4 -mx-4 first:border-t first:border-border/50 md:flex-row md:items-center md:gap-8 transition-all duration-500 hover:bg-foreground/3 rounded-lg ${
                 expInView ? "animate-fade-up" : "opacity-0"
-              } stagger-${index + 1}`}
+              } ${["stagger-1", "stagger-2", "stagger-3"][index]}`}
             >
               <p className="text-sm text-muted-foreground md:w-44 shrink-0 font-mono">
                 {exp.period}
