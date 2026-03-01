@@ -69,7 +69,7 @@ export function ProjectModal({
 
   return (
     <div
-      className={`fixed inset-0 z-70 flex items-end justify-center transition-all duration-300 md:items-center ${
+      className={`fixed inset-0 z-[70] flex items-end justify-center transition-all duration-300 md:items-center ${
         isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
       role="dialog"

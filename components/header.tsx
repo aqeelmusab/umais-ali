@@ -85,7 +85,7 @@ export function Header() {
 
       {/* Mobile menu */}
       <div
-        className={`fixed inset-0 z-60 bg-background/98 backdrop-blur-xl transition-all duration-500 md:hidden ${
+        className={`fixed inset-0 z-[60] bg-background/98 backdrop-blur-xl transition-all duration-500 md:hidden ${
           isMobileMenuOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
