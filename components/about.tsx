@@ -98,10 +98,10 @@ export function About() {
             </h2>
             <div className="mt-8 space-y-5 text-base leading-relaxed text-muted-foreground md:text-lg">
               <p>
-                {"I spend most of my time digging into search data, figuring out what people are actually looking for, and making sure the right pages show up when it matters. That means technical fixes, content planning, keyword mapping, and a lot of spreadsheets."}
+                I spend most of my time digging into search data, figuring out what people are actually looking for, and making sure the right pages show up when it matters. That means technical fixes, content planning, keyword mapping, and a lot of spreadsheets.
               </p>
               <p>
-                {"Before going independent, I worked at agencies where I handled SEO for clients across e-commerce, SaaS, healthcare, and local services. Each one taught me something different about how search works in practice, not just in theory."}
+                Before going independent, I worked at agencies where I handled SEO for clients across e-commerce, SaaS, healthcare, and local services. Each one taught me something different about how search works in practice, not just in theory.
               </p>
             </div>
           </div>
@@ -168,7 +168,7 @@ export function About() {
           {experience.map((exp, index) => (
             <div
               key={exp.period}
-              className={`group flex flex-col gap-2 border-b border-border/50 py-6 px-4 -mx-4 first:border-t first:border-border/50 md:flex-row md:items-center md:gap-8 transition-all duration-500 hover:bg-foreground/[0.03] rounded-lg ${
+              className={`group flex flex-col gap-2 border-b border-border/50 py-6 px-4 -mx-4 first:border-t first:border-border/50 md:flex-row md:items-center md:gap-8 transition-all duration-500 hover:bg-foreground/3 rounded-lg ${
                 expInView ? "animate-fade-up" : "opacity-0"
               } stagger-${index + 1}`}
             >

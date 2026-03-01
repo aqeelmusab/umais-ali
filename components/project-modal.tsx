@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import Image from "next/image"
 import { X, ArrowLeft, ArrowRight } from "lucide-react"
 
@@ -38,11 +38,13 @@ export function ProjectModal({
   hasNext,
 }: ProjectModalProps) {
   const [imageLoaded, setImageLoaded] = useState(false)
+  const prevProjectId = useRef(project?.id)
 
-  // Reset image loaded state when project changes
-  useEffect(() => {
-    setImageLoaded(false)
-  }, [project?.id])
+  // Reset image loaded state when project changes (derived, no effect setState)
+  if (project?.id !== prevProjectId.current) {
+    prevProjectId.current = project?.id
+    if (imageLoaded) setImageLoaded(false)
+  }
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -67,7 +69,7 @@ export function ProjectModal({
 
   return (
     <div
-      className={`fixed inset-0 z-[70] flex items-end justify-center transition-all duration-300 md:items-center ${
+      className={`fixed inset-0 z-70 flex items-end justify-center transition-all duration-300 md:items-center ${
         isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
       role="dialog"
