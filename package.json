@@ -5,20 +5,21 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "export": "next build",
     "start": "next start",
     "lint": "eslint ."
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "lucide-react": "^0.564.0",
-    "next": "^16.1.6",
+    "next": "^16.2.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.3",
-    "@next/eslint-plugin-next": "^16.1.6",
+    "@next/eslint-plugin-next": "^16.2.1",
     "@tailwindcss/postcss": "^4.2.0",
     "@types/node": "^22",
     "@types/react": "19.2.14",

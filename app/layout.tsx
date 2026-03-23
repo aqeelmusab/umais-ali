@@ -44,7 +44,7 @@ export const metadata: Metadata = {
   authors: [{ name: 'Umais Ali', url: SITE_URL }],
   creator: 'Umais Ali',
   publisher: 'Umais Ali',
-  manifest: '/manifest.json',
+  manifest: '/site.webmanifest',
   alternates: {
     canonical: '/',
   },
@@ -87,20 +87,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/favicon.ico' },
     ],
-    apple: '/apple-icon.png',
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
   },
 }
 
