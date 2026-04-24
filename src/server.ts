@@ -1,7 +1,11 @@
 import path from 'node:path'
 import express, { type Express, type Request, type Response } from 'express'
+import helmet from 'helmet'
+import { rateLimit, ipKeyGenerator } from 'express-rate-limit'
 import { projects } from './data/projects'
 import { validateContact } from './contact'
+import { sendContactEmail } from './email'
+import { env, isProduction, isTest, assertProductionEnv } from './env'
 import { getProjectNavigation } from './projects-nav'
 import {
   CONTACT_EMAIL,
@@ -27,14 +31,50 @@ const ROOT = path.resolve(__dirname, '..')
 export function createApp(): Express {
   const app = express()
 
+  // Trust the reverse proxy in front of Node (Hostinger / Nginx / Cloudflare)
+  // so req.ip and rate limiting see the real client IP from X-Forwarded-For.
+  const trust = env.TRUST_PROXY
+  app.set('trust proxy', /^\d+$/.test(trust) ? Number(trust) : trust)
+
   app.set('view engine', 'pug')
   app.set('views', path.join(ROOT, 'src', 'views'))
+  app.disable('x-powered-by')
+
+  // Security headers. CSP is left off because the layout uses inline scripts/styles
+  // and the unpkg HTMX CDN; tighten this once those are inventoried.
+  app.use(
+    helmet({
+      contentSecurityPolicy: false,
+      crossOriginEmbedderPolicy: false,
+      crossOriginResourcePolicy: { policy: 'cross-origin' },
+      referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+      hsts: env.ENABLE_HSTS && isProduction
+        ? { maxAge: 60 * 60 * 24 * 365, includeSubDomains: true, preload: true }
+        : false,
+    }),
+  )
 
   // Static assets (images, css, htmx, app.js)
   app.use(express.static(path.join(ROOT, 'public'), { maxAge: '1h', etag: true }))
 
   // Form-encoded body parser for the contact form
   app.use(express.urlencoded({ extended: false, limit: '32kb' }))
+
+  // Per-IP rate limit for the contact endpoint. Disabled in tests.
+  const contactLimiter = rateLimit({
+    windowMs: env.CONTACT_RATE_WINDOW_MS,
+    limit: env.CONTACT_RATE_MAX,
+    standardHeaders: 'draft-7',
+    legacyHeaders: false,
+    skip: () => isTest,
+    keyGenerator: (req) => ipKeyGenerator(req.ip ?? ''),
+    handler: (_req, res) => {
+      res.status(429).render('partials/contact-form', {
+        values: { name: '', email: '', message: '' },
+        errors: { message: 'Too many requests. Please try again in a few minutes.' },
+      })
+    },
+  })
 
   const baseLocals = {
     site: {
@@ -118,7 +158,7 @@ export function createApp(): Express {
     res.render('partials/project-modal-content', nav)
   })
 
-  app.post('/contact', (req: Request, res: Response) => {
+  app.post('/contact', contactLimiter, async (req: Request, res: Response) => {
     const result = validateContact(req.body)
 
     // Silently accept honeypot hits to avoid signaling bots.
@@ -135,13 +175,30 @@ export function createApp(): Express {
       return
     }
 
-    // In a real deployment this would dispatch via SMTP / a transactional API.
-    // For now we log and respond with the success fragment HTMX will swap in.
-    console.log('[contact] new message', {
-      name: result.values.name,
-      email: result.values.email,
-      length: result.values.message.length,
+    const ip = req.ip
+    const userAgent = req.get('user-agent') ?? ''
+
+    const sent = await sendContactEmail({
+      values: result.values,
+      ip,
+      userAgent,
     })
+
+    if (sent.delivered) {
+      console.log('[contact] delivered via Resend', { id: sent.id, email: result.values.email })
+    } else if (sent.skipped) {
+      console.log('[contact] email skipped', {
+        reason: sent.skipped,
+        name: result.values.name,
+        email: result.values.email,
+      })
+    } else {
+      // Don't leak the failure to the user — they did their part — but log loudly.
+      console.error('[contact] Resend send failed', {
+        error: sent.error,
+        email: result.values.email,
+      })
+    }
 
     res.render('partials/contact-success', { name: result.values.name })
   })
@@ -156,8 +213,8 @@ export function createApp(): Express {
 
 // Only start the HTTP server when this file is the entrypoint (not under test).
 if (require.main === module) {
-  const PORT = Number(process.env.PORT) || 3000
-  createApp().listen(PORT, () => {
-    console.log(`▸ umais-ali listening on http://localhost:${PORT}`)
+  assertProductionEnv()
+  createApp().listen(env.PORT, () => {
+    console.log(`▸ umais-ali listening on http://localhost:${env.PORT}`)
   })
 }
