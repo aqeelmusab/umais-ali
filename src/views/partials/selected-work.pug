@@ -14,7 +14,7 @@ mixin projectCard(project, index, horizontal)
     hx-swap='innerHTML'
     hx-trigger='click, keyup[key=="Enter" || key===" "]'
   )
-    .relative.aspect-4\/3.overflow-hidden.rounded-xl.bg-secondary
+    .relative.overflow-hidden.rounded-xl.bg-secondary(class='aspect-4/3')
       img(
         src=project.image
         alt='Screenshot of the ' + project.title + ' project'
