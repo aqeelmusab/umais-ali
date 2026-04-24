@@ -211,6 +211,16 @@
     document.querySelectorAll('.reveal:not(.in-view)').forEach((el) => el.classList.add('in-view'))
   })
 
+  // Allow HTMX to swap validation responses (422) — by default it only swaps 2xx.
+  // Without this, a failed contact-form submission silently drops the re-rendered
+  // form-with-errors and the user sees nothing happen.
+  document.body.addEventListener('htmx:beforeSwap', (e) => {
+    if (e.detail.xhr && e.detail.xhr.status === 422) {
+      e.detail.shouldSwap = true
+      e.detail.isError = false
+    }
+  })
+
   // ─── Scroll-to-top button ─────────────────────────────────────────────
   const stt = document.getElementById('scroll-top')
   if (stt) {
