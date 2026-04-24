@@ -1,77 +1,71 @@
 include icons.pug
 
-section.relative.grid.overflow-hidden.px-6.pt-28.pb-10(class='min-h-svh grid-rows-[1fr_auto] sm:pt-24 sm:pb-12 md:px-12 lg:px-20 lg:pb-20')
-  //- Ambient glows + grid backdrop
-  .pointer-events-none.absolute.inset-0.overflow-hidden(aria-hidden='true')
-    .animate-float.animate-glow-pulse.absolute.rounded-full(class='-top-32 -right-32 h-125 w-125 bg-primary/20 blur-[120px]')
-    .animate-float-reverse.animate-glow-pulse.absolute.rounded-full(class='top-1/2 -left-48 h-100 w-100 bg-accent/15 blur-[100px]' style='animation-delay: 2s;')
-    .animate-float.absolute.rounded-full(class='bottom-0 right-1/4 h-75 w-75 bg-primary/10 blur-[80px]' style='animation-delay: 4s;')
+section#top.relative.overflow-hidden(class='px-6 pt-32 pb-20 md:px-12 md:pt-44 md:pb-28 lg:px-20')
+
+  //- Soft warm wash + grid (theme-aware via CSS vars)
+  .pointer-events-none.absolute.inset-0(aria-hidden='true')
+    .absolute.rounded-full(
+      class='left-1/2 top-0 -translate-x-1/2 h-[640px] w-[1100px] opacity-60'
+      style='background:radial-gradient(circle, oklch(from var(--primary) l c h / 0.14), transparent 60%); filter:blur(80px);'
+    )
     .absolute.inset-0(
-      class='opacity-[0.035]'
-      style="background-image: linear-gradient(oklch(0.96 0.012 85 / 0.35) 1px, transparent 1px), linear-gradient(90deg, oklch(0.96 0.012 85 / 0.35) 1px, transparent 1px); background-size: 64px 64px; mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%); -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 75%);"
+      class='opacity-[0.06]'
+      style='background-image:linear-gradient(var(--hero-grid-color) 1px, transparent 1px), linear-gradient(to right, var(--hero-grid-color) 1px, transparent 1px); background-size: 64px 64px; mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 80%); -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 80%);'
     )
 
-  .relative.z-10.flex.items-center
-    .max-w-6xl
-      //- Status pill
-      .animate-fade-up.stagger-1.mb-8.inline-flex.items-center.gap-3.rounded-full.border.border-border.glass.px-4.py-2
-        span.relative.flex.h-2.w-2
-          span.animate-pulse-soft.absolute.inline-flex.h-full.w-full.rounded-full.bg-emerald-400(class='opacity-75')
-          span.relative.inline-flex.h-2.w-2.rounded-full.bg-emerald-400
-        p.font-mono.text-muted-foreground(class='text-[0.7rem] tracking-[0.18em] uppercase font-medium')
-          span.text-foreground/80 Available
-          | &nbsp;&middot; Booking projects for Q3
+  .relative.mx-auto(class='max-w-6xl')
 
-      //- Editorial display headline — sans roman + serif italic flourishes.
-      h1.animate-fade-up.stagger-2.font-sans.font-medium.tracking-tight.text-balance.text-foreground(class='text-[2.6rem] leading-[1.04] sm:text-6xl md:text-7xl lg:text-[6.5rem]')
-        | I help brands
-        |  
-        span.serif-italic.gradient-text get found
-        | ,
-        br
-        span.serif-italic.gradient-text get clicked
-        | , and turn rankings
-        br
-        | into
-        |  
-        span.serif-italic.text-primary real revenue.
-        span.caret(aria-hidden='true')
+    //- Status pill + meta rail
+    .flex.flex-wrap.items-center.justify-between.animate-fade-up(class='gap-4')
+      span.inline-flex.items-center.rounded-full.border.border-border.font-mono.text-muted-foreground(
+        class='gap-2.5 bg-card/60 pl-2 pr-3.5 py-1.5 text-xs backdrop-blur'
+      )
+        span.relative.inline-flex(class='h-2 w-2')
+          span.absolute.inline-flex.animate-pulse-soft.rounded-full.bg-primary(class='h-full w-full')
+          span.relative.inline-flex.rounded-full.bg-primary(class='h-2 w-2')
+        | Booking one project for July
+      span.hidden.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.22em] sm:inline-flex items-center gap-2')
+        span.h-px.w-6.bg-border
+        | Lahore · Remote worldwide
 
-      p.animate-fade-up.stagger-3.mt-8.max-w-2xl.text-base.leading-relaxed.text-muted-foreground(class='sm:mt-10 sm:text-lg md:text-xl')
-        | SEO strategist and executor. Technical audits, content systems, and link strategy
-        | engineered to compound — so organic traffic stops being a lottery and starts being a channel.
+    //- Editorial display headline
+    h1.font-serif.text-foreground.animate-fade-up.stagger-1(
+      class='mt-10 text-[clamp(2.75rem,7.6vw,6rem)] leading-[0.94] tracking-[-0.025em]'
+    )
+      | SEO that actually
+      br
+      span.serif-italic.text-spotlight moves the needle.
 
-      .animate-fade-up.stagger-4.mt-10.flex.flex-wrap.items-center.gap-3(class='sm:mt-12 sm:gap-4')
-        a.hover-glow.group.inline-flex.items-center.justify-center.gap-2.text-sm.font-medium.tracking-wide.text-primary-foreground.bg-primary.rounded-full.transition-all.duration-300(
-          href='#work'
-          class='h-13 px-7 hover:brightness-110 active:scale-[0.97]'
-        )
-          | See case studies
-          +icon('arrow-right', 'h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5')
-        a.group.inline-flex.items-center.justify-center.gap-2.text-sm.font-medium.tracking-wide.text-foreground.border.border-border.rounded-full.transition-all.duration-300(
-          href='#contact'
-          class='h-13 px-7 hover:bg-foreground/5 hover:border-foreground/25 active:scale-[0.97]'
-        )
-          span.relative.flex(class='h-1.5 w-1.5')
-            span.absolute.inline-flex.h-full.w-full.rounded-full.bg-emerald-400(class='animate-pulse-soft opacity-70')
-            span.relative.inline-flex.rounded-full.bg-emerald-400(class='h-1.5 w-1.5')
-          | Start a project
+    //- Subhead
+    p.text-muted-foreground.animate-fade-up.stagger-2(class='mt-8 max-w-xl text-base md:text-lg leading-relaxed')
+      | I'm Umais. I help teams turn search into a real growth channel,
+      | not a slide deck full of vanity metrics. Audits, content systems,
+      | link work, and migrations that hold up after the launch party.
 
-  //- Stats rail
-  .relative.z-10(class='pt-12 sm:pt-16')
-    .divider-gradient
-    .animate-fade-up.stagger-5.flex.flex-wrap.items-end.gap-x-10.gap-y-6.pt-8(class='sm:gap-x-14 md:gap-x-20')
-      each stat in heroStats
+    //- CTAs + keyboard hint
+    .flex.flex-wrap.items-center.animate-fade-up.stagger-3(class='mt-10 gap-4')
+      a.hover-glow.group.inline-flex.items-center.rounded-full.bg-foreground.font-medium.text-background.transition-all.duration-300(
+        href='#contact'
+        class='gap-2 h-12 pl-6 pr-5 text-sm hover:bg-foreground/90 active:scale-[0.98]'
+      )
+        | Start a project
+        span.inline-flex.transition-transform.duration-300(class='group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
+          +icon('arrow-up-right', 'h-4 w-4')
+      a.group.inline-flex.items-center.rounded-full.border.border-border.font-medium.text-foreground.transition-colors.duration-300(
+        href='#work'
+        class='gap-2 h-12 px-6 text-sm hover:border-foreground/40 hover:bg-foreground/[0.03]'
+      )
+        | See the work
+        span.inline-flex.transition-transform.duration-300(class='group-hover:translate-y-0.5')
+          +icon('arrow-down', 'h-4 w-4')
+
+      span.hidden.items-center.font-mono.text-muted-foreground(class='gap-2 text-[0.7rem] sm:inline-flex ml-2')
+        kbd.inline-flex.items-center.justify-center.rounded.border.border-border.bg-card(class='h-6 px-1.5 text-[0.65rem]') /
+        span jump to work
+
+    //- Stat rail
+    .grid.grid-cols-1.border-t.border-border.animate-fade-up.stagger-4(class='mt-20 gap-8 pt-10 sm:grid-cols-3')
+      each stat, idx in heroStats
         .flex.flex-col(class='gap-2')
-          p.num-display.text-foreground(class='text-4xl sm:text-5xl md:text-6xl')= stat.value
-          p.font-mono.text-muted-foreground(class='text-[0.65rem] tracking-[0.2em] uppercase font-medium sm:text-xs')= stat.label
-
-      .ml-auto.hidden(class='md:block')
-        a.group.flex.items-center.gap-3.rounded-full.border.border-border.text-muted-foreground.transition-all.duration-300(
-          href='#work'
-          class='h-11 pl-5 pr-2 hover:text-foreground hover:border-primary/40'
-          aria-label='Scroll to work section'
-        )
-          span.font-mono(class='text-[0.65rem] tracking-[0.2em] uppercase') Scroll
-          span.flex.items-center.justify-center.w-8.h-8.rounded-full.bg-primary/10.text-primary.transition-all.duration-300(class='group-hover:bg-primary group-hover:text-primary-foreground')
-            +icon('arrow-down', 'h-3.5 w-3.5 animate-bounce')
+          span.font-mono.uppercase.text-muted-foreground(class='text-xs tracking-[0.18em]') 0#{idx + 1} &nbsp;/&nbsp; #{stat.label}
+          span.num-display.text-foreground(class='text-5xl md:text-6xl')= stat.value

@@ -1,7 +1,19 @@
 include icons.pug
 
-.rounded-2xl.border.border-border.p-8.text-center.animate-fade-up(class='bg-secondary/30')
-  .mx-auto.flex.items-center.justify-center.rounded-full.bg-primary.text-primary-foreground(class='w-12 h-12 mb-5')
+.flex.flex-col.items-start(class='gap-6 py-4')
+  span.inline-flex.items-center.justify-center.rounded-full.border.border-primary(class='h-12 w-12 bg-primary/10 text-primary')
     +icon('check', 'h-5 w-5')
-  h3.font-serif.text-2xl.font-normal.text-foreground Thanks#{name && name !== 'there' ? ', ' + name : ''}!
-  p.mt-3.text-base.text-muted-foreground.max-w-md.mx-auto Your message landed safely. I'll get back to you shortly — usually within a day.
+  h3.font-serif.text-foreground(class='text-3xl md:text-4xl tracking-[-0.02em] leading-tight')
+    | Got it.
+    |
+    span.serif-italic.text-muted-foreground Talk soon.
+  p.text-muted-foreground(class='max-w-md text-base leading-relaxed')
+    | Thanks for the note. I read every message myself, so the reply will come from
+    | me, not a template. Usually within a day, sometimes faster.
+  button.inline-flex.items-center.text-foreground.transition-colors(
+    type='button'
+    onclick="document.getElementById('contact-form-wrap').innerHTML=''; window.location.hash='#contact';"
+    class='gap-2 text-sm font-medium hover:text-primary mt-2'
+  )
+    span Send another
+    +icon('arrow-up-right', 'h-3.5 w-3.5')

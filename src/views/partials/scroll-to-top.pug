@@ -1,8 +1,8 @@
 include icons.pug
 
-button#scroll-top(
+button#scroll-top.fixed.bottom-6.right-6.z-30.inline-flex.h-12.w-12.items-center.justify-center.rounded-full.border.border-border.bg-card.text-foreground.shadow-lg.transition-colors(
   type='button'
-  class='fixed bottom-6 right-6 z-40 flex items-center justify-center w-10 h-10 rounded-full border border-border bg-card/80 backdrop-blur-md text-muted-foreground shadow-lg shadow-background/40 transition-all duration-300 hover:text-foreground hover:border-primary hover:shadow-[0_0_20px] hover:shadow-primary/20 cursor-pointer md:bottom-8 md:right-8'
-  aria-label='Back to top'
+  aria-label='Scroll to top'
+  class='hover:border-primary/40 hover:bg-card/90'
 )
-  +icon('arrow-up', 'h-4 w-4')
+  +icon('arrow-up', 'h-5 w-5')

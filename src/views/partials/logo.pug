@@ -1,8 +1,9 @@
-mixin logo(extraClass)
-  - var c = extraClass || ''
-  span(class='flex items-baseline gap-1 ' + c)
-    span.font-sans.text-base.font-semibold.tracking-tight.text-foreground Umais
-    span.serif-italic.gradient-text(class='text-lg leading-none') Ali
-    span.relative.flex.h-1.w-1.self-center(aria-hidden='true')
-      span.absolute.inline-flex.h-full.w-full.rounded-full.bg-primary(class='animate-pulse-soft opacity-80')
-      span.relative.inline-flex.h-1.w-1.rounded-full.bg-primary
+mixin logo()
+  a.group.inline-flex.items-center.gap-2(href='#top' aria-label='Umais Ali, home')
+    span.relative.inline-flex.items-center.justify-center.overflow-hidden.rounded-md.border.border-border.bg-card.transition-colors(
+      class='h-8 w-8 group-hover:border-primary/50'
+    )
+      span.font-serif.leading-none.text-foreground(class='text-base') UA
+    span.flex.flex-col.leading-none
+      span.font-serif.text-foreground(class='text-[0.95rem]') Umais Ali
+      span.mt-1.font-mono.uppercase.text-muted-foreground(class='text-[0.55rem] tracking-[0.22em]') SEO Executive

@@ -1,51 +1,47 @@
 include icons.pug
 
-section#contact.relative.px-6.py-24.overflow-hidden(class='md:px-12 md:py-32 lg:px-20')
-  .pointer-events-none.absolute.inset-0(aria-hidden='true')
-    .absolute.top-0.rounded-full(class='left-1/2 -translate-x-1/2 h-125 w-200 bg-primary/8 blur-[120px]')
+section#contact.relative(class='px-6 py-24 md:px-12 md:py-32 lg:px-20')
+  .mx-auto(class='max-w-6xl')
+    .grid.grid-cols-1(class='gap-16 lg:grid-cols-12 lg:gap-20')
 
-  .relative.z-10
-    .mb-12.reveal
-      p.eyebrow Contact
+      //- LEFT — invitation
+      .flex.flex-col(class='lg:col-span-5')
+        span.eyebrow Get in touch
+        h2.font-serif.text-foreground(class='mt-6 text-4xl md:text-5xl tracking-[-0.025em] leading-[1.05]')
+          | Got something
+          br
+          span.serif-italic.text-muted-foreground worth shipping?
+        p.text-muted-foreground(class='mt-8 max-w-md text-base md:text-lg leading-relaxed')
+          | Tell me a bit about your team, what you are stuck on,
+          | and where you would like to be in twelve months. Most replies go out
+          | within a day. Shorter notes are very welcome.
 
-    .grid.grid-cols-1.gap-12(class='md:grid-cols-12 md:gap-10')
-      div(class='md:col-span-7')
-        h2.font-sans.font-medium.tracking-tight.text-foreground.text-balance.reveal.stagger-1(class='text-4xl leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl')
-          | Need more traffic from Google?
-          |  
-          span.serif-italic.gradient-text Let&rsquo;s talk.
-        p.mt-6.text-lg.leading-relaxed.text-muted-foreground.max-w-lg.reveal.stagger-2
-          | Whether you need a full SEO strategy, a technical audit, or just a second opinion on your search performance, drop a note below and I'll get back to you.
+        .flex.flex-col(class='mt-12 gap-8')
+          .flex.flex-col(class='gap-2')
+            span.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.22em]') Email
+            a.group.inline-flex.items-center.font-serif.text-foreground.transition-colors(class='gap-2 text-xl hover:text-primary' href='mailto:' + site.contactEmail)
+              span= site.contactEmail
+              span.inline-flex.transition-transform.duration-300(class='translate-y-px group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
+                +icon('arrow-up-right', 'h-4 w-4')
 
-        #contact-form-wrap.mt-10.max-w-xl.reveal.stagger-3
-          include contact-form.pug
+          .flex.flex-col(class='gap-2')
+            span.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.22em]') Around the web
+            ul.flex.flex-wrap(class='gap-x-4 gap-y-2')
+              each link in socialLinks
+                li
+                  a.group.inline-flex.items-center.text-muted-foreground.transition-colors(class='gap-1 text-sm hover:text-foreground' href=link.href target='_blank' rel='noopener noreferrer')
+                    span= link.label
+                    span.inline-flex.transition-opacity.duration-300(class='opacity-0 group-hover:opacity-100')
+                      +icon('arrow-up-right', 'h-3.5 w-3.5')
 
-      .flex.flex-col.gap-10.justify-center(class='md:col-span-5')
-        .reveal.stagger-4
-          p.font-mono.text-xs.uppercase.text-muted-foreground.mb-3(class='tracking-[0.18em]') Email
-          a.group.inline-flex.items-center.gap-2.text-lg.text-foreground.transition-colors(
-            href='mailto:' + site.contactEmail
-            class='hover:text-primary'
-          )
-            = site.contactEmail
-            +icon('arrow-up-right', 'h-4 w-4 text-muted-foreground opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
+          .flex.items-center.border-t.border-border(class='gap-3 pt-8 mt-2')
+            span.relative.inline-flex(class='h-2 w-2')
+              span.absolute.inline-flex.animate-pulse-soft.rounded-full.bg-primary(class='h-full w-full')
+              span.relative.inline-flex.rounded-full.bg-primary(class='h-2 w-2')
+            span.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.22em]') Currently taking work for July onwards
 
-        .reveal.stagger-5
-          p.font-mono.text-xs.uppercase.text-muted-foreground.mb-4(class='tracking-[0.18em]') Social
-          .flex.flex-col.gap-3
-            each link in socialLinks
-              a.group.inline-flex.items-center.gap-2.text-base.text-foreground.transition-colors(
-                href=link.href
-                target='_blank'
-                rel='noopener noreferrer'
-                class='hover:text-primary'
-              )
-                = link.label
-                +icon('arrow-up-right', 'h-3.5 w-3.5 text-muted-foreground opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
-                span.sr-only (opens in new tab)
-
-        .flex.items-center.text-sm.text-muted-foreground.reveal.stagger-5(class='gap-2.5')
-          span.relative.flex.h-2.w-2
-            span.animate-pulse-soft.absolute.inline-flex.h-full.w-full.rounded-full.bg-emerald-400(class='opacity-75')
-            span.relative.inline-flex.h-2.w-2.rounded-full.bg-emerald-400
-          | Available for new projects
+      //- RIGHT — form on a quiet card
+      .flex.flex-col(class='lg:col-span-7')
+        .rounded-2xl.border.border-border(class='bg-card/40 p-6 md:p-10')
+          #contact-form-wrap
+            include contact-form.pug

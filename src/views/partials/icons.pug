@@ -36,3 +36,18 @@ mixin icon(name, cls)
   else if name === 'check'
     svg(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class=c aria-hidden='true')
       polyline(points='20 6 9 17 4 12')
+  else if name === 'sun'
+    svg(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class=c aria-hidden='true')
+      circle(cx='12' cy='12' r='4')
+      path(d='M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41')
+  else if name === 'moon'
+    svg(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class=c aria-hidden='true')
+      path(d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z')
+  else if name === 'sparkle'
+    svg(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class=c aria-hidden='true')
+      path(d='M12 3l1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3z')
+      path(d='M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8L19 16z')
+  else if name === 'plus'
+    svg(xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class=c aria-hidden='true')
+      line(x1='12' y1='5' x2='12' y2='19')
+      line(x1='5' y1='12' x2='19' y2='12')

@@ -69,12 +69,14 @@
 
   function openMenu() {
     if (!menu) return
+    if (menu.classList.contains('is-open')) return
     menu.classList.add('is-open')
     menu.setAttribute('aria-hidden', 'false')
     lockScroll()
   }
   function closeMenu() {
     if (!menu) return
+    if (!menu.classList.contains('is-open')) return
     menu.classList.remove('is-open')
     menu.setAttribute('aria-hidden', 'true')
     unlockScroll()
@@ -94,6 +96,7 @@
 
   function openModal() {
     if (!modal) return
+    if (modal.classList.contains('is-open')) return
     modal.classList.add('is-open')
     modal.setAttribute('aria-hidden', 'false')
     lockScroll()
@@ -105,6 +108,7 @@
   }
   function closeModal() {
     if (!modal) return
+    if (!modal.classList.contains('is-open')) return
     modal.classList.remove('is-open')
     modal.setAttribute('aria-hidden', 'true')
     unlockScroll()
@@ -135,6 +139,28 @@
 
   // ─── Global keyboard handlers ─────────────────────────────────────────
   document.addEventListener('keydown', (e) => {
+    // "/" — jump to work (only when nothing is focused/typed in)
+    if (
+      e.key === '/' &&
+      !e.metaKey && !e.ctrlKey && !e.altKey &&
+      !(modal && modal.classList.contains('is-open')) &&
+      !(menu && menu.classList.contains('is-open'))
+    ) {
+      const target = document.activeElement
+      const isTyping = target && (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable
+      )
+      if (!isTyping) {
+        const work = document.getElementById('work')
+        if (work) {
+          e.preventDefault()
+          work.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      }
+    }
+
     if (e.key === 'Escape') {
       if (modal && modal.classList.contains('is-open')) {
         closeModal()
@@ -192,5 +218,23 @@
     window.addEventListener('scroll', onScrollStt, { passive: true })
     stt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }))
     onScrollStt()
+  }
+
+  // ─── Theme toggle ─────────────────────────────────────────────────────
+  const themeBtn = document.getElementById('theme-toggle')
+  if (themeBtn) {
+    const setLabel = () => {
+      const t = document.documentElement.getAttribute('data-theme') || 'dark'
+      themeBtn.setAttribute('aria-label', t === 'light' ? 'Switch to dark theme' : 'Switch to light theme')
+      themeBtn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false')
+    }
+    themeBtn.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('data-theme') || 'dark'
+      const next = current === 'light' ? 'dark' : 'light'
+      document.documentElement.setAttribute('data-theme', next)
+      try { localStorage.setItem('theme', next) } catch (_) {}
+      setLabel()
+    })
+    setLabel()
   }
 })()

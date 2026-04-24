@@ -1,14 +1,35 @@
 extends layout.pug
 
 block content
+  include partials/icons.pug
   include partials/header.pug
-  main.flex.items-center.justify-center.px-6.py-24(class='min-h-svh md:px-12 lg:px-20')
-    .text-center
-      p.text-xs.font-semibold.tracking-widest.uppercase.text-primary 404
-      h1.mt-4.font-serif.text-4xl.font-normal.tracking-tight.text-foreground(class='sm:text-5xl md:text-6xl') Page not found
-      p.mt-4.text-base.text-muted-foreground That page does not exist. Try heading back home.
-      a.mt-8.inline-flex.items-center.justify-center.text-sm.font-medium.text-primary-foreground.bg-primary.rounded-full.transition-all.duration-300(
-        href='/'
-        class='h-12 px-8 hover:brightness-110 active:scale-[0.97]'
-      ) Back to home
+
+  main#main.relative.flex.min-h-screen.items-center.justify-center.overflow-hidden(class='px-6 py-32 md:px-12 lg:px-20')
+    //- Soft grid bg
+    .pointer-events-none.absolute.inset-0(aria-hidden='true' class='[mask-image:radial-gradient(ellipse_at_center,_black_30%,_transparent_75%)] opacity-40')
+      .h-full.w-full(class='bg-[linear-gradient(to_right,_var(--color-border)_1px,_transparent_1px),_linear-gradient(to_bottom,_var(--color-border)_1px,_transparent_1px)] bg-[size:48px_48px]')
+
+    .relative.mx-auto.flex.max-w-3xl.flex-col.items-start(class='gap-8 text-left')
+      span.eyebrow Error 404
+      h1.font-serif.text-foreground(class='text-6xl md:text-8xl tracking-[-0.03em] leading-[0.95]')
+        | That page
+        br
+        span.serif-italic.text-muted-foreground took a wrong turn.
+      p.text-muted-foreground(class='max-w-xl text-base md:text-lg leading-relaxed')
+        | Either the link is old, the page moved, or I broke something while
+        | shipping. Either way, here is the way back.
+      .flex.flex-wrap(class='gap-3 mt-2')
+        a.group.inline-flex.items-center.rounded-full.bg-foreground.font-medium.text-background.transition-all.duration-300(
+          href='/'
+          class='gap-3 h-12 px-6 text-sm hover:bg-foreground/90 active:scale-[0.98]'
+        )
+          span Back home
+          span.inline-flex.transition-transform.duration-300(class='group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
+            +icon('arrow-up-right', 'h-3.5 w-3.5')
+        a.inline-flex.items-center.rounded-full.border.border-border.text-foreground.transition-colors(
+          href='/#contact'
+          class='gap-2 h-12 px-6 text-sm hover:border-foreground/40 hover:bg-card'
+        )
+          span Tell me what broke
+
   include partials/footer.pug

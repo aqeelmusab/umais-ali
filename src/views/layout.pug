@@ -3,7 +3,21 @@ html(lang='en' class='bg-background')
   head
     meta(charset='UTF-8')
     meta(name='viewport' content='width=device-width, initial-scale=1')
-    meta(name='theme-color' content='#1a1816')
+    meta(name='theme-color' content='#1a1816' media='(prefers-color-scheme: dark)')
+    meta(name='theme-color' content='#fbf8f1' media='(prefers-color-scheme: light)')
+
+    //- Apply saved theme BEFORE first paint to avoid flash.
+    script.
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+          var theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+        } catch (_) {
+          document.documentElement.setAttribute('data-theme', 'dark');
+        }
+      })();
 
     title= title || site.title
     meta(name='description' content=description || site.description)

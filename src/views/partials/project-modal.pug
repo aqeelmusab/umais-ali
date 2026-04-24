@@ -1,12 +1,23 @@
 include icons.pug
 
-#project-modal.fixed.inset-0.flex.items-end.justify-center(
-  class='z-70 md:items-center'
+#project-modal.fixed.inset-0.z-50.flex.items-end.justify-center(
+  aria-hidden='true'
   role='dialog'
   aria-modal='true'
-  aria-hidden='true'
-  aria-label='Project details'
+  aria-labelledby='project-modal-title'
+  class='p-0 md:items-center md:p-6'
 )
-  .absolute.inset-0(class='bg-background/80 backdrop-blur-md' data-modal-backdrop aria-hidden='true')
-  .modal-card.relative.w-full.max-w-3xl.bg-card.border.border-border.overflow-hidden.shadow-2xl(class='max-h-[90svh] rounded-t-2xl md:rounded-2xl shadow-background/60 transition-all duration-500 ease-out')
-    #project-modal-content.overflow-y-auto.overscroll-contain(class='max-h-[90svh]')
+  //- Backdrop
+  .absolute.inset-0(
+    aria-hidden='true'
+    data-modal-close
+    style='background:oklch(from var(--background) l c h / 0.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);'
+  )
+
+  //- Card
+  .modal-card.relative.flex.w-full.flex-col.overflow-hidden.bg-card.shadow-2xl.border.border-border(
+    class='h-[92vh] max-w-6xl rounded-t-2xl md:h-[88vh] md:rounded-2xl'
+  )
+    //- Body — populated by HTMX. The swapped content provides its own header.
+    #project-modal-content.flex-1.overflow-y-auto
+      .flex.h-full.items-center.justify-center.text-muted-foreground(class='text-sm') Loading…

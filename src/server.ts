@@ -8,11 +8,15 @@ import {
   SITE_TITLE,
   SITE_URL,
   experience,
+  faqs,
   heroStats,
   highlights,
+  marquee,
   navLinks,
+  services,
   skills,
   socialLinks,
+  testimonials,
 } from './data/site'
 
 const app = express()
@@ -43,6 +47,10 @@ const baseLocals = {
   skills,
   experience,
   highlights,
+  services,
+  marquee,
+  testimonials,
+  faqs,
   socialLinks,
   projects,
   year: new Date().getFullYear(),
@@ -66,7 +74,7 @@ const jsonLd = {
       url: SITE_URL,
       jobTitle: 'SEO Executive',
       description:
-        'SEO strategist and executor with 5+ years of experience helping businesses build organic search channels that compound over time.',
+        'SEO strategist and operator with five plus years of experience helping businesses build organic search channels that hold up after launch.',
       knowsAbout: [
         'Search Engine Optimization',
         'Technical SEO',
@@ -141,7 +149,7 @@ app.post('/contact', (req: Request, res: Response) => {
   }
 
   const errors: { name?: string; email?: string; message?: string } = {}
-  if (name.length < 2 || name.length > 80) errors.name = 'Please enter your name (2–80 characters).'
+  if (name.length < 2 || name.length > 80) errors.name = 'Please enter your name (2 to 80 characters).'
   if (!EMAIL_RE.test(email) || email.length > 200) errors.email = 'Please enter a valid email address.'
   if (message.length < 10 || message.length > 4000)
     errors.message = 'Please write a message between 10 and 4000 characters.'

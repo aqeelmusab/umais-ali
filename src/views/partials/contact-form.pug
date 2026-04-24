@@ -1,23 +1,24 @@
 include icons.pug
 
-mixin field(name, label, type, value, error, autocomplete)
+mixin field(name, label, type, value, error, autocomplete, placeholder)
   - var inputId = 'cf-' + name
   - var hasErr = !!error
   - var describedBy = hasErr ? inputId + '-err' : null
-  - var inputBase = 'w-full rounded-xl bg-secondary/40 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:bg-secondary/60'
-  - var borderCls = hasErr ? ' border-destructive focus:border-destructive' : ' border-border/60 focus:border-primary/40'
+  - var inputBase = 'w-full rounded-xl bg-background/60 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors focus:bg-background'
+  - var borderCls = hasErr ? ' border-destructive focus:border-destructive' : ' border-border focus:border-foreground/40'
   label.block(for=inputId)
-    span.block.font-mono.text-xs.uppercase.text-muted-foreground.mb-2(class='tracking-[0.18em]')= label
+    span.block.font-mono.uppercase.text-muted-foreground(class='mb-2 text-[0.65rem] tracking-[0.22em]')= label
     if type === 'textarea'
       textarea(
         id=inputId
         name=name
         rows='5'
         autocomplete=autocomplete
+        placeholder=placeholder
         required
         aria-invalid=hasErr ? 'true' : 'false'
         aria-describedby=describedBy
-        class=inputBase + borderCls + ' resize-y min-h-[8rem]'
+        class=inputBase + borderCls + ' resize-y min-h-[10rem]'
       )= value || ''
     else
       input(
@@ -26,40 +27,45 @@ mixin field(name, label, type, value, error, autocomplete)
         type=type
         value=value || ''
         autocomplete=autocomplete
+        placeholder=placeholder
         required
         aria-invalid=hasErr ? 'true' : 'false'
         aria-describedby=describedBy
         class=inputBase + borderCls
       )
     if hasErr
-      p(id=describedBy class='mt-2 text-xs text-destructive')= error
+      p.text-destructive(id=describedBy class='mt-2 text-xs')= error
 
-form#contact-form.flex.flex-col.gap-5(
+form#contact-form.flex.flex-col(
   hx-post='/contact'
   hx-target='#contact-form-wrap'
   hx-swap='innerHTML'
   hx-disabled-elt='find button[type="submit"]'
   novalidate
+  class='gap-5'
 )
-  .grid.grid-cols-1.gap-5(class='sm:grid-cols-2')
-    +field('name', 'Name', 'text', values && values.name, errors && errors.name, 'name')
-    +field('email', 'Email', 'email', values && values.email, errors && errors.email, 'email')
-  +field('message', 'Message', 'textarea', values && values.message, errors && errors.message, 'off')
+  .grid.grid-cols-1(class='gap-5 sm:grid-cols-2')
+    +field('name', 'Your name', 'text', values && values.name, errors && errors.name, 'name', 'Sara Mitchell')
+    +field('email', 'Email', 'email', values && values.email, errors && errors.email, 'email', 'sara@company.com')
+  +field('message', 'What is the project?', 'textarea', values && values.message, errors && errors.message, 'off', 'A couple of sentences is plenty. Links are great too.')
 
   //- Honeypot — hidden from real users, irresistible to bots.
-  div(aria-hidden='true' class='absolute -left-2499.75 top-auto h-px w-px overflow-hidden')
+  div(aria-hidden='true' class='absolute -left-[2499.75px] top-auto h-px w-px overflow-hidden')
     label(for='cf-website') Leave this field empty
     input(id='cf-website' name='website' type='text' tabindex='-1' autocomplete='off')
 
-  .flex.flex-wrap.items-center.gap-4.pt-2
-    button(
+  .flex.flex-wrap.items-center(class='gap-4 pt-2')
+    button.hover-glow.group.inline-flex.items-center.justify-center.rounded-full.bg-foreground.font-medium.text-background.transition-all.duration-300(
       type='submit'
-      class='hover-glow group inline-flex items-center justify-center gap-3 h-13 px-8 text-sm font-medium tracking-wide text-primary-foreground bg-primary rounded-full transition-all duration-300 hover:brightness-110 active:scale-[0.97] disabled:opacity-60 disabled:cursor-wait'
+      class='gap-3 h-12 px-7 text-sm hover:bg-foreground/90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-wait'
     )
-      span(class='htmx-indicator-hide') Send Message
-      span(class='htmx-indicator inline-flex items-center gap-2')
-        svg(class='animate-spin h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true')
+      span.htmx-indicator-hide.inline-flex.items-center(class='gap-2')
+        | Send it over
+        span.inline-flex.transition-transform.duration-300(class='group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
+          +icon('arrow-up-right', 'h-3.5 w-3.5')
+      span.htmx-indicator.inline-flex.items-center(class='gap-2')
+        svg.animate-spin(class='h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true')
           circle(cx='12' cy='12' r='10' stroke-opacity='0.25')
           path(d='M22 12a10 10 0 0 1-10 10' stroke-linecap='round')
-        | Sending…
-    p.text-xs.text-muted-foreground I usually reply within a day.
+        | Sending
+    p.text-muted-foreground(class='text-xs') No newsletters, no follow up sequence. Just a real reply from me.
