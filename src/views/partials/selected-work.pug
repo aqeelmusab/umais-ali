@@ -31,8 +31,9 @@ mixin projectCard(project, index, horizontal)
           +icon('arrow-up-right', 'h-4 w-4')
     .flex.flex-col(class='gap-1.5 ' + (horizontal ? 'mt-5 md:mt-0' : 'mt-5'))
       .flex.items-center.justify-between
-        p.text-xs.font-medium.tracking-widest.uppercase(class='text-primary/80')= project.category
-      h3.text-xl.font-medium.tracking-tight.text-foreground.transition-colors.duration-300(class='group-hover:text-primary md:text-2xl')= project.title
+        p.font-mono.text-xs.uppercase(class='tracking-[0.18em] text-primary/80')= project.category
+      h3.font-sans.text-xl.font-medium.tracking-tight.text-foreground.transition-colors.duration-300(class='group-hover:text-primary md:text-2xl')
+        = project.title
       .mt-2.flex.flex-wrap.gap-2
         each tag in project.tags
           span.inline-flex.items-center.rounded-full.border.text-xs.text-muted-foreground.transition-colors(
@@ -42,12 +43,16 @@ mixin projectCard(project, index, horizontal)
 section#work.px-6.py-24(class='md:px-12 md:py-32 lg:px-20')
   div
     .mb-16.transition-all.duration-700.reveal
-      .flex.items-center.gap-3.mb-4
-        .h-px.w-8.bg-primary
-        p.text-xs.font-semibold.tracking-widest.uppercase.text-primary Selected Work
-      .flex.items-end.justify-between
-        h2.font-serif.text-3xl.font-normal.tracking-tight.text-foreground(class='md:text-4xl lg:text-5xl') Case Studies
-        p.hidden.text-sm.text-muted-foreground(class='md:block')= projects.length + ' projects'
+      p.eyebrow.mb-5 Selected Work
+      .flex.items-end.justify-between.gap-6
+        h2.font-sans.font-medium.tracking-tight.text-foreground.text-balance(class='text-4xl leading-[1.05] md:text-5xl lg:text-6xl')
+          | Case studies in
+          |  
+          span.serif-italic.gradient-text compounding
+          |  growth.
+        p.hidden.font-mono.text-xs.tracking-widest.uppercase.text-muted-foreground.shrink-0(class='md:block')
+          span.text-foreground/80= ('0' + projects.length).slice(-2)
+          | &nbsp;/ projects
 
     .grid.grid-cols-1.gap-12(class='md:grid-cols-2 md:gap-x-8 md:gap-y-16')
       each project, index in projects

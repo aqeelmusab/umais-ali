@@ -20,19 +20,19 @@ button(
 
 .px-6.py-6(class='md:px-8 md:py-8')
   .flex.flex-wrap.items-center.gap-3.mb-4
-    span.inline-flex.items-center.rounded-full.text-xs.font-medium.tracking-wide.text-primary(class='bg-primary/10 px-3 py-1')= project.category
-    span.text-xs.text-muted-foreground= project.year
+    span.inline-flex.items-center.rounded-full.font-mono.text-xs.uppercase.text-primary(class='tracking-[0.18em] bg-primary/10 px-3 py-1')= project.category
+    span.font-mono.text-xs.tracking-widest.uppercase.text-muted-foreground= project.year
 
-  h2.font-serif.text-2xl.font-normal.tracking-tight.text-foreground.text-balance(class='md:text-3xl')= project.title
+  h2.font-sans.text-3xl.font-medium.tracking-tight.text-foreground.text-balance(class='md:text-4xl')= project.title
 
   p.mt-5.text-base.leading-relaxed.text-muted-foreground= project.longDescription
 
   .mt-8.grid.grid-cols-2.gap-6
     .rounded-xl.p-4(class='bg-secondary/50 border border-border/50')
-      p.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground(class='mb-1.5') Client
+      p.font-mono.text-xs.uppercase.text-muted-foreground(class='tracking-[0.18em] mb-1.5') Client
       p.text-sm.font-medium.text-foreground= project.client
     .rounded-xl.p-4(class='bg-secondary/50 border border-border/50')
-      p.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground(class='mb-1.5') Role
+      p.font-mono.text-xs.uppercase.text-muted-foreground(class='tracking-[0.18em] mb-1.5') Role
       p.text-sm.font-medium.text-foreground= project.role
 
   .mt-6.flex.flex-wrap.gap-2

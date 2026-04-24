@@ -6,15 +6,14 @@ section#contact.relative.px-6.py-24.overflow-hidden(class='md:px-12 md:py-32 lg:
 
   .relative.z-10
     .mb-12.reveal
-      .flex.items-center.gap-3.mb-4
-        .h-px.w-8.bg-primary
-        p.text-xs.font-semibold.tracking-widest.uppercase.text-primary Contact
+      p.eyebrow Contact
 
     .grid.grid-cols-1.gap-12(class='md:grid-cols-12 md:gap-10')
       div(class='md:col-span-7')
-        h2.font-serif.text-3xl.font-normal.tracking-tight.text-foreground.text-balance.reveal.stagger-1(class='sm:text-4xl md:text-5xl lg:text-6xl')
-          | Need more traffic from Google?&nbsp;
-          span.gradient-text Let's talk.
+        h2.font-sans.font-medium.tracking-tight.text-foreground.text-balance.reveal.stagger-1(class='text-4xl leading-[1.05] sm:text-5xl md:text-6xl lg:text-7xl')
+          | Need more traffic from Google?
+          |  
+          span.serif-italic.gradient-text Let&rsquo;s talk.
         p.mt-6.text-lg.leading-relaxed.text-muted-foreground.max-w-lg.reveal.stagger-2
           | Whether you need a full SEO strategy, a technical audit, or just a second opinion on your search performance, drop a note below and I'll get back to you.
 
@@ -23,7 +22,7 @@ section#contact.relative.px-6.py-24.overflow-hidden(class='md:px-12 md:py-32 lg:
 
       .flex.flex-col.gap-10.justify-center(class='md:col-span-5')
         .reveal.stagger-4
-          p.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground.mb-3 Email
+          p.font-mono.text-xs.uppercase.text-muted-foreground.mb-3(class='tracking-[0.18em]') Email
           a.group.inline-flex.items-center.gap-2.text-lg.text-foreground.transition-colors(
             href='mailto:' + site.contactEmail
             class='hover:text-primary'
@@ -32,7 +31,7 @@ section#contact.relative.px-6.py-24.overflow-hidden(class='md:px-12 md:py-32 lg:
             +icon('arrow-up-right', 'h-4 w-4 text-muted-foreground opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
 
         .reveal.stagger-5
-          p.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground.mb-4 Social
+          p.font-mono.text-xs.uppercase.text-muted-foreground.mb-4(class='tracking-[0.18em]') Social
           .flex.flex-col.gap-3
             each link in socialLinks
               a.group.inline-flex.items-center.gap-2.text-base.text-foreground.transition-colors(

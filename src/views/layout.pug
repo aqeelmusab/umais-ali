@@ -31,10 +31,10 @@ html(lang='en' class='bg-background')
     link(rel='icon' href='/favicon.ico')
     link(rel='apple-touch-icon' href='/apple-touch-icon.png' sizes='180x180' type='image/png')
 
-    //- Fonts
-    link(rel='preconnect' href='https://fonts.googleapis.com')
-    link(rel='preconnect' href='https://fonts.gstatic.com' crossorigin)
-    link(rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap')
+    //- Self-hosted fonts — preload critical subsets so above-the-fold typography paints immediately.
+    link(rel='preload' href='/fonts/geist-latin.woff2' as='font' type='font/woff2' crossorigin)
+    link(rel='preload' href='/fonts/instrument-serif-latin.woff2' as='font' type='font/woff2' crossorigin)
+    link(rel='preload' href='/fonts/instrument-serif-italic-latin.woff2' as='font' type='font/woff2' crossorigin)
 
     link(rel='stylesheet' href='/css/main.css')
 

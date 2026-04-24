@@ -7,7 +7,7 @@ mixin field(name, label, type, value, error, autocomplete)
   - var inputBase = 'w-full rounded-xl bg-secondary/40 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:bg-secondary/60'
   - var borderCls = hasErr ? ' border-destructive focus:border-destructive' : ' border-border/60 focus:border-primary/40'
   label.block(for=inputId)
-    span.block.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground.mb-2= label
+    span.block.font-mono.text-xs.uppercase.text-muted-foreground.mb-2(class='tracking-[0.18em]')= label
     if type === 'textarea'
       textarea(
         id=inputId
