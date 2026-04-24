@@ -50,7 +50,7 @@ form#contact-form.flex.flex-col(
   +field('message', 'What is the project?', 'textarea', values && values.message, errors && errors.message, 'off', 'A couple of sentences is plenty. Links are great too.')
 
   //- Honeypot — hidden from real users, irresistible to bots.
-  div(aria-hidden='true' class='absolute -left-[2499.75px] top-auto h-px w-px overflow-hidden')
+  div(aria-hidden='true' class='absolute left-[-2499.75px] top-auto h-px w-px overflow-hidden')
     label(for='cf-website') Leave this field empty
     input(id='cf-website' name='website' type='text' tabindex='-1' autocomplete='off')
 

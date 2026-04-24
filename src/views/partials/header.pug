@@ -11,14 +11,14 @@ header#site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.rounded-ful
     each link in navLinks
       a.relative.rounded-full.font-medium.text-muted-foreground.transition-colors.duration-300(
         href=link.href
-        class='px-4 py-2 text-sm hover:text-foreground hover:bg-foreground/[0.04]'
+        class='px-4 py-2 text-sm hover:text-foreground hover:bg-foreground/4'
       )= link.label
 
   .flex.items-center(class='gap-1.5')
     button#theme-toggle.theme-toggle.inline-flex.items-center.justify-center.rounded-full.text-muted-foreground.transition-colors(
       type='button'
       aria-label='Toggle colour theme'
-      class='h-10 w-10 hover:text-foreground hover:bg-foreground/[0.05]'
+      class='h-10 w-10 hover:text-foreground hover:bg-foreground/5'
     )
       span.icon-moon.inline-flex
         +icon('moon', 'h-4 w-4')
@@ -38,7 +38,7 @@ header#site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.rounded-ful
       aria-label='Open menu'
       aria-expanded='false'
       aria-controls='mobile-menu'
-      class='h-10 w-10 md:hidden hover:bg-foreground/[0.05]'
+      class='h-10 w-10 md:hidden hover:bg-foreground/5'
     )
       +icon('menu', 'h-5 w-5')
 
@@ -49,7 +49,7 @@ header#site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.rounded-ful
     button#mobile-menu-close.inline-flex.items-center.justify-center.rounded-full.text-foreground.transition-colors(
       type='button'
       aria-label='Close menu'
-      class='h-10 w-10 hover:bg-foreground/[0.06]'
+      class='h-10 w-10 hover:bg-foreground/6'
     )
       +icon('x', 'h-5 w-5')
 

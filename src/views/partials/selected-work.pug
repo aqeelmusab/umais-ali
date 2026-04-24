@@ -34,7 +34,7 @@ mixin bentoCard(project, sizeClasses, isFeature)
         ) 0#{project.id} · #{project.year}
         if project.result
           span.inline-flex.items-center.font-mono.uppercase.rounded-full.text-primary(
-            class='gap-1.5 text-[0.65rem] tracking-[0.18em] border border-primary/30 bg-primary/[0.08] px-2.5 py-1 backdrop-blur'
+            class='gap-1.5 text-[0.65rem] tracking-[0.18em] border border-primary/30 bg-primary/8 px-2.5 py-1 backdrop-blur'
           )
             span.rounded-full.bg-primary.animate-pulse-soft(class='h-1.5 w-1.5')
             span= project.result
@@ -49,7 +49,7 @@ mixin bentoCard(project, sizeClasses, isFeature)
           h3.font-serif.text-foreground(class= titleSizeCls + ' tracking-[-0.02em] leading-[1.05]')= project.title
           p.text-muted-foreground.line-clamp-2(class='hidden text-sm max-w-md ' + (isFeature ? 'lg:block mt-1' : ''))= project.description
         span.inline-flex.shrink-0.items-center.justify-center.rounded-full.border.text-foreground.transition-all.duration-300(
-          class='h-11 w-11 border-foreground/15 bg-background/40 backdrop-blur group-hover:bg-foreground group-hover:text-background group-hover:border-transparent group-hover:rotate-[-12deg]'
+          class='h-11 w-11 border-foreground/15 bg-background/40 backdrop-blur group-hover:bg-foreground group-hover:text-background group-hover:border-transparent group-hover:-rotate-12'
         )
           +icon('arrow-up-right', 'h-4 w-4')
 
@@ -59,7 +59,7 @@ section#work.relative(class='px-6 py-24 md:px-12 md:py-32 lg:px-20')
     .flex.flex-col.border-b.border-border(class='gap-6 pb-12 md:flex-row md:items-end md:justify-between')
       div
         span.eyebrow Selected work
-        h2.font-serif.text-foreground(class='mt-6 text-4xl md:text-5xl tracking-[-0.025em] leading-[1.05]')
+        h2.font-serif.text-foreground(class='mt-6 text-4xl md:text-5xl tracking-tight leading-[1.05]')
           | Five projects,
           br
           span.serif-italic.text-muted-foreground one common thread.
