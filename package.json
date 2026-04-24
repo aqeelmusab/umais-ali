@@ -11,7 +11,9 @@
     "build": "npm run build:css && npm run build:ts",
     "start": "node dist/server.js",
     "dev:server": "tsx watch src/server.ts",
-    "dev": "npm-run-all --parallel watch:css dev:server"
+    "dev": "npm-run-all --parallel watch:css dev:server",
+    "typecheck:tests": "tsc -p tsconfig.test.json",
+    "test": "tsx --test tests/**/*.test.ts"
   },
   "dependencies": {
     "express": "^4.21.2",
