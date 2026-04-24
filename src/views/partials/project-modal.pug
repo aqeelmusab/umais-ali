@@ -1,0 +1,12 @@
+include icons.pug
+
+#project-modal.fixed.inset-0.flex.items-end.justify-center(
+  class='z-70 md:items-center'
+  role='dialog'
+  aria-modal='true'
+  aria-hidden='true'
+  aria-label='Project details'
+)
+  .absolute.inset-0(class='bg-background/80 backdrop-blur-md' data-modal-backdrop aria-hidden='true')
+  .modal-card.relative.w-full.max-w-3xl.bg-card.border.border-border.overflow-hidden.shadow-2xl(class='max-h-[90svh] rounded-t-2xl md:rounded-2xl shadow-background/60 transition-all duration-500 ease-out')
+    #project-modal-content.overflow-y-auto.overscroll-contain(class='max-h-[90svh]')

@@ -1,0 +1,56 @@
+include icons.pug
+
+mixin projectCard(project, index, horizontal)
+  - var staggerCls = ['stagger-1','stagger-2','stagger-3','stagger-4'][index % 4]
+  - var rootCls = 'group cursor-pointer transition-all duration-700 rounded-xl reveal ' + staggerCls + (horizontal ? ' md:grid md:grid-cols-2 md:gap-8 md:items-center' : '')
+  div(
+    class=rootCls
+    role='button'
+    tabindex='0'
+    aria-label='View project: ' + project.title
+    data-project-id=project.id
+    hx-get='/projects/' + project.id
+    hx-target='#project-modal-content'
+    hx-swap='innerHTML'
+    hx-trigger='click, keyup[key=="Enter" || key===" "]'
+  )
+    .relative.aspect-4-3.overflow-hidden.rounded-xl.bg-secondary(class='aspect-[4/3]')
+      img(
+        src=project.image
+        alt='Screenshot of the ' + project.title + ' project'
+        loading='lazy'
+        decoding='async'
+        class='absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-105'
+      )
+      .absolute.inset-0.opacity-0.transition-opacity.duration-500(class='bg-linear-to-t from-background/80 via-background/20 to-transparent group-hover:opacity-100')
+      if project.result
+        .absolute.top-4.left-4.inline-flex.items-center.rounded-full.glass.text-xs.font-semibold.tracking-wide.text-primary(class='px-3.5 py-1.5')= project.result
+      .absolute.flex.items-end.justify-between.opacity-0.transition-all.duration-500(class='inset-x-0 bottom-0 p-5 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0')
+        p.text-sm.font-medium.text-foreground= project.description
+        .shrink-0.flex.items-center.justify-center.rounded-full.bg-primary.text-primary-foreground(class='ml-3 w-10 h-10')
+          +icon('arrow-up-right', 'h-4 w-4')
+    .flex.flex-col(class='gap-1.5 ' + (horizontal ? 'mt-5 md:mt-0' : 'mt-5'))
+      .flex.items-center.justify-between
+        p.text-xs.font-medium.tracking-widest.uppercase(class='text-primary/80')= project.category
+      h3.text-xl.font-medium.tracking-tight.text-foreground.transition-colors.duration-300(class='group-hover:text-primary md:text-2xl')= project.title
+      .mt-2.flex.flex-wrap.gap-2
+        each tag in project.tags
+          span.inline-flex.items-center.rounded-full.border.text-xs.text-muted-foreground.transition-colors(
+            class='border-border/60 bg-secondary/50 px-3 py-1 group-hover:border-primary/20 group-hover:text-foreground/80'
+          )= tag
+
+section#work.px-6.py-24(class='md:px-12 md:py-32 lg:px-20')
+  div
+    .mb-16.transition-all.duration-700.reveal
+      .flex.items-center.gap-3.mb-4
+        .h-px.w-8.bg-primary
+        p.text-xs.font-semibold.tracking-widest.uppercase.text-primary Selected Work
+      .flex.items-end.justify-between
+        h2.font-serif.text-3xl.font-normal.tracking-tight.text-foreground(class='md:text-4xl lg:text-5xl') Case Studies
+        p.hidden.text-sm.text-muted-foreground(class='md:block')= projects.length + ' projects'
+
+    .grid.grid-cols-1.gap-12(class='md:grid-cols-2 md:gap-x-8 md:gap-y-16')
+      each project, index in projects
+        - var isLastOdd = index === projects.length - 1 && projects.length % 2 !== 0
+        div(class=isLastOdd ? 'md:col-span-2' : '')
+          +projectCard(project, index, isLastOdd)

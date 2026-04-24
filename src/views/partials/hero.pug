@@ -1,0 +1,56 @@
+include icons.pug
+
+section.relative.grid.overflow-hidden.px-6.pt-28.pb-10(class='min-h-svh grid-rows-[1fr_auto] sm:pt-24 sm:pb-12 md:px-12 lg:px-20 lg:pb-20')
+  .pointer-events-none.absolute.inset-0.overflow-hidden(aria-hidden='true')
+    .animate-float.animate-glow-pulse.absolute.rounded-full(class='-top-32 -right-32 h-125 w-125 bg-primary/20 blur-[120px]')
+    .animate-float-reverse.animate-glow-pulse.absolute.rounded-full(class='top-1/2 -left-48 h-100 w-100 bg-accent/15 blur-[100px]' style='animation-delay: 2s;')
+    .animate-float.absolute.rounded-full(class='bottom-0 right-1/4 h-75 w-75 bg-primary/10 blur-[80px]' style='animation-delay: 4s;')
+    .absolute.inset-0(
+      class='opacity-[0.03]'
+      style="background-image: linear-gradient(oklch(0.94 0.005 80 / 0.3) 1px, transparent 1px), linear-gradient(90deg, oklch(0.94 0.005 80 / 0.3) 1px, transparent 1px); background-size: 60px 60px;"
+    )
+
+  .relative.z-10.flex.items-center
+    .max-w-5xl
+      .animate-fade-up.stagger-1.mb-6.inline-flex.items-center.gap-3.rounded-full.border.border-border.px-4.py-2.backdrop-blur-sm(class='bg-secondary/50')
+        span.relative.flex.h-2.w-2
+          span.animate-pulse-soft.absolute.inline-flex.h-full.w-full.rounded-full.bg-emerald-400(class='opacity-75')
+          span.relative.inline-flex.h-2.w-2.rounded-full.bg-emerald-400
+        p.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground Available for projects
+
+      h1.animate-fade-up.stagger-2.font-serif.text-4xl.font-normal.tracking-tight.text-balance(class='leading-[1.08] sm:text-5xl md:text-7xl lg:text-8xl')
+        span.text-foreground I help businesses&nbsp;
+        span.gradient-text get found
+        span.text-foreground , get clicked, and&nbsp;
+        span.gradient-text get results
+        span.text-foreground &nbsp;through search.
+
+      p.animate-fade-up.stagger-3.mt-6.max-w-2xl.text-base.leading-relaxed.text-muted-foreground(class='sm:mt-8 sm:text-lg md:text-xl')
+        | SEO strategist and executor. I work with brands to build organic search channels
+        | that compound over time, turning rankings into real revenue.
+
+      .animate-fade-up.stagger-4.mt-8.flex.flex-wrap.items-center.gap-3(class='sm:mt-10 sm:gap-4')
+        a.hover-glow.group.inline-flex.items-center.justify-center.text-sm.font-medium.tracking-wide.text-primary-foreground.bg-primary.rounded-full.transition-all.duration-300(
+          href='#work'
+          class='h-13 px-8 hover:brightness-110 active:scale-[0.97]'
+        ) See My Work
+        a.inline-flex.items-center.justify-center.text-sm.font-medium.tracking-wide.text-foreground.border.border-border.rounded-full.transition-all.duration-300(
+          href='#contact'
+          class='h-13 px-8 hover:bg-foreground/5 hover:border-foreground/20 active:scale-[0.97]'
+        ) Get in Touch
+
+  .relative.z-10(class='pt-12 sm:pt-16')
+    .divider-gradient
+    .animate-fade-up.stagger-5.flex.flex-wrap.items-end.gap-8.pt-6(class='sm:gap-10 sm:pt-8 md:gap-16')
+      each stat in heroStats
+        .flex.flex-col(class='gap-1.5')
+          p.text-2xl.font-semibold.tracking-tight.text-foreground(class='sm:text-3xl md:text-4xl')= stat.value
+          p.font-medium.tracking-widest.uppercase.text-muted-foreground(class='text-[0.65rem] sm:text-xs')= stat.label
+
+      .ml-auto.hidden(class='md:block')
+        a.flex.items-center.justify-center.rounded-full.border.border-border.text-muted-foreground.transition-all.duration-300(
+          href='#work'
+          class='w-11 h-11 hover:text-foreground hover:border-primary hover:shadow-[0_0_20px] hover:shadow-primary/20'
+          aria-label='Scroll to work section'
+        )
+          +icon('arrow-down', 'h-4 w-4 animate-bounce')

@@ -1,0 +1,65 @@
+include icons.pug
+
+mixin field(name, label, type, value, error, autocomplete)
+  - var inputId = 'cf-' + name
+  - var hasErr = !!error
+  - var describedBy = hasErr ? inputId + '-err' : null
+  - var inputBase = 'w-full rounded-xl bg-secondary/40 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:bg-secondary/60'
+  - var borderCls = hasErr ? ' border-destructive focus:border-destructive' : ' border-border/60 focus:border-primary/40'
+  label.block(for=inputId)
+    span.block.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground.mb-2= label
+    if type === 'textarea'
+      textarea(
+        id=inputId
+        name=name
+        rows='5'
+        autocomplete=autocomplete
+        required
+        aria-invalid=hasErr ? 'true' : 'false'
+        aria-describedby=describedBy
+        class=inputBase + borderCls + ' resize-y min-h-[8rem]'
+      )= value || ''
+    else
+      input(
+        id=inputId
+        name=name
+        type=type
+        value=value || ''
+        autocomplete=autocomplete
+        required
+        aria-invalid=hasErr ? 'true' : 'false'
+        aria-describedby=describedBy
+        class=inputBase + borderCls
+      )
+    if hasErr
+      p(id=describedBy class='mt-2 text-xs text-destructive')= error
+
+form#contact-form.flex.flex-col.gap-5(
+  hx-post='/contact'
+  hx-target='#contact-form-wrap'
+  hx-swap='innerHTML'
+  hx-disabled-elt='find button[type="submit"]'
+  novalidate
+)
+  .grid.grid-cols-1.gap-5(class='sm:grid-cols-2')
+    +field('name', 'Name', 'text', values && values.name, errors && errors.name, 'name')
+    +field('email', 'Email', 'email', values && values.email, errors && errors.email, 'email')
+  +field('message', 'Message', 'textarea', values && values.message, errors && errors.message, 'off')
+
+  //- Honeypot — hidden from real users, irresistible to bots.
+  div(aria-hidden='true' class='absolute left-[-9999px] top-auto h-px w-px overflow-hidden')
+    label(for='cf-website') Leave this field empty
+    input(id='cf-website' name='website' type='text' tabindex='-1' autocomplete='off')
+
+  .flex.flex-wrap.items-center.gap-4.pt-2
+    button(
+      type='submit'
+      class='hover-glow group inline-flex items-center justify-center gap-3 h-13 px-8 text-sm font-medium tracking-wide text-primary-foreground bg-primary rounded-full transition-all duration-300 hover:brightness-110 active:scale-[0.97] disabled:opacity-60 disabled:cursor-wait'
+    )
+      span(class='htmx-indicator-hide') Send Message
+      span(class='htmx-indicator inline-flex items-center gap-2')
+        svg(class='animate-spin h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' aria-hidden='true')
+          circle(cx='12' cy='12' r='10' stroke-opacity='0.25')
+          path(d='M22 12a10 10 0 0 1-10 10' stroke-linecap='round')
+        | Sending…
+    p.text-xs.text-muted-foreground I usually reply within a day.

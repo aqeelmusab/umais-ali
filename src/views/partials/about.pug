@@ -1,0 +1,65 @@
+section#about.px-6.py-24(class='md:px-12 md:py-32 lg:px-20')
+  div
+    .mb-16.transition-all.duration-700.reveal
+      .flex.items-center.gap-3.mb-4
+        .h-px.w-8.bg-primary
+        p.text-xs.font-semibold.tracking-widest.uppercase.text-primary About
+
+    .grid.grid-cols-1.gap-12(class='md:grid-cols-12 md:gap-10')
+      .reveal.stagger-2(class='md:col-span-5')
+        .relative.overflow-hidden.rounded-2xl.bg-secondary(class='aspect-[3/4]')
+          img(
+            src='/images/portrait.png'
+            alt='Portrait of Umais Ali'
+            loading='lazy'
+            decoding='async'
+            class='absolute inset-0 w-full h-full object-cover'
+          )
+          .absolute.inset-0(class='bg-linear-to-t from-background/30 to-transparent')
+
+      .flex.flex-col.justify-center.reveal.stagger-3(class='md:col-span-7')
+        h2.font-serif.text-2xl.font-normal.tracking-tight.text-foreground.text-balance(class='leading-[1.2] sm:text-3xl md:text-4xl lg:text-5xl')
+          | Good SEO does not feel like marketing.
+          span.gradient-text &nbsp;It feels like the right answer&nbsp;
+          | showing up at the right time.
+        .mt-8.space-y-5.text-base.leading-relaxed.text-muted-foreground(class='md:text-lg')
+          p
+            | I spend most of my time digging into search data, figuring out what people are actually looking for, and making sure the right pages show up when it matters. That means technical fixes, content planning, keyword mapping, and a lot of spreadsheets.
+          p
+            | Before going independent, I worked at agencies where I handled SEO for clients across e-commerce, SaaS, healthcare, and local services. Each one taught me something different about how search works in practice, not just in theory.
+
+  .mt-24
+    .divider-gradient
+    .grid.grid-cols-2.gap-8.pt-10(class='md:grid-cols-4 md:gap-12')
+      each item, i in highlights
+        - var stagger = ['stagger-1','stagger-2','stagger-3','stagger-4'][i]
+        .flex.flex-col.gap-2.reveal(class=stagger)
+          p.text-3xl.font-semibold.tracking-tight.text-foreground(class='md:text-4xl')= item.value
+          p.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground= item.label
+
+  .mt-20.overflow-x-hidden(class='-mx-6 md:-mx-12 lg:-mx-20')
+    .divider-gradient
+    .relative.py-8(style='mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 8%, black 92%, transparent);')
+      .flex
+        - for (var copy = 0; copy < 2; copy++)
+          .flex.shrink-0.animate-marquee(aria-hidden=copy === 1 ? 'true' : null)
+            each skill in skills
+              span.shrink-0.inline-flex.items-center.rounded-full.text-sm.font-medium.text-foreground.transition-colors(
+                class='mx-3 border border-border/60 bg-secondary/30 px-5 py-2.5 hover:border-primary/30 hover:text-primary'
+              )= skill
+    .divider-gradient
+
+  .mt-20
+    .flex.items-center.gap-3.mb-10.reveal
+      .h-px.w-8.bg-primary
+      p.text-xs.font-semibold.tracking-widest.uppercase.text-primary Experience
+    .flex.flex-col
+      each exp, i in experience
+        - var stagger = ['stagger-1','stagger-2','stagger-3'][i]
+        .group.flex.flex-col.gap-2.py-6.px-4.transition-all.duration-500.rounded-lg.reveal(
+          class='border-b border-border/50 first:border-t first:border-border/50 -mx-4 md:flex-row md:items-center md:gap-8 hover:bg-foreground/5 ' + stagger
+        )
+          p.text-sm.text-muted-foreground.shrink-0.font-mono(class='md:w-44')= exp.period
+          .flex-1
+            p.text-lg.font-medium.text-foreground.transition-colors(class='group-hover:text-primary')= exp.role
+            p.text-sm.text-muted-foreground(class='mt-0.5')= exp.company

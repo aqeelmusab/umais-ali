@@ -1,0 +1,67 @@
+include icons.pug
+
+button(
+  type='button'
+  data-modal-close
+  class='absolute top-4 right-4 z-20 flex items-center justify-center w-10 h-10 rounded-full bg-background/90 backdrop-blur-md border border-border text-foreground shadow-lg transition-all duration-300 hover:bg-background hover:border-primary hover:text-primary cursor-pointer'
+  aria-label='Close project details'
+)
+  +icon('x', 'h-4 w-4')
+
+.relative.aspect-video.bg-secondary
+  img(
+    src=project.image
+    alt=project.title
+    class='absolute inset-0 w-full h-full object-cover'
+  )
+  .absolute.inset-x-0.bottom-0(class='h-24 bg-linear-to-t from-card to-transparent')
+  if project.result
+    .absolute.bottom-4.inline-flex.items-center.rounded-full.bg-primary.text-sm.font-semibold.text-primary-foreground(class='left-6 md:left-8 px-4 py-2')= project.result
+
+.px-6.py-6(class='md:px-8 md:py-8')
+  .flex.flex-wrap.items-center.gap-3.mb-4
+    span.inline-flex.items-center.rounded-full.text-xs.font-medium.tracking-wide.text-primary(class='bg-primary/10 px-3 py-1')= project.category
+    span.text-xs.text-muted-foreground= project.year
+
+  h2.font-serif.text-2xl.font-normal.tracking-tight.text-foreground.text-balance(class='md:text-3xl')= project.title
+
+  p.mt-5.text-base.leading-relaxed.text-muted-foreground= project.longDescription
+
+  .mt-8.grid.grid-cols-2.gap-6
+    .rounded-xl.p-4(class='bg-secondary/50 border border-border/50')
+      p.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground(class='mb-1.5') Client
+      p.text-sm.font-medium.text-foreground= project.client
+    .rounded-xl.p-4(class='bg-secondary/50 border border-border/50')
+      p.text-xs.font-medium.tracking-widest.uppercase.text-muted-foreground(class='mb-1.5') Role
+      p.text-sm.font-medium.text-foreground= project.role
+
+  .mt-6.flex.flex-wrap.gap-2
+    each tag in project.tags
+      span.inline-flex.items-center.rounded-full.text-xs.text-muted-foreground(class='border border-border/60 bg-secondary/50 px-3 py-1')= tag
+
+  .divider-gradient.mt-8
+  .flex.items-center.justify-between.pt-6
+    button(
+      type='button'
+      data-modal-prev
+      disabled=!hasPrev
+      class='inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm text-muted-foreground transition-all duration-300 hover:text-foreground hover:bg-foreground/5 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-transparent'
+      aria-label='Previous project'
+      hx-get=hasPrev ? '/projects/' + prevId : null
+      hx-target=hasPrev ? '#project-modal-content' : null
+      hx-swap=hasPrev ? 'innerHTML' : null
+    )
+      +icon('arrow-left', 'h-4 w-4')
+      | Previous
+    button(
+      type='button'
+      data-modal-next
+      disabled=!hasNext
+      class='inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm text-muted-foreground transition-all duration-300 hover:text-foreground hover:bg-foreground/5 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:bg-transparent'
+      aria-label='Next project'
+      hx-get=hasNext ? '/projects/' + nextId : null
+      hx-target=hasNext ? '#project-modal-content' : null
+      hx-swap=hasNext ? 'innerHTML' : null
+    )
+      | Next
+      +icon('arrow-right', 'h-4 w-4')

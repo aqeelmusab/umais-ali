@@ -1,0 +1,7 @@
+include icons.pug
+
+.rounded-2xl.border.border-border.p-8.text-center.animate-fade-up(class='bg-secondary/30')
+  .mx-auto.flex.items-center.justify-center.rounded-full.bg-primary.text-primary-foreground(class='w-12 h-12 mb-5')
+    +icon('check', 'h-5 w-5')
+  h3.font-serif.text-2xl.font-normal.text-foreground Thanks#{name && name !== 'there' ? ', ' + name : ''}!
+  p.mt-3.text-base.text-muted-foreground.max-w-md.mx-auto Your message landed safely. I'll get back to you shortly — usually within a day.

@@ -1,7 +1,8 @@
 @import 'tailwindcss';
-@import 'tw-animate-css';
 
-@custom-variant dark (&:is(.dark *));
+/* Tell Tailwind v4 where to scan for class names. */
+@source "../views/**/*.pug";
+@source "../../public/js/**/*.js";
 
 :root {
   /* ── Dark-first premium palette ────────────────── */
@@ -28,12 +29,11 @@
 
   --glow-primary: oklch(0.82 0.11 75 / 0.15);
   --glow-accent: oklch(0.78 0.14 60 / 0.10);
-
 }
 
 @theme inline {
-  --font-sans: var(--font-inter), 'Inter', system-ui, sans-serif;
-  --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Playfair Display', Georgia, serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -85,85 +85,53 @@ body::before {
   background-size: 256px 256px;
 }
 
-/* ── Selection ─────────────────────────────────── */
 ::selection {
   background: oklch(0.82 0.11 75 / 0.25);
   color: inherit;
 }
 
-/* ── Entrance animations ───────────────────────── */
+/* ── Animations ───────────────────────────────── */
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(32px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; } to { opacity: 1; }
 }
-
 @keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
+  0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
 }
-
 @keyframes float {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   33% { transform: translateY(-12px) rotate(1deg); }
   66% { transform: translateY(6px) rotate(-1deg); }
 }
-
 @keyframes float-reverse {
   0%, 100% { transform: translateY(0) rotate(0deg); }
   33% { transform: translateY(8px) rotate(-1deg); }
   66% { transform: translateY(-14px) rotate(1deg); }
 }
-
 @keyframes marquee {
   0% { transform: translateX(0); }
   100% { transform: translateX(-100%); }
 }
-
 @keyframes glow-pulse {
   0%, 100% { opacity: 0.4; filter: blur(60px); }
   50% { opacity: 0.7; filter: blur(80px); }
 }
-
-/* ── Utility classes ───────────────────────────── */
-.animate-fade-up {
-  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+  50% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
 }
 
-.animate-fade-in {
-  animation: fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animate-pulse-soft {
-  animation: pulse-soft 2.5s ease-in-out infinite;
-}
-
-.animate-float {
-  animation: float 8s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-  animation: float-reverse 10s ease-in-out infinite;
-}
-
-.animate-marquee {
-  animation: marquee 30s linear infinite;
-  will-change: transform;
-}
-
-.animate-glow-pulse {
-  animation: glow-pulse 5s ease-in-out infinite;
-}
+.animate-fade-up { animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-fade-in { animation: fade-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.animate-pulse-soft { animation: pulse-soft 2.5s ease-in-out infinite; }
+.animate-float { animation: float 8s ease-in-out infinite; }
+.animate-float-reverse { animation: float-reverse 10s ease-in-out infinite; }
+.animate-marquee { animation: marquee 30s linear infinite; will-change: transform; }
+.animate-glow-pulse { animation: glow-pulse 5s ease-in-out infinite; }
+.animate-bounce { animation: bounce 1s infinite; }
 
 .stagger-1 { animation-delay: 0.06s; }
 .stagger-2 { animation-delay: 0.12s; }
@@ -171,14 +139,12 @@ body::before {
 .stagger-4 { animation-delay: 0.24s; }
 .stagger-5 { animation-delay: 0.30s; }
 
-/* ── Glass surface ─────────────────────────────── */
 .glass {
   background: oklch(0.94 0.005 80 / 0.04);
   backdrop-filter: blur(24px) saturate(1.2);
   border: 1px solid oklch(0.94 0.005 80 / 0.08);
 }
 
-/* ── Gradient text ─────────────────────────────── */
 .gradient-text {
   background: linear-gradient(135deg, oklch(0.94 0.005 80) 0%, oklch(0.82 0.11 75) 50%, oklch(0.78 0.14 60) 100%);
   -webkit-background-clip: text;
@@ -186,10 +152,7 @@ body::before {
   background-clip: text;
 }
 
-/* ── Hover glow ────────────────────────────────── */
-.hover-glow {
-  position: relative;
-}
+.hover-glow { position: relative; }
 .hover-glow::after {
   content: '';
   position: absolute;
@@ -201,38 +164,60 @@ body::before {
   z-index: -1;
   filter: blur(12px);
 }
-.hover-glow:hover::after {
-  opacity: 1;
-}
+.hover-glow:hover::after { opacity: 1; }
 
-/* ── Divider gradient ──────────────────────────── */
 .divider-gradient {
   height: 1px;
   background: linear-gradient(90deg, transparent, oklch(0.94 0.005 80 / 0.12) 20%, oklch(0.82 0.11 75 / 0.3) 50%, oklch(0.94 0.005 80 / 0.12) 80%, transparent);
 }
 
-/* ── Scrollbar ─────────────────────────────────── */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: oklch(0.30 0.005 60);
-  border-radius: 999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: oklch(0.40 0.005 60);
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: oklch(0.30 0.005 60); border-radius: 999px; }
+::-webkit-scrollbar-thumb:hover { background: oklch(0.40 0.005 60); }
+
+html { scrollbar-width: thin; scrollbar-color: oklch(0.30 0.005 60) transparent; }
+
+/* ── Reveal-on-scroll (replaces React useInView) ─ */
+.reveal { opacity: 0; }
+.reveal.in-view { animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
+
+/* ── Header scroll state ─────────────────────── */
+#site-nav.is-scrolled {
+  background: oklch(0.94 0.005 80 / 0.04);
+  backdrop-filter: blur(24px) saturate(1.2);
+  border: 1px solid oklch(0.94 0.005 80 / 0.08);
+  box-shadow: 0 10px 30px -12px oklch(0.11 0.008 60 / 0.4);
 }
 
-/* Firefox */
-html {
-  scrollbar-width: thin;
-  scrollbar-color: oklch(0.30 0.005 60) transparent;
+/* ── Mobile menu open state ──────────────────── */
+#mobile-menu { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+#mobile-menu.is-open { opacity: 1; pointer-events: auto; }
+
+/* ── Project modal open state ────────────────── */
+#project-modal { opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+#project-modal.is-open { opacity: 1; pointer-events: auto; }
+#project-modal .modal-card { transform: translateY(2rem) scale(0.97); transition: transform 0.5s ease; }
+#project-modal.is-open .modal-card { transform: translateY(0) scale(1); }
+
+/* ── Scroll-to-top visibility ────────────────── */
+#scroll-top {
+  opacity: 0;
+  transform: translateY(1rem);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+#scroll-top.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
-/* ── Reduced motion ────────────────────────────── */
+/* ── HTMX swap fade for contact form ─────────── */
+.htmx-swapping { opacity: 0; transition: opacity 0.2s ease; }
+.htmx-settling { opacity: 0; }
+.htmx-settling.htmx-added { opacity: 1; transition: opacity 0.3s ease; }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;

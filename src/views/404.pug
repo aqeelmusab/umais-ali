@@ -1,0 +1,14 @@
+extends layout.pug
+
+block content
+  include partials/header.pug
+  main.flex.items-center.justify-center.px-6.py-24(class='min-h-svh md:px-12 lg:px-20')
+    .text-center
+      p.text-xs.font-semibold.tracking-widest.uppercase.text-primary 404
+      h1.mt-4.font-serif.text-4xl.font-normal.tracking-tight.text-foreground(class='sm:text-5xl md:text-6xl') Page not found
+      p.mt-4.text-base.text-muted-foreground That page does not exist. Try heading back home.
+      a.mt-8.inline-flex.items-center.justify-center.text-sm.font-medium.text-primary-foreground.bg-primary.rounded-full.transition-all.duration-300(
+        href='/'
+        class='h-12 px-8 hover:brightness-110 active:scale-[0.97]'
+      ) Back to home
+  include partials/footer.pug

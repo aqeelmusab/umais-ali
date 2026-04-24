@@ -1,0 +1,63 @@
+include icons.pug
+include logo.pug
+
+header.fixed.top-0.left-0.right-0.z-50.flex.justify-center.px-4.pt-4
+  nav#site-nav.flex.items-center.gap-1.rounded-full.px-2.py-2.transition-all.duration-500
+    a.flex.items-center.rounded-full.px-4.transition-colors(href='/' class='gap-1.5 py-1.5 hover:bg-foreground/5')
+      +logo()
+
+    .hidden.h-4.w-px(class='bg-foreground/10 md:block')
+
+    .hidden.items-center(class='gap-0.5 md:flex')
+      each link in navLinks
+        a.rounded-full.px-4.text-sm.text-muted-foreground.transition-all.duration-300(
+          href=link.href
+          class='py-1.5 hover:text-foreground hover:bg-foreground/5'
+        )= link.label
+
+    .hidden.h-4.w-px(class='bg-foreground/10 md:block')
+
+    a.hidden.items-center.justify-center.rounded-full.bg-primary.px-5.text-sm.font-medium.text-primary-foreground.transition-all.duration-300(
+      href='#contact'
+      class='py-1.5 md:inline-flex hover:brightness-110 active:scale-[0.97]'
+    ) Hire Me
+
+    button#mobile-menu-open.flex.items-center.justify-center.rounded-full.text-foreground.transition-colors(
+      type='button'
+      class='w-9 h-9 md:hidden hover:bg-foreground/5'
+      aria-label='Open menu'
+      aria-controls='mobile-menu'
+      aria-expanded='false'
+    )
+      +icon('menu', 'h-4 w-4')
+
+#mobile-menu.fixed.inset-0.bg-background(
+  class='z-60 md:hidden backdrop-blur-xl'
+  role='dialog'
+  aria-modal='true'
+  aria-hidden='true'
+  aria-label='Navigation menu'
+  style='background-color: oklch(0.11 0.008 60 / 0.98);'
+)
+  .flex.items-center.justify-between.px-6.py-5
+    a.flex.items-center(href='/' data-close-menu class='gap-1.5')
+      +logo()
+    button#mobile-menu-close.flex.items-center.justify-center.rounded-full.text-foreground(
+      type='button'
+      class='w-10 h-10 hover:bg-foreground/5'
+      aria-label='Close menu'
+    )
+      +icon('x', 'h-5 w-5')
+
+  nav.flex.flex-col.px-6.pt-16.gap-2(aria-label='Mobile navigation')
+    each link, i in navLinks
+      a.text-4xl.font-serif.tracking-tight.text-foreground.py-3.border-b.border-border.transition-all.duration-500.animate-fade-up(
+        href=link.href
+        data-close-menu
+        class=`hover:text-primary stagger-${i + 1}`
+      )= link.label
+    a.mt-8.inline-flex.items-center.justify-center.text-base.font-medium.text-primary-foreground.bg-primary.rounded-full.transition-all.duration-500.animate-fade-up.stagger-4(
+      href='#contact'
+      data-close-menu
+      class='h-14 px-10 hover:brightness-110'
+    ) Hire Me
