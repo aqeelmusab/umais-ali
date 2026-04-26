@@ -1,6 +1,6 @@
 export const SITE_URL = 'https://umaisali.com'
 export const SITE_NAME = 'Umais Ali'
-export const SITE_TITLE = 'Umais Ali, SEO that actually moves the needle'
+export const SITE_TITLE = 'Umais Ali | SEO that actually moves the needle'
 export const SITE_DESCRIPTION =
   'I help teams turn search into a real growth channel. Technical audits, content systems, link building, and migrations that hold up after launch. Five years in, forty something projects, three million plus organic visits.'
 

@@ -237,7 +237,6 @@
 
   // ─── Project modal ────────────────────────────────────────────────────
   const modal = document.getElementById('project-modal')
-  const modalBackdrop = modal ? modal.querySelector('[data-modal-backdrop]') : null
   const modalContent = document.getElementById('project-modal-content')
   let lastProjectTrigger = null
 
@@ -273,8 +272,6 @@
       if (modalContent && !modal.classList.contains('is-open')) modalContent.innerHTML = ''
     }, 300)
   }
-
-  if (modalBackdrop) modalBackdrop.addEventListener('click', closeModal)
 
   // Open modal triggers (project cards) — delegated.
   document.addEventListener('click', (e) => {

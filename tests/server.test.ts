@@ -25,6 +25,8 @@ test('GET / renders the home page', async () => {
     assert.equal(res.status, 200)
     const html = await res.text()
     assert.match(html, /<html/i)
+    assert.match(html, /data-modal-close/)
+    assert.doesNotMatch(html, /data-modal-backdrop/)
   })
 })
 
