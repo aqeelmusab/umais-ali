@@ -43,7 +43,7 @@ header#site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.rounded-ful
       +icon('menu', 'h-5 w-5')
 
 //- ── Mobile sheet ──────────────────────────────────────
-#mobile-menu.fixed.inset-0.z-50.flex.flex-col.bg-background(aria-hidden='true' class='md:hidden')
+#mobile-menu.fixed.inset-0.z-50.flex.flex-col.bg-background(aria-hidden='true' inert class='md:hidden')
   .flex.items-center.justify-between(class='h-16 px-6')
     +logo()
     button#mobile-menu-close.inline-flex.items-center.justify-center.rounded-full.text-foreground.transition-colors(

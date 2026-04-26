@@ -59,15 +59,25 @@
   function openMenu() {
     if (!menu) return
     if (menu.classList.contains('is-open')) return
+    menu.removeAttribute('inert')
     menu.classList.add('is-open')
     menu.setAttribute('aria-hidden', 'false')
+    if (menuOpen) menuOpen.setAttribute('aria-expanded', 'true')
     lockScroll()
+    requestAnimationFrame(() => {
+      if (menuClose) menuClose.focus({ preventScroll: true })
+    })
   }
   function closeMenu() {
     if (!menu) return
     if (!menu.classList.contains('is-open')) return
+    if (menu.contains(document.activeElement) && menuOpen) {
+      menuOpen.focus({ preventScroll: true })
+    }
     menu.classList.remove('is-open')
     menu.setAttribute('aria-hidden', 'true')
+    menu.setAttribute('inert', '')
+    if (menuOpen) menuOpen.setAttribute('aria-expanded', 'false')
     unlockScroll()
   }
   if (menuOpen) menuOpen.addEventListener('click', openMenu)
@@ -82,10 +92,12 @@
   const modal = document.getElementById('project-modal')
   const modalBackdrop = modal ? modal.querySelector('[data-modal-backdrop]') : null
   const modalContent = document.getElementById('project-modal-content')
+  let lastProjectTrigger = null
 
   function openModal() {
     if (!modal) return
     if (modal.classList.contains('is-open')) return
+    modal.removeAttribute('inert')
     modal.classList.add('is-open')
     modal.setAttribute('aria-hidden', 'false')
     lockScroll()
@@ -98,8 +110,16 @@
   function closeModal() {
     if (!modal) return
     if (!modal.classList.contains('is-open')) return
+    if (modal.contains(document.activeElement)) {
+      if (lastProjectTrigger && document.contains(lastProjectTrigger)) {
+        lastProjectTrigger.focus({ preventScroll: true })
+      } else {
+        document.body.focus()
+      }
+    }
     modal.classList.remove('is-open')
     modal.setAttribute('aria-hidden', 'true')
+    modal.setAttribute('inert', '')
     unlockScroll()
     // Clear after the fade-out transition (300ms — see CSS)
     setTimeout(() => {
@@ -112,7 +132,10 @@
   // Open modal triggers (project cards) — delegated.
   document.addEventListener('click', (e) => {
     const trigger = e.target.closest('[data-project-id]')
-    if (trigger) openModal()
+    if (trigger) {
+      lastProjectTrigger = trigger
+      openModal()
+    }
   })
   // HTMX delivers prev/next markup into the same container; keep modal open.
   document.body.addEventListener('htmx:afterSwap', (e) => {
