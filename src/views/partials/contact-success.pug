@@ -12,7 +12,9 @@ include icons.pug
     | me, not a template. Usually within a day, sometimes faster.
   button.inline-flex.items-center.text-foreground.transition-colors(
     type='button'
-    data-contact-reset
+    hx-get='/contact/form'
+    hx-target='#contact-form-wrap'
+    hx-swap='innerHTML'
     class='gap-2 text-sm font-medium hover:text-primary mt-2'
   )
     span Send another

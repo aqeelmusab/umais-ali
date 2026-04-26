@@ -45,8 +45,8 @@ form#contact-form.flex.flex-col(
   class='gap-5'
 )
   .grid.grid-cols-1(class='gap-5 sm:grid-cols-2')
-    +field('name', 'Your name', 'text', values && values.name, errors && errors.name, 'name', 'Sara Mitchell')
-    +field('email', 'Email', 'email', values && values.email, errors && errors.email, 'email', 'sara@company.com')
+    +field('name', 'Name', 'text', values && values.name, errors && errors.name, 'name', 'Your name')
+    +field('email', 'Email', 'email', values && values.email, errors && errors.email, 'email', 'you@domain.com')
   +field('message', 'What is the project?', 'textarea', values && values.message, errors && errors.message, 'off', 'A couple of sentences is plenty. Links are great too.')
 
   //- Honeypot — hidden from real users, irresistible to bots.

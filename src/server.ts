@@ -189,6 +189,13 @@ export function createApp(options: CreateAppOptions = {}): Express {
     res.render('partials/project-modal-content', nav)
   })
 
+  app.get('/contact/form', (_req: Request, res: Response) => {
+    res.render('partials/contact-form', {
+      values: { name: '', email: '', message: '' },
+      errors: {},
+    })
+  })
+
   app.post('/contact', contactLimiter, async (req: Request, res: Response) => {
     const result = validateContact(req.body)
 

@@ -83,6 +83,17 @@ test('POST /contact returns 200 success fragment on valid input', async () => {
   })
 })
 
+test('GET /contact/form returns a fresh contact form fragment', async () => {
+  await withServer(async (base) => {
+    const res = await fetch(`${base}/contact/form`)
+    assert.equal(res.status, 200)
+    const html = await res.text()
+    assert.match(html, /id="contact-form"/)
+    assert.match(html, /placeholder="Your name"/)
+    assert.match(html, /placeholder="you@domain.com"/)
+  })
+})
+
 test('POST /contact silently 200s on honeypot hit (no error leaked to bot)', async () => {
   await withServer(async (base) => {
     const res = await fetch(`${base}/contact`, {

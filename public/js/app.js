@@ -209,14 +209,6 @@
     }
   })
 
-  document.body.addEventListener('click', (e) => {
-    const reset = e.target.closest('[data-contact-reset]')
-    if (!reset) return
-    const wrap = document.getElementById('contact-form-wrap')
-    if (wrap) wrap.innerHTML = ''
-    window.location.hash = '#contact'
-  })
-
   // ─── Scroll-to-top button ─────────────────────────────────────────────
   const stt = document.getElementById('scroll-top')
   if (stt) {
