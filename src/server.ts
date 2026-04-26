@@ -1,4 +1,6 @@
 import path from 'node:path'
+import { randomBytes } from 'node:crypto'
+import type { IncomingMessage, ServerResponse } from 'node:http'
 import express, { type Express, type Request, type Response } from 'express'
 import helmet from 'helmet'
 import { rateLimit, ipKeyGenerator } from 'express-rate-limit'
@@ -46,11 +48,34 @@ export function createApp(options: CreateAppOptions = {}): Express {
   app.set('views', path.join(ROOT, 'src', 'views'))
   app.disable('x-powered-by')
 
-  // Security headers. CSP is left off because the layout uses inline scripts/styles
-  // and the unpkg HTMX CDN; tighten this once those are inventoried.
+  app.use((_req, res, next) => {
+    res.locals.cspNonce = randomBytes(16).toString('base64')
+    next()
+  })
+
+  const cspNonce = (_req: IncomingMessage, res: ServerResponse): string =>
+    `'nonce-${(res as Response).locals.cspNonce}'`
+
+  // Security headers. Inline scripts are allowed only with the per-request nonce.
   app.use(
     helmet({
-      contentSecurityPolicy: false,
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          baseUri: ["'self'"],
+          connectSrc: ["'self'"],
+          fontSrc: ["'self'"],
+          formAction: ["'self'"],
+          frameAncestors: ["'none'"],
+          imgSrc: ["'self'", 'data:'],
+          objectSrc: ["'none'"],
+          scriptSrc: ["'self'", cspNonce, 'https://unpkg.com'],
+          scriptSrcAttr: ["'none'"],
+          styleSrc: ["'self'"],
+          styleSrcAttr: ["'none'"],
+          upgradeInsecureRequests: isProduction ? [] : null,
+        },
+      },
       crossOriginEmbedderPolicy: false,
       crossOriginResourcePolicy: { policy: 'cross-origin' },
       referrerPolicy: { policy: 'strict-origin-when-cross-origin' },

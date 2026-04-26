@@ -10,14 +10,8 @@
   let scrollLockCount = 0
   function lockScroll() {
     if (scrollLockCount === 0) {
-      const sbw = window.innerWidth - document.documentElement.clientWidth
       document.body.dataset.scrollY = String(window.scrollY)
-      document.body.style.position = 'fixed'
-      document.body.style.top = '-' + window.scrollY + 'px'
-      document.body.style.left = '0'
-      document.body.style.right = '0'
-      document.body.style.width = '100%'
-      if (sbw > 0) document.body.style.paddingRight = sbw + 'px'
+      document.body.classList.add('is-scroll-locked')
     }
     scrollLockCount++
   }
@@ -25,12 +19,7 @@
     scrollLockCount = Math.max(0, scrollLockCount - 1)
     if (scrollLockCount === 0) {
       const y = parseInt(document.body.dataset.scrollY || '0', 10)
-      document.body.style.position = ''
-      document.body.style.top = ''
-      document.body.style.left = ''
-      document.body.style.right = ''
-      document.body.style.width = ''
-      document.body.style.paddingRight = ''
+      document.body.classList.remove('is-scroll-locked')
       delete document.body.dataset.scrollY
       window.scrollTo(0, y)
     }
@@ -218,6 +207,14 @@
       e.detail.shouldSwap = true
       e.detail.isError = false
     }
+  })
+
+  document.body.addEventListener('click', (e) => {
+    const reset = e.target.closest('[data-contact-reset]')
+    if (!reset) return
+    const wrap = document.getElementById('contact-form-wrap')
+    if (wrap) wrap.innerHTML = ''
+    window.location.hash = '#contact'
   })
 
   // ─── Scroll-to-top button ─────────────────────────────────────────────

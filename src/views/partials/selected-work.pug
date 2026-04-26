@@ -22,9 +22,8 @@ mixin bentoCard(project, sizeClasses, isFeature)
         decoding='async'
       )
       //- Subtle vignette so text is always legible
-      .pointer-events-none.absolute.inset-0(
+      .project-vignette.pointer-events-none.absolute.inset-0(
         aria-hidden='true'
-        style='background:linear-gradient(to top, oklch(from var(--background) l c h / 0.94) 0%, oklch(from var(--background) l c h / 0.55) 38%, oklch(from var(--background) l c h / 0.10) 65%, transparent 100%);'
       )
 
       //- Top row: index + result

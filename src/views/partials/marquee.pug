@@ -5,13 +5,11 @@ section.marquee.relative.overflow-hidden.border-y.border-border(
   //- Edge fade masks
   .pointer-events-none.absolute.inset-y-0.z-10(
     aria-hidden='true'
-    class='left-0 w-20 md:w-32'
-    style='background:linear-gradient(to right, var(--background), transparent);'
+    class='marquee__fade marquee__fade--left left-0 w-20 md:w-32'
   )
   .pointer-events-none.absolute.inset-y-0.z-10(
     aria-hidden='true'
-    class='right-0 w-20 md:w-32'
-    style='background:linear-gradient(to left, var(--background), transparent);'
+    class='marquee__fade marquee__fade--right right-0 w-20 md:w-32'
   )
 
   //- Single track containing two identical groups; CSS animates by exactly -50%

@@ -12,7 +12,7 @@ include icons.pug
     | me, not a template. Usually within a day, sometimes faster.
   button.inline-flex.items-center.text-foreground.transition-colors(
     type='button'
-    onclick="document.getElementById('contact-form-wrap').innerHTML=''; window.location.hash='#contact';"
+    data-contact-reset
     class='gap-2 text-sm font-medium hover:text-primary mt-2'
   )
     span Send another

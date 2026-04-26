@@ -7,7 +7,7 @@ html(lang='en' class='bg-background')
     meta(name='theme-color' content='#fbf8f1' media='(prefers-color-scheme: light)')
 
     //- Apply saved theme BEFORE first paint to avoid flash.
-    script.
+    script(nonce=cspNonce).
       (function () {
         try {
           var stored = localStorage.getItem('theme');
@@ -53,9 +53,14 @@ html(lang='en' class='bg-background')
     link(rel='stylesheet' href='/css/main.css')
 
     if jsonLd
-      script(type='application/ld+json')!= JSON.stringify(jsonLd)
+      script(type='application/ld+json' nonce=cspNonce)!= JSON.stringify(jsonLd)
 
     //- HTMX
+    meta(name='htmx-config' content='{"includeIndicatorStyles":false}')
+    script(nonce=cspNonce).
+      window.htmx = window.htmx || {};
+      window.htmx.config = window.htmx.config || {};
+      window.htmx.config.includeIndicatorStyles = false;
     script(src='https://unpkg.com/htmx.org@2.0.4' integrity='sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+' crossorigin='anonymous' defer)
 
   body(class='font-sans antialiased overflow-x-hidden')
