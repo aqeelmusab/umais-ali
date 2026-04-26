@@ -5,7 +5,9 @@ import { createApp } from '../src/server'
 import { projects } from '../src/data/projects'
 
 async function withServer<T>(fn: (baseUrl: string) => Promise<T>): Promise<T> {
-  const app = createApp()
+  const app = createApp({
+    sendEmail: async () => ({ delivered: true, id: 'test-email-id' }),
+  })
   const server = app.listen(0)
   try {
     await new Promise<void>((resolve) => server.once('listening', () => resolve()))

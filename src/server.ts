@@ -4,7 +4,7 @@ import helmet from 'helmet'
 import { rateLimit, ipKeyGenerator } from 'express-rate-limit'
 import { projects } from './data/projects'
 import { validateContact } from './contact'
-import { sendContactEmail } from './email'
+import { sendContactEmail, type SendContactArgs, type SendContactResult } from './email'
 import { env, isProduction, isTest, assertProductionEnv } from './env'
 import { getProjectNavigation } from './projects-nav'
 import {
@@ -28,7 +28,14 @@ import {
 // Resolve views/public relative to project root (works for both `tsx` and compiled `dist`).
 const ROOT = path.resolve(__dirname, '..')
 
-export function createApp(): Express {
+type ContactEmailSender = (args: SendContactArgs) => Promise<SendContactResult>
+
+export interface CreateAppOptions {
+  sendEmail?: ContactEmailSender
+}
+
+export function createApp(options: CreateAppOptions = {}): Express {
+  const sendEmail = options.sendEmail ?? sendContactEmail
   const app = express()
 
   // Trust Vercel's proxy headers so req.ip and rate limiting see the real client IP.
@@ -177,25 +184,22 @@ export function createApp(): Express {
     const ip = req.ip
     const userAgent = req.get('user-agent') ?? ''
 
-    const sent = await sendContactEmail({
+    const sent = await sendEmail({
       values: result.values,
       ip,
       userAgent,
     })
 
     if (sent.delivered) {
-      console.log('[contact] delivered via Resend', { id: sent.id, email: result.values.email })
+      console.log('[contact] delivered via Resend', { id: sent.id })
     } else if (sent.skipped) {
       console.log('[contact] email skipped', {
         reason: sent.skipped,
-        name: result.values.name,
-        email: result.values.email,
       })
     } else {
       // Don't leak the failure to the user — they did their part — but log loudly.
       console.error('[contact] Resend send failed', {
         error: sent.error,
-        email: result.values.email,
       })
     }
 

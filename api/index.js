@@ -1,3 +1,5 @@
 const { createApp } = require('../dist/server.js')
 
-module.exports = createApp()
+const app = createApp()
+
+module.exports = (req, res) => app(req, res)
