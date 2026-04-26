@@ -30,7 +30,7 @@ This is not a static-only export. The site renders through an Express app and us
 ## Project Structure
 
 ```text
-api/index.js              Vercel serverless entrypoint
+api/index.ts              Vercel serverless entrypoint
 public/                   Static assets served directly
 public/css/main.css       Generated Tailwind CSS bundle
 public/js/app.js          Client-side interaction glue
@@ -193,7 +193,7 @@ Deployment behavior:
 - `npm ci` installs dependencies.
 - `npm run build` generates `public/css/main.css` and compiles TypeScript to `dist/`.
 - Vercel serves existing static files first.
-- All remaining routes go to `api/index.js`, which loads the compiled Express app from `dist/server.js`.
+- All remaining routes go to `api/index.ts`, which loads the Express app from `src/server.ts`.
 
 Add these variables in Vercel Project Settings:
 
