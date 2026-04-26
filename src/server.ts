@@ -239,6 +239,13 @@ export function createApp(options: CreateAppOptions = {}): Express {
   return app
 }
 
+let serverlessApp: Express | null = null
+
+export default function handler(req: IncomingMessage, res: ServerResponse): void {
+  serverlessApp ??= createApp()
+  serverlessApp(req, res)
+}
+
 // Only start the HTTP server when this file is the entrypoint (not under test).
 if (require.main === module) {
   assertProductionEnv()
