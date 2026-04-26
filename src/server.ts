@@ -8,6 +8,7 @@ import { projects } from './data/projects'
 import { validateContact } from './contact'
 import { sendContactEmail, type SendContactArgs, type SendContactResult } from './email'
 import { env, isProduction, isTest, assertProductionEnv } from './env'
+import { ogImageHandler } from './og-image'
 import { getProjectNavigation } from './projects-nav'
 import {
   CONTACT_EMAIL,
@@ -175,6 +176,9 @@ export function createApp(options: CreateAppOptions = {}): Express {
       },
     ],
   }
+
+  // Dynamically generated Open Graph image (rendered with Satori + resvg-js).
+  app.get('/og-image.png', ogImageHandler)
 
   app.get('/', (_req: Request, res: Response) => {
     res.render('index', { ...baseLocals, canonicalPath: '/', jsonLd })

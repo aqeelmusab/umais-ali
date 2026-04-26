@@ -148,3 +148,17 @@ test('unknown route renders the 404 page', async () => {
     assert.match(html, /<html/i)
   })
 })
+
+test('GET /og-image.png returns a generated PNG with cache headers', async () => {
+  await withServer(async (base) => {
+    const res = await fetch(`${base}/og-image.png`)
+    assert.equal(res.status, 200)
+    assert.equal(res.headers.get('content-type'), 'image/png')
+    assert.match(res.headers.get('cache-control') ?? '', /max-age=/)
+    const buf = Buffer.from(await res.arrayBuffer())
+    assert.ok(buf.byteLength > 1024, 'PNG payload should be non-trivial')
+    // PNG magic bytes
+    assert.deepEqual(buf.subarray(0, 8), Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+  })
+})
+
