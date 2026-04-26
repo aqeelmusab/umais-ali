@@ -26,8 +26,8 @@ export const env = {
   NODE_ENV: str('NODE_ENV', 'development'),
   PORT: int('PORT', 3000),
 
-  // Hostinger / any reverse proxy in front of Node. Set to "1" or a number of hops
-  // so express-rate-limit and req.ip see the real client IP from X-Forwarded-For.
+  // Vercel forwards client IP metadata through proxy headers.
+  // Set to "1" or a number of hops so rate limiting sees the real client IP.
   TRUST_PROXY: str('TRUST_PROXY', '1'),
 
   // Resend

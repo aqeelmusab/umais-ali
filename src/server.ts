@@ -31,8 +31,7 @@ const ROOT = path.resolve(__dirname, '..')
 export function createApp(): Express {
   const app = express()
 
-  // Trust the reverse proxy in front of Node (Hostinger / Nginx / Cloudflare)
-  // so req.ip and rate limiting see the real client IP from X-Forwarded-For.
+  // Trust Vercel's proxy headers so req.ip and rate limiting see the real client IP.
   const trust = env.TRUST_PROXY
   app.set('trust proxy', /^\d+$/.test(trust) ? Number(trust) : trust)
 
