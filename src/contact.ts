@@ -46,8 +46,8 @@ export function validateContact(body: ContactBody | undefined | null): ContactRe
   if (!EMAIL_RE.test(values.email) || values.email.length > 200) {
     errors.email = 'Please enter a valid email address.'
   }
-  if (values.message.length < 10 || values.message.length > 4000) {
-    errors.message = 'Please write a message between 10 and 4000 characters.'
+  if (values.message.length < 10 || values.message.length > 2000) {
+    errors.message = 'Please write a message between 10 and 2000 characters.'
   }
 
   return {

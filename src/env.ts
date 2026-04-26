@@ -36,6 +36,8 @@ export const env = {
   CONTACT_FROM: str('CONTACT_FROM', 'Umais Ali <onboarding@resend.dev>'),
   // Where contact-form messages get delivered.
   CONTACT_TO: str('CONTACT_TO'),
+  // Optional published Resend template id or alias for contact-form emails.
+  CONTACT_TEMPLATE_ID: str('CONTACT_TEMPLATE_ID'),
   // Optional reply-to override; defaults to the submitter's email.
   CONTACT_REPLY_TO: str('CONTACT_REPLY_TO'),
 

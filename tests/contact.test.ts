@@ -51,7 +51,7 @@ test('validateContact: rejects too-short / too-long message', () => {
     validateContact({ name: 'Jane Doe', email: 'a@b.co', message: 'short' }).errors.message,
   )
   assert.ok(
-    validateContact({ name: 'Jane Doe', email: 'a@b.co', message: 'x'.repeat(4001) }).errors.message,
+    validateContact({ name: 'Jane Doe', email: 'a@b.co', message: 'x'.repeat(2001) }).errors.message,
   )
 })
 

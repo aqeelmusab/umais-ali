@@ -46,6 +46,7 @@ export async function sendContactEmail(args: SendContactArgs): Promise<SendConta
   const safeName = sanitizeHeaderValue(values.name)
   const safeEmail = sanitizeHeaderValue(values.email)
   const subject = `New contact form message from ${safeName}`
+  const replyTo = env.CONTACT_REPLY_TO || safeEmail
 
   const text =
     `Name: ${values.name}\n` +
@@ -64,14 +65,31 @@ export async function sendContactEmail(args: SendContactArgs): Promise<SendConta
     `</div>`
 
   try {
-    const { data, error } = await resend.emails.send({
-      from: env.CONTACT_FROM,
-      to: env.CONTACT_TO,
-      subject,
-      text,
-      html,
-      replyTo: env.CONTACT_REPLY_TO || safeEmail,
-    })
+    const { data, error } = env.CONTACT_TEMPLATE_ID
+      ? await resend.emails.send({
+          from: env.CONTACT_FROM,
+          to: env.CONTACT_TO,
+          subject,
+          replyTo,
+          template: {
+            id: env.CONTACT_TEMPLATE_ID,
+            variables: {
+              name: values.name,
+              email: values.email,
+              message: values.message,
+              ip: ip ?? '',
+              userAgent: userAgent ?? '',
+            },
+          },
+        })
+      : await resend.emails.send({
+          from: env.CONTACT_FROM,
+          to: env.CONTACT_TO,
+          subject,
+          text,
+          html,
+          replyTo,
+        })
     if (error) {
       return { delivered: false, error: error.message ?? String(error) }
     }
