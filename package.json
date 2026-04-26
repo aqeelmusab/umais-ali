@@ -5,7 +5,7 @@
   "description": "Umais Ali — SEO Executive portfolio (Node + Express + Pug + HTMX + Tailwind).",
   "main": "dist/server.js",
   "engines": {
-    "node": "22.x"
+    "node": "24.x"
   },
   "scripts": {
     "build:css": "tailwindcss -i ./src/styles/main.css -o ./public/css/main.css --minify",

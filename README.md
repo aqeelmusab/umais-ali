@@ -18,7 +18,7 @@ This is not a static-only export. The site renders through an Express app and us
 
 ## Tech Stack
 
-- Node.js 22
+- Node.js 24
 - Express 4
 - Pug 3
 - HTMX 2
@@ -47,7 +47,7 @@ vercel.json               Vercel routing and build config
 
 ## Requirements
 
-- Node.js 22.x
+- Node.js 24.x
 - npm
 
 ## Local Setup
