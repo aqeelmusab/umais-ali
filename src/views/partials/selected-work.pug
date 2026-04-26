@@ -28,12 +28,12 @@ mixin bentoCard(project, sizeClasses, isFeature)
 
       //- Top row: index + result
       .relative.z-10.flex.items-center.justify-between(class='p-5 lg:p-7')
-        span.font-mono.uppercase.rounded-full.border(
-          class='text-[0.65rem] tracking-[0.2em] backdrop-blur border-foreground/15 bg-background/40 px-2.5 py-1 text-foreground/85'
+        span.font-mono.uppercase.rounded-full(
+          class='text-[0.65rem] tracking-[0.2em] backdrop-blur bg-background/40 px-2.5 py-1 text-foreground/85'
         ) 0#{project.id} · #{project.year}
         if project.result
           span.inline-flex.items-center.font-mono.uppercase.rounded-full.text-primary(
-            class='gap-1.5 text-[0.65rem] tracking-[0.18em] border border-primary/30 bg-primary/8 px-2.5 py-1 backdrop-blur'
+            class='gap-1.5 text-[0.65rem] tracking-[0.18em] bg-primary/8 px-2.5 py-1 backdrop-blur'
           )
             span.rounded-full.bg-primary.animate-pulse-soft(class='h-1.5 w-1.5')
             span= project.result
@@ -47,8 +47,8 @@ mixin bentoCard(project, sizeClasses, isFeature)
           span.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.22em]')= project.category
           h3.font-serif.text-foreground(class= titleSizeCls + ' tracking-[-0.02em] leading-[1.05]')= project.title
           p.text-muted-foreground.line-clamp-2(class='hidden text-sm max-w-md ' + (isFeature ? 'lg:block mt-1' : ''))= project.description
-        span.inline-flex.shrink-0.items-center.justify-center.rounded-full.border.text-foreground.transition-all.duration-300(
-          class='h-11 w-11 border-foreground/15 bg-background/40 backdrop-blur group-hover:bg-foreground group-hover:text-background group-hover:border-transparent group-hover:-rotate-12'
+        span.inline-flex.shrink-0.items-center.justify-center.rounded-full.text-foreground.transition-all.duration-300(
+          class='h-11 w-11 bg-background/40 backdrop-blur group-hover:bg-foreground group-hover:text-background group-hover:-rotate-12'
         )
           +icon('arrow-up-right', 'h-4 w-4')
 

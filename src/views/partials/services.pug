@@ -18,7 +18,11 @@ section#services.relative(class='px-6 py-24 md:px-12 md:py-32 lg:px-20')
     ul.grid.grid-cols-1.bg-border(class='gap-px mt-px md:grid-cols-2 lg:grid-cols-3')
       each service in services
         li.group.relative.bg-background.transition-colors.duration-300(class='hover:bg-card')
-          .flex.h-full.flex-col(class='gap-6 p-8 lg:p-10')
+          a.flex.h-full.flex-col(
+            href='/services/' + service.slug
+            class='gap-6 p-8 lg:p-10'
+            aria-label='Read about ' + service.title
+          )
             .flex.items-start.justify-between
               span.font-mono.text-muted-foreground(class='text-xs tracking-[0.18em]')= service.number
               span.inline-flex.h-8.w-8.items-center.justify-center.rounded-full.text-muted-foreground.transition-all.duration-300(class='border border-transparent group-hover:border-border group-hover:text-foreground group-hover:-rotate-12')

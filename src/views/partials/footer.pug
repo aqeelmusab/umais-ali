@@ -6,7 +6,8 @@ footer.relative.border-t.border-border(class='px-6 py-16 md:px-12 md:py-20 lg:px
     .grid.grid-cols-1(class='gap-12 md:grid-cols-12')
       //- LEFT — wordmark + line
       .flex.flex-col(class='md:col-span-6 gap-4')
-        a.inline-flex.items-baseline.font-serif.text-foreground(class='gap-1 text-2xl tracking-[-0.01em] hover:text-primary transition-colors' href='#top')
+        - var footerLogoHref = currentPath && currentPath !== '/' ? '/' : '#top'
+        a.inline-flex.items-baseline.font-serif.text-foreground(class='gap-1 text-2xl tracking-[-0.01em] hover:text-primary transition-colors' href=footerLogoHref)
           span Umais
           span.serif-italic.text-muted-foreground Ali
         p.text-muted-foreground(class='max-w-md text-sm leading-relaxed')
@@ -18,7 +19,8 @@ footer.relative.border-t.border-border(class='px-6 py-16 md:px-12 md:py-20 lg:px
         nav.flex.flex-col(class='gap-3')
           span.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.22em] mb-1') Site
           each link in navLinks
-            a.text-foreground.transition-colors(class='text-sm hover:text-primary' href=link.href)= link.label
+            - var footerHref = currentPath && currentPath !== '/' && link.href.charAt(0) === '#' ? '/' + link.href : link.href
+            a.text-foreground.transition-colors(class='text-sm hover:text-primary' href=footerHref)= link.label
 
         nav.flex.flex-col(class='gap-3')
           span.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.22em] mb-1') Elsewhere

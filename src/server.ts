@@ -27,6 +27,8 @@ import {
   testimonials,
 } from './data/site'
 
+const serviceBySlug = new Map(services.map((service) => [service.slug, service]))
+
 // Resolve views/public relative to project root (works for both `tsx` and compiled `dist`).
 const ROOT = path.resolve(__dirname, '..')
 
@@ -50,6 +52,11 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
   app.use((_req, res, next) => {
     res.locals.cspNonce = randomBytes(16).toString('base64')
+    next()
+  })
+
+  app.use((req, res, next) => {
+    res.locals.currentPath = req.path
     next()
   })
 
@@ -147,7 +154,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
         url: SITE_URL,
         jobTitle: 'SEO Executive',
         description:
-          'SEO strategist and operator with five plus years of experience helping businesses build organic search channels that hold up after launch.',
+          'SEO strategist and executor with five plus years of experience helping businesses build organic search channels that hold up after launch.',
         knowsAbout: [
           'Search Engine Optimization',
           'Technical SEO',
@@ -177,6 +184,39 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
   app.get('/', (_req: Request, res: Response) => {
     res.render('index', { ...baseLocals, jsonLd })
+  })
+
+  app.get('/services', (_req: Request, res: Response) => {
+    res.redirect(301, '/#services')
+  })
+
+  app.get('/services/:slug', (req: Request, res: Response) => {
+    const slug = Array.isArray(req.params.slug) ? req.params.slug[0] : req.params.slug
+    const service = serviceBySlug.get(slug)
+    if (!service) {
+      res.status(404).render('404', baseLocals)
+      return
+    }
+
+    const relatedServices = services.filter((item) => item.slug !== service.slug).slice(0, 3)
+    const serviceJsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: service.title,
+      description: service.page.description,
+      provider: { '@id': `${SITE_URL}/#person` },
+      url: `${SITE_URL}/services/${service.slug}`,
+      areaServed: 'Worldwide',
+    }
+
+    res.render('service', {
+      ...baseLocals,
+      service,
+      relatedServices,
+      title: `${service.title} | ${SITE_NAME}`,
+      description: service.page.description,
+      jsonLd: serviceJsonLd,
+    })
   })
 
   // HTMX: return a single project's modal markup for inline injection.

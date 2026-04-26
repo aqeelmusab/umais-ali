@@ -3,6 +3,7 @@ import assert from 'node:assert/strict'
 import type { AddressInfo } from 'node:net'
 import { createApp } from '../src/server'
 import { projects } from '../src/data/projects'
+import { services } from '../src/data/site'
 
 async function withServer<T>(fn: (baseUrl: string) => Promise<T>): Promise<T> {
   const app = createApp({
@@ -47,6 +48,24 @@ test('GET /projects/:id 404s for unknown id', async () => {
 test('GET /projects/:id 404s for non-numeric id', async () => {
   await withServer(async (base) => {
     const res = await fetch(`${base}/projects/not-a-number`)
+    assert.equal(res.status, 404)
+  })
+})
+
+test('GET /services/:slug renders a real service page', async () => {
+  await withServer(async (base) => {
+    const service = services[0]
+    const res = await fetch(`${base}/services/${service.slug}`)
+    assert.equal(res.status, 200)
+    const html = await res.text()
+    assert.match(html, new RegExp(service.title))
+    assert.match(html, /What you get/i)
+  })
+})
+
+test('GET /services/:slug 404s for unknown service', async () => {
+  await withServer(async (base) => {
+    const res = await fetch(`${base}/services/not-a-real-service`)
     assert.equal(res.status, 404)
   })
 })

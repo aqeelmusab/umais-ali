@@ -8,9 +8,109 @@
 
   // ─── Scroll lock (single source of truth) ──────────────────────────────
   let scrollLockCount = 0
+  let smoothScrollFrame = 0
+  let wheelScrollFrame = 0
+  let wheelTarget = 0
+  let wheelCurrent = 0
+  let isWheelScrolling = false
+
+  function prefersReducedMotion() {
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  }
+
+  function easeOutQuart(t) {
+    return 1 - Math.pow(1 - t, 4)
+  }
+
+  function clampScroll(value) {
+    const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight)
+    return Math.min(max, Math.max(0, value))
+  }
+
+  function canScrollInside(target, deltaY) {
+    let node = target instanceof Element ? target : null
+    while (node && node !== document.body) {
+      const style = window.getComputedStyle(node)
+      const canScroll = /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight
+      if (canScroll) {
+        const canScrollDown = deltaY > 0 && node.scrollTop + node.clientHeight < node.scrollHeight - 1
+        const canScrollUp = deltaY < 0 && node.scrollTop > 1
+        if (canScrollDown || canScrollUp) return true
+      }
+      node = node.parentElement
+    }
+    return false
+  }
+
+  function runWheelScroll() {
+    wheelCurrent += (wheelTarget - wheelCurrent) * 0.16
+    if (Math.abs(wheelTarget - wheelCurrent) < 0.5) {
+      wheelCurrent = wheelTarget
+      window.scrollTo(0, wheelCurrent)
+      wheelScrollFrame = 0
+      isWheelScrolling = false
+      return
+    }
+    window.scrollTo(0, wheelCurrent)
+    wheelScrollFrame = requestAnimationFrame(runWheelScroll)
+  }
+
+  function smoothScrollTo(top, duration = 900) {
+    if (prefersReducedMotion()) {
+      window.scrollTo(0, top)
+      return
+    }
+
+    cancelAnimationFrame(smoothScrollFrame)
+    cancelAnimationFrame(wheelScrollFrame)
+    wheelScrollFrame = 0
+    isWheelScrolling = false
+    const start = window.scrollY
+    const target = clampScroll(top)
+    const distance = target - start
+    const startTime = performance.now()
+
+    function tick(now) {
+      const elapsed = now - startTime
+      const progress = Math.min(1, elapsed / duration)
+      window.scrollTo(0, Math.round(start + distance * easeOutQuart(progress)))
+      if (progress < 1) smoothScrollFrame = requestAnimationFrame(tick)
+    }
+
+    smoothScrollFrame = requestAnimationFrame(tick)
+  }
+
+  function onWheelSmooth(event) {
+    if (
+      prefersReducedMotion() ||
+      document.documentElement.classList.contains('is-scroll-locked') ||
+      event.ctrlKey || event.metaKey ||
+      Math.abs(event.deltaX) > Math.abs(event.deltaY) ||
+      canScrollInside(event.target, event.deltaY)
+    ) return
+
+    event.preventDefault()
+    cancelAnimationFrame(smoothScrollFrame)
+    const deltaFactor = event.deltaMode === 1 ? 18 : event.deltaMode === 2 ? window.innerHeight : 1
+    if (!isWheelScrolling) {
+      wheelCurrent = window.scrollY
+      wheelTarget = wheelCurrent
+      isWheelScrolling = true
+    }
+    wheelTarget = clampScroll(wheelTarget + event.deltaY * deltaFactor)
+    if (!wheelScrollFrame) wheelScrollFrame = requestAnimationFrame(runWheelScroll)
+  }
+
+  window.addEventListener('wheel', onWheelSmooth, { passive: false })
+  window.addEventListener('scroll', () => {
+    if (!isWheelScrolling) wheelTarget = window.scrollY
+  }, { passive: true })
+
   function lockScroll() {
     if (scrollLockCount === 0) {
-      document.body.dataset.scrollY = String(window.scrollY)
+      const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
+      if (scrollbarGap > 0) document.body.style.paddingRight = `${scrollbarGap}px`
+      document.documentElement.classList.add('is-scroll-locked')
       document.body.classList.add('is-scroll-locked')
     }
     scrollLockCount++
@@ -18,11 +118,33 @@
   function unlockScroll() {
     scrollLockCount = Math.max(0, scrollLockCount - 1)
     if (scrollLockCount === 0) {
-      const y = parseInt(document.body.dataset.scrollY || '0', 10)
       document.body.classList.remove('is-scroll-locked')
-      delete document.body.dataset.scrollY
-      window.scrollTo(0, y)
+      document.documentElement.classList.remove('is-scroll-locked')
+      document.body.style.removeProperty('padding-right')
     }
+  }
+
+  // ─── Smooth in-page anchor scrolling ──────────────────────────────────
+  function getAnchorTarget(link) {
+    const rawHref = link.getAttribute('href')
+    if (!rawHref || rawHref === '#') return null
+
+    let url
+    try {
+      url = new URL(rawHref, window.location.href)
+    } catch (_) {
+      return null
+    }
+
+    if (url.origin !== window.location.origin || url.pathname !== window.location.pathname || !url.hash) return null
+    return document.getElementById(decodeURIComponent(url.hash.slice(1)))
+  }
+
+  function scrollToAnchorTarget(target) {
+    const navOffset = nav ? Math.ceil(nav.getBoundingClientRect().height + nav.getBoundingClientRect().top + 16) : 0
+    const top = Math.max(0, window.scrollY + target.getBoundingClientRect().top - navOffset)
+    smoothScrollTo(top)
+    if (target.id) history.pushState(null, '', `#${target.id}`)
   }
 
   // ─── Focus trap helper ────────────────────────────────────────────────
@@ -46,9 +168,21 @@
   // ─── Header: glass on scroll ──────────────────────────────────────────
   const nav = document.getElementById('site-nav')
   if (nav) {
-    const onScrollNav = () => nav.classList.toggle('is-scrolled', window.scrollY > 20)
+    let navTicking = false
+    const updateNavState = () => {
+      const isScrolled = nav.classList.contains('is-scrolled')
+      const shouldScroll = isScrolled ? window.scrollY > 10 : window.scrollY > 44
+      nav.classList.toggle('is-scrolled', shouldScroll)
+      navTicking = false
+    }
+    const onScrollNav = () => {
+      if (!navTicking) {
+        navTicking = true
+        requestAnimationFrame(updateNavState)
+      }
+    }
     window.addEventListener('scroll', onScrollNav, { passive: true })
-    onScrollNav()
+    updateNavState()
   }
 
   // ─── Mobile menu ──────────────────────────────────────────────────────
@@ -88,6 +222,19 @@
     )
   }
 
+  document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]')
+    if (!link) return
+
+    const target = getAnchorTarget(link)
+    if (!target) return
+
+    e.preventDefault()
+    if (menu && menu.classList.contains('is-open')) closeMenu()
+    if (modal && modal.classList.contains('is-open')) closeModal()
+    requestAnimationFrame(() => scrollToAnchorTarget(target))
+  })
+
   // ─── Project modal ────────────────────────────────────────────────────
   const modal = document.getElementById('project-modal')
   const modalBackdrop = modal ? modal.querySelector('[data-modal-backdrop]') : null
@@ -104,7 +251,7 @@
     // Focus the close button after content settles
     requestAnimationFrame(() => {
       const closeBtn = modal.querySelector('[data-modal-close]')
-      if (closeBtn) closeBtn.focus()
+      if (closeBtn) closeBtn.focus({ preventScroll: true })
     })
   }
   function closeModal() {
@@ -168,7 +315,7 @@
         const work = document.getElementById('work')
         if (work) {
           e.preventDefault()
-          work.scrollIntoView({ behavior: 'smooth', block: 'start' })
+          scrollToAnchorTarget(work)
         }
       }
     }
@@ -237,7 +384,7 @@
   if (stt) {
     const onScrollStt = () => stt.classList.toggle('is-visible', window.scrollY > 400)
     window.addEventListener('scroll', onScrollStt, { passive: true })
-    stt.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }))
+    stt.addEventListener('click', () => smoothScrollTo(0, 800))
     onScrollStt()
   }
 
