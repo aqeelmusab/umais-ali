@@ -5,14 +5,12 @@ header#site-nav.site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.ro
   class='top-4 left-4 right-4 h-14 max-w-6xl px-3 md:top-6 md:left-8 md:right-8 md:px-4'
   aria-label='Primary'
 )
-  - var logoHref = currentPath && currentPath !== '/' ? '/' : '#top'
-  +logo(logoHref)
+  +logo()
 
   nav.hidden.items-center.gap-1(class='md:flex' aria-label='Primary navigation')
     each link in navLinks
-      - var navHref = currentPath && currentPath !== '/' && link.href.charAt(0) === '#' ? '/' + link.href : link.href
       a.relative.rounded-full.font-medium.text-muted-foreground.transition-colors.duration-300(
-        href=navHref
+        href=link.href
         class='px-4 py-2 text-sm hover:text-foreground hover:bg-foreground/4'
       )= link.label
 
@@ -47,7 +45,7 @@ header#site-nav.site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.ro
 //- ── Mobile sheet ──────────────────────────────────────
 #mobile-menu.fixed.inset-0.z-50.flex.flex-col.bg-background(aria-hidden='true' inert class='md:hidden')
   .flex.items-center.justify-between(class='h-16 px-6')
-    +logo(logoHref)
+    +logo()
     button#mobile-menu-close.inline-flex.items-center.justify-center.rounded-full.text-foreground.transition-colors(
       type='button'
       aria-label='Close menu'
@@ -57,9 +55,8 @@ header#site-nav.site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.ro
 
   nav.flex.flex-1.flex-col.justify-center(class='gap-1 px-8' aria-label='Mobile navigation')
     each link, idx in navLinks
-      - var mobileNavHref = currentPath && currentPath !== '/' && link.href.charAt(0) === '#' ? '/' + link.href : link.href
       a.group.flex.items-baseline.border-b.border-border.text-foreground(
-        href=mobileNavHref
+        href=link.href
         data-close-menu
         class='gap-4 py-5'
       )

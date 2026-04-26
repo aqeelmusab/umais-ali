@@ -21,13 +21,12 @@ import {
   highlights,
   marquee,
   navLinks,
+  getServiceBySlug,
   services,
   skills,
   socialLinks,
   testimonials,
 } from './data/site'
-
-const serviceBySlug = new Map(services.map((service) => [service.slug, service]))
 
 // Resolve views/public relative to project root (works for both `tsx` and compiled `dist`).
 const ROOT = path.resolve(__dirname, '..')
@@ -52,11 +51,6 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
   app.use((_req, res, next) => {
     res.locals.cspNonce = randomBytes(16).toString('base64')
-    next()
-  })
-
-  app.use((req, res, next) => {
-    res.locals.currentPath = req.path
     next()
   })
 
@@ -183,38 +177,54 @@ export function createApp(options: CreateAppOptions = {}): Express {
   }
 
   app.get('/', (_req: Request, res: Response) => {
-    res.render('index', { ...baseLocals, jsonLd })
+    res.render('index', { ...baseLocals, canonicalPath: '/', jsonLd })
   })
 
   app.get('/services', (_req: Request, res: Response) => {
-    res.redirect(301, '/#services')
+    res.render('services', {
+      ...baseLocals,
+      title: 'SEO Services | Umais Ali',
+      description:
+        'SEO services for teams that need technical audits, content strategy, programmatic SEO, link building, migrations, and reporting that turns search into a real growth channel.',
+      canonicalPath: '/services',
+      jsonLd,
+    })
   })
 
   app.get('/services/:slug', (req: Request, res: Response) => {
-    const slug = Array.isArray(req.params.slug) ? req.params.slug[0] : req.params.slug
-    const service = serviceBySlug.get(slug)
+    const slugParam = req.params.slug
+    const serviceSlug = Array.isArray(slugParam) ? slugParam[0] : slugParam
+    const service = serviceSlug ? getServiceBySlug(serviceSlug) : undefined
     if (!service) {
       res.status(404).render('404', baseLocals)
       return
     }
 
-    const relatedServices = services.filter((item) => item.slug !== service.slug).slice(0, 3)
+    const relatedServices = services.filter((candidate) => service.relatedSlugs.includes(candidate.slug))
+
     const serviceJsonLd = {
-      '@context': 'https://schema.org',
-      '@type': 'Service',
-      name: service.title,
-      description: service.page.description,
-      provider: { '@id': `${SITE_URL}/#person` },
-      url: `${SITE_URL}/services/${service.slug}`,
-      areaServed: 'Worldwide',
+      ...jsonLd,
+      '@graph': [
+        ...jsonLd['@graph'],
+        {
+          '@type': 'Service',
+          '@id': `${SITE_URL}/services/${service.slug}#service`,
+          name: service.title,
+          description: service.metaDescription,
+          provider: { '@id': `${SITE_URL}/#person` },
+          url: `${SITE_URL}/services/${service.slug}`,
+          areaServed: 'Worldwide',
+        },
+      ],
     }
 
-    res.render('service', {
+    res.render('service-detail', {
       ...baseLocals,
       service,
       relatedServices,
-      title: `${service.title} | ${SITE_NAME}`,
-      description: service.page.description,
+      title: service.metaTitle,
+      description: service.metaDescription,
+      canonicalPath: `/services/${service.slug}`,
       jsonLd: serviceJsonLd,
     })
   })

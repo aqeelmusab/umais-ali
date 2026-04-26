@@ -52,14 +52,25 @@ test('GET /projects/:id 404s for non-numeric id', async () => {
   })
 })
 
-test('GET /services/:slug renders a real service page', async () => {
+test('GET /services renders the service index', async () => {
   await withServer(async (base) => {
-    const service = services[0]
-    const res = await fetch(`${base}/services/${service.slug}`)
+    const res = await fetch(`${base}/services`)
     assert.equal(res.status, 200)
     const html = await res.text()
-    assert.match(html, new RegExp(service.title))
-    assert.match(html, /What you get/i)
+    assert.match(html, /SEO services for teams/i)
+    assert.ok(html.includes(`/services/${services[0].slug}`), 'index should link to service pages')
+  })
+})
+
+test('GET /services/:slug renders every service page', async () => {
+  await withServer(async (base) => {
+    for (const service of services) {
+      const res = await fetch(`${base}/services/${service.slug}`)
+      assert.equal(res.status, 200)
+      const html = await res.text()
+      assert.ok(html.includes(service.title), `page should include ${service.title}`)
+      assert.ok(html.includes(service.metaDescription), `page should include metadata for ${service.title}`)
+    }
   })
 })
 

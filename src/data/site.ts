@@ -5,10 +5,10 @@ export const SITE_DESCRIPTION =
   'I help teams turn search into a real growth channel. Technical audits, content systems, link building, and migrations that hold up after launch. Five years in, forty something projects, three million plus organic visits.'
 
 export const navLinks = [
-  { label: 'Work', href: '#work' },
-  { label: 'Services', href: '#services' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Work', href: '/#work' },
+  { label: 'Services', href: '/services' },
+  { label: 'About', href: '/#about' },
+  { label: 'Contact', href: '/#contact' },
 ]
 
 export const heroStats = [
@@ -48,263 +48,375 @@ export const highlights = [
 export const services = [
   {
     number: '01',
-    slug: 'technical-seo-audits',
     title: 'Technical SEO Audits',
+    slug: 'technical-seo-audits',
     summary:
       'A real look at why your site is not ranking. Crawl issues, indexation, schema, Core Web Vitals. You get a short fix list ordered by impact, not a sixty page PDF nobody reads.',
     deliverables: ['Crawl and log analysis', 'Indexation map', 'CWV remediation'],
-    page: {
+    metaTitle: 'Technical SEO Audits | Umais Ali',
+    metaDescription:
+      'Technical SEO audits for teams that need clear diagnosis, prioritized fixes, and cleaner crawl, indexation, schema, and Core Web Vitals performance.',
+    hero: {
       eyebrow: 'Technical SEO Audits',
-      title: 'Find the issues that are holding search back.',
-      description:
-        'A technical SEO audit for teams that need a clear diagnosis, not a giant PDF. I find the crawl, indexation, performance, and architecture issues that are limiting growth, then turn them into a fix list your team can actually ship.',
+      lineOne: 'Find the blockers search engines',
+      accent: 'keep running into.',
       intro:
-        'Most technical SEO problems are not dramatic. They are small decisions that compound over time. A few crawl traps, thin templates, blocked assets, slow pages, duplicate URLs, broken canonicals, and internal links that bury important pages. The audit is built to separate noise from the work that will move rankings, traffic, and revenue.',
-      bestFor: [
-        'Sites with flat or declining organic traffic',
-        'Teams preparing for a redesign or platform change',
-        'Marketing teams that need engineering buy in',
-        'Founders who want a second opinion before investing in content',
-      ],
-      process: [
-        {
-          title: 'Crawl and indexation review',
-          body: 'I map what Google can find, what it should find, and what should be kept out of the index. This usually reveals the first layer of wasted crawl budget and duplicated intent.',
-        },
-        {
-          title: 'Template and page quality audit',
-          body: 'I review the page types that drive search visibility and check whether the content, metadata, schema, internal links, and intent match are strong enough to compete.',
-        },
-        {
-          title: 'Prioritized fix plan',
-          body: 'You get the issues grouped by impact, difficulty, and owner. The goal is to give marketing and engineering the same view of what matters first.',
-        },
-      ],
-      outcomes: [
-        'A clear technical SEO roadmap',
-        'Cleaner index coverage and fewer duplicate signals',
-        'Better crawl paths to commercial pages',
-        'A fix list your team can work through without guesswork',
-      ],
-      metrics: ['Index coverage', 'Core Web Vitals', 'Crawl depth', 'Organic landing pages'],
+        'I audit the parts of a site that quietly decide whether good pages get found, crawled, indexed, and trusted. The output is practical, prioritized, and written for the people who need to ship the fixes.',
     },
+    overview: [
+      'Most SEO problems do not announce themselves neatly. A page can look fine in a browser and still waste crawl budget, send mixed canonical signals, hide important templates from search, or load slowly enough to lose demand before it converts.',
+      'This audit turns those issues into a clean working list. I separate urgent technical problems from cosmetic noise, explain the tradeoffs, and help your team move in the order that protects traffic and revenue.',
+    ],
+    bestFor: [
+      'Sites with traffic drops or flat growth',
+      'Teams preparing for a redesign or migration',
+      'Marketing teams that need engineering-ready tickets',
+    ],
+    outcomes: [
+      {
+        title: 'Crawl clarity',
+        text: 'A map of the pages search engines can reach, the pages they should ignore, and the loops or dead ends wasting crawl attention.',
+      },
+      {
+        title: 'Indexation control',
+        text: 'A clear view of what is indexed, what should be indexed, and where canonical, robots, sitemap, or rendering signals are getting in the way.',
+      },
+      {
+        title: 'Fix order by impact',
+        text: 'A short action plan that tells your team what to fix first, why it matters, who should own it, and how to verify the result.',
+      },
+    ],
+    process: [
+      {
+        title: 'Baseline the site',
+        text: 'I review analytics, Search Console, templates, sitemap coverage, crawl data, and recent release history before making recommendations.',
+      },
+      {
+        title: 'Inspect the signals',
+        text: 'I check rendering, internal links, canonicals, redirects, structured data, status codes, Core Web Vitals, and duplicate or thin page patterns.',
+      },
+      {
+        title: 'Turn findings into work',
+        text: 'You get prioritized tickets, acceptance criteria, and a walkthrough so marketing and engineering can move without guessing.',
+      },
+    ],
+    scope: {
+      timeline: '10 to 15 working days for most sites',
+      format: 'Audit, fix list, implementation call, and follow-up review',
+      handoff: 'A concise roadmap your team can actually work through',
+    },
+    relatedSlugs: ['seo-migrations', 'reporting-that-helps'],
   },
   {
     number: '02',
-    slug: 'content-and-keywords',
     title: 'Content and Keywords',
+    slug: 'content-and-keywords',
     summary:
       'Topic clusters built around the things your buyers actually search for, mapped to pages on your site so the work compounds instead of fighting itself.',
     deliverables: ['Intent mapped keywords', 'Topic clusters', 'Editorial calendar'],
-    page: {
+    metaTitle: 'Content and Keyword Strategy | Umais Ali',
+    metaDescription:
+      'Content and keyword strategy for teams that need search demand mapped into focused pages, topic clusters, and a realistic publishing plan.',
+    hero: {
       eyebrow: 'Content and Keywords',
-      title: 'Build content around what buyers already want to know.',
-      description:
-        'Keyword research and content planning for teams that want search traffic with a purpose. I turn scattered ideas into a focused content system tied to intent, product value, and realistic ranking opportunities.',
+      lineOne: 'Build content around demand',
+      accent: 'that is already there.',
       intro:
-        'Good content strategy is not a spreadsheet full of keywords. It is a set of choices about which topics matter, which pages deserve to exist, how they connect, and what a reader should do next. I help teams build that structure before they spend months writing into the void.',
-      bestFor: [
-        'Teams publishing content without a clear search framework',
-        'Companies with strong expertise but weak organic visibility',
-        'Sites with overlapping articles that compete with each other',
-        'Brands that need content tied to pipeline, not vanity traffic',
-      ],
-      process: [
-        {
-          title: 'Intent and opportunity research',
-          body: 'I group keywords by what the searcher needs, how competitive the result is, and how closely the topic connects to your product or service.',
-        },
-        {
-          title: 'Cluster and page mapping',
-          body: 'Each topic gets a home. Some deserve a landing page, some need a guide, and some should be merged into something you already have.',
-        },
-        {
-          title: 'Editorial plan and briefs',
-          body: 'Writers get briefs with audience context, search intent, structure, internal links, and the proof needed to make the page useful.',
-        },
-      ],
-      outcomes: [
-        'A focused keyword map by intent',
-        'Cleaner topic clusters with less cannibalization',
-        'Briefs that help writers produce useful pages faster',
-        'Content tied to commercial paths through the site',
-      ],
-      metrics: ['Ranking groups', 'Organic assisted conversions', 'Content velocity', 'Internal link coverage'],
+        'I turn search data into a content plan your team can publish with confidence. The work starts with buyer intent, not volume screenshots, and ends with pages that have a clear job to do.',
     },
+    overview: [
+      'A good content strategy is not a spreadsheet full of keywords. It is a decision system. It tells you which searches matter, which page should target them, what the reader needs to believe, and how each new asset supports the pages around it.',
+      'The goal is to stop shipping isolated posts and start building a search footprint that compounds. That means tighter briefs, better internal links, cleaner topic ownership, and fewer pages competing with each other.',
+    ],
+    bestFor: [
+      'Teams with scattered blog traffic and weak conversions',
+      'Brands entering a new category or market',
+      'Sites with strong expertise but unclear search structure',
+    ],
+    outcomes: [
+      {
+        title: 'Intent-led keyword map',
+        text: 'Keywords grouped by what the searcher is trying to do, then mapped to existing pages, new pages, or pages that should be consolidated.',
+      },
+      {
+        title: 'Topic cluster structure',
+        text: 'A practical architecture for pillar pages, supporting pages, internal links, and content gaps that are worth filling.',
+      },
+      {
+        title: 'Editorial momentum',
+        text: 'A calendar with briefs, priority levels, page purpose, primary angle, and clear success signals for each piece.',
+      },
+    ],
+    process: [
+      {
+        title: 'Read the market',
+        text: 'I study search demand, competitors, SERP formats, current rankings, product positioning, and the language your customers already use.',
+      },
+      {
+        title: 'Map the opportunity',
+        text: 'I group demand by intent and commercial value, then decide what should be created, refreshed, merged, or ignored.',
+      },
+      {
+        title: 'Brief the work',
+        text: 'Your team gets briefs that explain the angle, audience, structure, internal links, and proof points needed to make each page useful.',
+      },
+    ],
+    scope: {
+      timeline: '2 to 4 weeks depending on category depth',
+      format: 'Keyword map, cluster plan, briefs, and publishing calendar',
+      handoff: 'A focused content system instead of a loose list of topics',
+    },
+    relatedSlugs: ['programmatic-seo', 'reporting-that-helps'],
   },
   {
     number: '03',
-    slug: 'programmatic-seo',
     title: 'Programmatic SEO',
+    slug: 'programmatic-seo',
     summary:
       'Template driven pages for products, locations, or comparisons. Done right they scale fast. Done wrong they get the whole site demoted, so we build guardrails first.',
     deliverables: ['Template architecture', 'Data integration', 'Indexation guardrails'],
-    page: {
+    metaTitle: 'Programmatic SEO | Umais Ali',
+    metaDescription:
+      'Programmatic SEO strategy for scalable landing pages with real demand, reliable data, useful templates, and indexation guardrails.',
+    hero: {
       eyebrow: 'Programmatic SEO',
-      title: 'Scale useful pages without turning the site into clutter.',
-      description:
-        'Programmatic SEO planning for teams with products, locations, categories, integrations, or comparisons that can become valuable search pages. I design the templates, data rules, and indexation controls before scale becomes a liability.',
+      lineOne: 'Scale search pages without',
+      accent: 'watering them down.',
       intro:
-        'Programmatic SEO works when each page has a reason to exist. The template has to answer a real query, the data has to be strong, and the indexation rules have to protect the rest of the site. I help teams build the system with enough discipline to grow safely.',
-      bestFor: [
-        'Marketplaces, SaaS products, directories, and ecommerce sites',
-        'Teams with structured data that could support search pages',
-        'Companies planning location, comparison, or integration pages',
-        'Sites that need scale without thin content risk',
-      ],
-      process: [
-        {
-          title: 'Opportunity and page type selection',
-          body: 'I identify which query patterns are worth targeting and which ones should be left alone. Not every data point deserves an indexed page.',
-        },
-        {
-          title: 'Template strategy',
-          body: 'We define what each page must include to be helpful, from unique copy blocks and data modules to internal links and schema.',
-        },
-        {
-          title: 'Indexation controls',
-          body: 'I set rules for noindex, canonical tags, sitemap inclusion, quality thresholds, and monitoring so weak pages do not flood the index.',
-        },
-      ],
-      outcomes: [
-        'A validated set of scalable page types',
-        'Templates built around search intent and useful data',
-        'Indexation rules that protect site quality',
-        'A monitoring plan for growth and cleanup',
-      ],
-      metrics: ['Indexed page quality', 'Template traffic', 'Long tail rankings', 'Conversion by page type'],
+        'I help teams build scalable page systems for products, locations, comparisons, and directories. The focus is useful coverage, clean data, and indexation control before volume becomes a liability.',
     },
+    overview: [
+      'Programmatic SEO works when every page has a reason to exist. It fails when a template creates thousands of near-empty pages and leaves Google to sort out the mess.',
+      'I plan the architecture before pages go live. We define the demand pattern, the required data, the minimum quality bar, the internal linking model, and the rules that decide which pages deserve indexation.',
+    ],
+    bestFor: [
+      'Marketplaces, SaaS directories, and comparison sites',
+      'Businesses with structured product, location, or category data',
+      'Teams that want scale without thin-page risk',
+    ],
+    outcomes: [
+      {
+        title: 'Template strategy',
+        text: 'A page model that matches search intent, supports useful copy, and gives every generated page a clear purpose.',
+      },
+      {
+        title: 'Data requirements',
+        text: 'A practical list of fields, fallbacks, validation rules, and enrichment needs so templates do not collapse at scale.',
+      },
+      {
+        title: 'Indexation guardrails',
+        text: 'Rules for when pages should be indexable, when they should stay out of search, and how to monitor quality after launch.',
+      },
+    ],
+    process: [
+      {
+        title: 'Validate demand',
+        text: 'I confirm the search pattern, SERP expectations, modifiers, competitors, and the page types that can earn traffic.',
+      },
+      {
+        title: 'Design the system',
+        text: 'We define templates, required data, internal links, schema, canonical rules, noindex logic, and QA checks.',
+      },
+      {
+        title: 'Launch with control',
+        text: 'I help stage the rollout, monitor crawl and indexation, and adjust rules before scale creates avoidable problems.',
+      },
+    ],
+    scope: {
+      timeline: '3 to 6 weeks for strategy and launch support',
+      format: 'Opportunity model, template brief, data spec, and launch QA',
+      handoff: 'A page system that can scale without becoming search clutter',
+    },
+    relatedSlugs: ['content-and-keywords', 'technical-seo-audits'],
   },
   {
     number: '04',
-    slug: 'link-building',
     title: 'Link Building',
+    slug: 'link-building',
     summary:
       'Outreach and digital PR aimed at the publications your buyers already trust. No PBNs, no shady lists, nothing that needs disavowing in six months.',
     deliverables: ['Prospecting and outreach', 'Digital PR pitches', 'Anchor strategy'],
-    page: {
+    metaTitle: 'Link Building and Digital PR | Umais Ali',
+    metaDescription:
+      'Ethical link building and digital PR for teams that need relevant authority, stronger category signals, and outreach that protects the brand.',
+    hero: {
       eyebrow: 'Link Building',
-      title: 'Earn links that make sense for the brand.',
-      description:
-        'A measured approach to link building and digital PR. I focus on relevant publications, useful angles, and outreach that supports authority without creating risk for the site later.',
+      lineOne: 'Earn links from places',
+      accent: 'that make sense.',
       intro:
-        'Links still matter, but the wrong links create a mess. The goal is not to collect random domains. The goal is to earn coverage from places your audience, industry, and search engines can reasonably trust. That takes better prospecting, better angles, and patience.',
-      bestFor: [
-        'Brands in competitive search results',
-        'Teams with good content that is not earning authority',
-        'Companies that need safer alternatives to cheap link vendors',
-        'Sites building authority around a new category or product',
-      ],
-      process: [
-        {
-          title: 'Authority and competitor review',
-          body: 'I look at the links driving visibility in your market and identify realistic opportunities that fit your brand and budget.',
-        },
-        {
-          title: 'Prospecting and angle development',
-          body: 'Targets are grouped by relevance and outreach angle. The pitch has to give someone a real reason to care, not just ask for a backlink.',
-        },
-        {
-          title: 'Outreach and quality control',
-          body: 'Every opportunity is checked for relevance, placement quality, and risk. I would rather ship fewer good links than a larger report full of weak ones.',
-        },
-      ],
-      outcomes: [
-        'A clean prospect list by relevance and quality',
-        'Digital PR angles that fit the market',
-        'Safer links from publications with real context',
-        'Anchor text guidance that avoids over-optimization',
-      ],
-      metrics: ['Referring domains', 'Link relevance', 'Authority growth', 'Ranking movement on target pages'],
+        'I build authority through relevant outreach, useful angles, and publication targets your buyers would recognize. No private networks, no recycled lists, no shortcuts that become cleanup work later.',
     },
+    overview: [
+      'Links still matter, but the wrong links can make a good site look desperate. The work has to match the brand, the category, and the pages that need authority most.',
+      'I focus on prospects with real audiences, topical relevance, and editorial standards. The result is a cleaner link profile and a stronger reason for search engines to trust the pages you care about.',
+    ],
+    bestFor: [
+      'Brands with good content that is not earning enough authority',
+      'Competitive categories where page quality alone is not enough',
+      'Teams that need outreach without risking the brand',
+    ],
+    outcomes: [
+      {
+        title: 'Relevant prospecting',
+        text: 'A qualified list of publications, partners, resources, and journalists where the pitch has a real reason to land.',
+      },
+      {
+        title: 'Better pitch angles',
+        text: 'Outreach built around useful evidence, expert commentary, data, or resources instead of generic guest post requests.',
+      },
+      {
+        title: 'Anchor and page strategy',
+        text: 'A link plan that supports important pages without creating unnatural anchor patterns or overloading one part of the site.',
+      },
+    ],
+    process: [
+      {
+        title: 'Audit the profile',
+        text: 'I review current links, competitor gaps, risk signals, target pages, and the authority needed to compete.',
+      },
+      {
+        title: 'Build the outreach plan',
+        text: 'We choose the assets, angles, publications, and outreach rhythm that fit your category and brand voice.',
+      },
+      {
+        title: 'Track quality over volume',
+        text: 'Reporting focuses on relevance, placement quality, target page impact, and what each link is meant to support.',
+      },
+    ],
+    scope: {
+      timeline: 'Monthly retainers with clear quality targets',
+      format: 'Prospecting, outreach, pitch writing, and placement reporting',
+      handoff: 'A link profile that looks earned because it is',
+    },
+    relatedSlugs: ['content-and-keywords', 'reporting-that-helps'],
   },
   {
     number: '05',
-    slug: 'seo-migrations',
     title: 'SEO Migrations',
+    slug: 'seo-migrations',
     summary:
       'Replatforming, redesigns, domain moves. The kind of project that quietly erases a year of growth if it goes wrong. I plan it, ship it, and watch it after.',
     deliverables: ['Pre launch audit', 'Redirect mapping', 'Post launch monitoring'],
-    page: {
+    metaTitle: 'SEO Migrations | Umais Ali',
+    metaDescription:
+      'SEO migration planning for redesigns, replatforms, URL changes, and domain moves that need redirects, QA, and post-launch monitoring.',
+    hero: {
       eyebrow: 'SEO Migrations',
-      title: 'Move the site without losing the traffic you earned.',
-      description:
-        'SEO migration support for redesigns, replatforms, domain changes, and major information architecture updates. I plan the move, protect important URLs, and monitor the launch until the risk window is under control.',
+      lineOne: 'Move the site without',
+      accent: 'losing the channel.',
       intro:
-        'A migration is one of the easiest ways to lose organic growth. The damage usually comes from simple misses: changed URLs, weak redirect logic, missing metadata, blocked sections, broken canonicals, and pages that disappear during launch. I build the plan before those mistakes become expensive.',
-      bestFor: [
-        'Teams moving to a new CMS or ecommerce platform',
-        'Companies redesigning high traffic templates',
-        'Brands changing domains, URL structures, or navigation',
-        'Marketing leaders who need launch risk reduced',
-      ],
-      process: [
-        {
-          title: 'Pre launch inventory',
-          body: 'I identify the pages, templates, rankings, links, and traffic sources that need protection before the new site goes live.',
-        },
-        {
-          title: 'Redirect and validation plan',
-          body: 'Every important URL gets a destination. I check redirects, canonicals, metadata, internal links, robots rules, and sitemap logic before launch.',
-        },
-        {
-          title: 'Post launch monitoring',
-          body: 'After launch, I watch crawl errors, indexation, rankings, analytics, and server behavior so issues can be fixed while they are still small.',
-        },
-      ],
-      outcomes: [
-        'A migration checklist by owner and deadline',
-        'Redirect mapping for high value URLs',
-        'Pre launch and post launch QA',
-        'Monitoring that catches traffic loss early',
-      ],
-      metrics: ['Redirect health', 'Organic traffic retention', 'Index coverage', 'Ranking recovery'],
+        'I plan and monitor migrations so redesigns, replatforms, URL changes, and domain moves do not quietly erase organic growth. The work is detailed, calm, and built around risk control.',
     },
+    overview: [
+      'A migration is usually treated like a launch checklist item until rankings start slipping. By then the team is trying to debug redirects, templates, canonicals, content changes, and tracking gaps at the same time.',
+      'I get involved before launch, document what has to be protected, map the redirects, review the staging site, and stay close after release so small problems do not become traffic losses.',
+    ],
+    bestFor: [
+      'Rebrands, domain changes, and site consolidations',
+      'CMS, framework, or ecommerce platform moves',
+      'Redesigns that touch templates, URLs, content, or navigation',
+    ],
+    outcomes: [
+      {
+        title: 'Risk map',
+        text: 'A clear list of the pages, templates, rankings, backlinks, and technical signals that need protection before launch.',
+      },
+      {
+        title: 'Redirect control',
+        text: 'A redirect map that preserves important URLs, avoids chains, and gives engineering a direct implementation path.',
+      },
+      {
+        title: 'Launch monitoring',
+        text: 'Post-launch checks for crawl errors, indexation shifts, rankings, traffic, sitemap coverage, and analytics continuity.',
+      },
+    ],
+    process: [
+      {
+        title: 'Document the current site',
+        text: 'I capture crawl data, top pages, backlinks, rankings, sitemap coverage, analytics, and URL patterns before anything moves.',
+      },
+      {
+        title: 'Review the staging build',
+        text: 'I check templates, metadata, canonicals, robots rules, internal links, structured data, redirects, and tracking before launch.',
+      },
+      {
+        title: 'Watch the release',
+        text: 'After launch, I monitor the signals that matter and help the team fix issues while they are still small.',
+      },
+    ],
+    scope: {
+      timeline: '4 to 8 weeks depending on release complexity',
+      format: 'Migration plan, redirect map, staging QA, launch support, and monitoring',
+      handoff: 'A controlled release with fewer surprises after go-live',
+    },
+    relatedSlugs: ['technical-seo-audits', 'reporting-that-helps'],
   },
   {
     number: '06',
-    slug: 'seo-reporting',
     title: 'Reporting that helps',
+    slug: 'reporting-that-helps',
     summary:
       'GA4, Search Console, and Looker dashboards built so a non SEO can open them on a Monday and know what to do that week.',
     deliverables: ['GA4 and GSC setup', 'Looker dashboards', 'Monthly insights'],
-    page: {
-      eyebrow: 'SEO Reporting',
-      title: 'Turn search data into decisions people can use.',
-      description:
-        'SEO reporting and dashboard setup for teams that need clarity. I connect GA4, Search Console, Looker Studio, and campaign context so reporting explains what changed and what to do next.',
+    metaTitle: 'SEO Reporting and Dashboards | Umais Ali',
+    metaDescription:
+      'SEO reporting, GA4, Search Console, and Looker dashboards that connect organic performance to decisions your team can act on.',
+    hero: {
+      eyebrow: 'Reporting that helps',
+      lineOne: 'Turn SEO reporting into',
+      accent: 'a decision tool.',
       intro:
-        'A good report should not make people hunt for the point. It should show what changed, why it matters, and where attention should go next. I build reporting that works for marketers, founders, and operators who need a clean view of organic performance.',
-      bestFor: [
-        'Teams with messy GA4 or Search Console reporting',
-        'Founders who want a simple view of organic growth',
-        'Marketing teams reporting to leadership every month',
-        'Companies that need SEO tied to pipeline and revenue',
-      ],
-      process: [
-        {
-          title: 'Measurement review',
-          body: 'I check tracking, conversions, channel grouping, Search Console properties, and any gaps that make SEO performance hard to trust.',
-        },
-        {
-          title: 'Dashboard design',
-          body: 'The dashboard is organized around the questions people actually ask: what grew, what dropped, which pages matter, and where the next action is.',
-        },
-        {
-          title: 'Insight rhythm',
-          body: 'I add a practical reporting cadence so the dashboard becomes a working tool, not a link that gets opened once a quarter.',
-        },
-      ],
-      outcomes: [
-        'Cleaner SEO measurement across GA4 and Search Console',
-        'A dashboard that separates signal from noise',
-        'Monthly insights tied to action',
-        'Reporting that leadership can understand quickly',
-      ],
-      metrics: ['Organic sessions', 'Qualified conversions', 'Landing page performance', 'Query and page movement'],
+        'I build reporting that helps teams understand what changed, why it changed, and what to do next. The goal is less dashboard theatre and more useful Monday morning decisions.',
     },
+    overview: [
+      'Most SEO reports are either too shallow to be useful or too dense to survive outside the SEO team. They list movement without explaining whether anyone should care.',
+      'I connect GA4, Search Console, Looker, and rank data into a reporting view that separates noise from signal. Leadership gets the story. Operators get the next action.',
+    ],
+    bestFor: [
+      'Teams with reports nobody trusts or reads',
+      'Founders and marketing leads who need clearer organic performance',
+      'SEO teams that need cleaner weekly and monthly workflows',
+    ],
+    outcomes: [
+      {
+        title: 'Cleaner measurement',
+        text: 'GA4 and Search Console views checked for tracking gaps, channel confusion, landing page noise, and missing conversion context.',
+      },
+      {
+        title: 'Readable dashboards',
+        text: 'Looker dashboards that show organic performance by page group, query theme, funnel stage, and business outcome.',
+      },
+      {
+        title: 'Useful insights',
+        text: 'Reporting notes that explain what moved, what probably caused it, what deserves attention, and what can be ignored.',
+      },
+    ],
+    process: [
+      {
+        title: 'Audit the data',
+        text: 'I review GA4, Search Console, Looker, rank tracking, events, conversions, and existing stakeholder reports.',
+      },
+      {
+        title: 'Design the view',
+        text: 'We decide which questions the report must answer, then build dashboards around decisions instead of vanity metrics.',
+      },
+      {
+        title: 'Create the rhythm',
+        text: 'I set up a reporting cadence, explain the views, and leave notes that make monthly performance easier to discuss.',
+      },
+    ],
+    scope: {
+      timeline: '1 to 3 weeks depending on data quality',
+      format: 'Tracking review, dashboard build, reporting notes, and walkthrough',
+      handoff: 'A reporting setup people can use without translating SEO jargon',
+    },
+    relatedSlugs: ['technical-seo-audits', 'content-and-keywords'],
   },
 ]
+
+export function getServiceBySlug(slug: string) {
+  return services.find((service) => service.slug === slug)
+}
 
 export const marquee = [
   'Technical SEO',

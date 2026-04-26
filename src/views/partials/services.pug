@@ -17,11 +17,11 @@ section#services.relative(class='px-6 py-24 md:px-12 md:py-32 lg:px-20')
 
     ul.grid.grid-cols-1.bg-border(class='gap-px mt-px md:grid-cols-2 lg:grid-cols-3')
       each service in services
-        li.group.relative.bg-background.transition-colors.duration-300(class='hover:bg-card')
-          a.flex.h-full.flex-col(
+        li.bg-background
+          a.group.flex.h-full.flex-col.transition-colors.duration-300(
             href='/services/' + service.slug
-            class='gap-6 p-8 lg:p-10'
-            aria-label='Read about ' + service.title
+            class='gap-6 p-8 lg:p-10 hover:bg-card'
+            aria-label='View ' + service.title + ' service'
           )
             .flex.items-start.justify-between
               span.font-mono.text-muted-foreground(class='text-xs tracking-[0.18em]')= service.number

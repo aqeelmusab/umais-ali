@@ -394,18 +394,6 @@ body::before {
   );
 }
 
-.service-panel {
-  border-radius: var(--radius);
-  background: oklch(from var(--card) l c h / 0.46);
-  background-clip: padding-box;
-  box-shadow: 0 1px 0 0 oklch(from var(--foreground) l c h / 0.045) inset;
-}
-
-:root[data-theme='light'] .service-panel {
-  background: oklch(from var(--card) l c h / 0.72);
-  box-shadow: 0 1px 0 0 oklch(from var(--foreground) l c h / 0.055) inset;
-}
-
 /* ── Eyebrow (section label rail) ─────────────── */
 .eyebrow {
   display: inline-flex;

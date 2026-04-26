@@ -19,14 +19,16 @@ html(lang='en' class='bg-background')
         }
       })();
 
+    - var pageUrl = canonicalUrl || site.url + (canonicalPath || '/')
+
     title= title || site.title
     meta(name='description' content=description || site.description)
-    link(rel='canonical' href=site.url + '/')
+    link(rel='canonical' href=pageUrl)
 
     //- Open Graph
     meta(property='og:type' content='website')
     meta(property='og:locale' content='en_US')
-    meta(property='og:url' content=site.url)
+    meta(property='og:url' content=pageUrl)
     meta(property='og:site_name' content=site.name)
     meta(property='og:title' content=title || site.title)
     meta(property='og:description' content=description || site.description)
