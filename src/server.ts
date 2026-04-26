@@ -8,7 +8,7 @@ import { projects } from './data/projects'
 import { validateContact } from './contact'
 import { sendContactEmail, type SendContactArgs, type SendContactResult } from './email'
 import { env, isProduction, isTest, assertProductionEnv } from './env'
-import { ogImageHandler } from './og-image'
+import { ogImageHandler } from './og-image.js'
 import { getProjectNavigation } from './projects-nav'
 import {
   CONTACT_EMAIL,
@@ -200,7 +200,12 @@ export function createApp(options: CreateAppOptions = {}): Express {
     const serviceSlug = Array.isArray(slugParam) ? slugParam[0] : slugParam
     const service = serviceSlug ? getServiceBySlug(serviceSlug) : undefined
     if (!service) {
-      res.status(404).render('404', baseLocals)
+      res.status(404).render('404', {
+        ...baseLocals,
+        title: 'Page Not Found | Umais Ali',
+        description: 'The page you requested could not be found.',
+        robots: 'noindex, nofollow',
+      })
       return
     }
 
@@ -294,7 +299,12 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
   // 404 fallback
   app.use((_req: Request, res: Response) => {
-    res.status(404).render('404', baseLocals)
+    res.status(404).render('404', {
+      ...baseLocals,
+      title: 'Page Not Found | Umais Ali',
+      description: 'The page you requested could not be found.',
+      robots: 'noindex, nofollow',
+    })
   })
 
   return app

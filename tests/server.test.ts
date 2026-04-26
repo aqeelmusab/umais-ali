@@ -30,6 +30,24 @@ test('GET / renders the home page', async () => {
   })
 })
 
+test('GET / includes complete SEO and social metadata', async () => {
+  await withServer(async (base) => {
+    const res = await fetch(`${base}/`)
+    assert.equal(res.status, 200)
+    const html = await res.text()
+    assert.match(html, /<title>Umais Ali \| SEO that actually moves the needle<\/title>/)
+    assert.match(html, /<meta name="description"/)
+    assert.match(html, /<meta name="robots" content="index, follow">/)
+    assert.match(html, /<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">/)
+    assert.match(html, /<link rel="canonical" href="https:\/\/umaisali.com\/">/)
+    assert.match(html, /<meta property="og:image:width" content="1200">/)
+    assert.match(html, /<meta property="og:image:height" content="630">/)
+    assert.match(html, /<meta property="og:image:alt" content="Umais Ali - SEO that actually moves the needle">/)
+    assert.match(html, /<meta name="twitter:site" content="@umaisali">/)
+    assert.match(html, /<meta name="twitter:image:alt" content="Umais Ali - SEO that actually moves the needle">/)
+  })
+})
+
 test('GET /projects/:id returns the modal fragment for a real project', async () => {
   await withServer(async (base) => {
     const id = projects[0].id
@@ -80,6 +98,9 @@ test('GET /services/:slug 404s for unknown service', async () => {
   await withServer(async (base) => {
     const res = await fetch(`${base}/services/not-a-real-service`)
     assert.equal(res.status, 404)
+    const html = await res.text()
+    assert.match(html, /<meta name="robots" content="noindex, nofollow">/)
+    assert.doesNotMatch(html, /<link rel="canonical"/)
   })
 })
 
@@ -148,6 +169,8 @@ test('unknown route renders the 404 page', async () => {
     assert.equal(res.status, 404)
     const html = await res.text()
     assert.match(html, /<html/i)
+    assert.match(html, /<meta name="robots" content="noindex, nofollow">/)
+    assert.doesNotMatch(html, /<link rel="canonical"/)
   })
 })
 
