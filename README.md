@@ -20,11 +20,11 @@ This is not a static-only export. The site renders through an Express app and us
 ## Tech Stack
 
 - Node.js 24
-- Express 4
+- Express 5
 - Pug 3
 - HTMX 2
 - Tailwind CSS 4
-- TypeScript 5
+- TypeScript 6
 - Resend
 - Vercel serverless functions
 
