@@ -195,7 +195,7 @@ Deployment behavior:
 - `npm run build` generates `public/css/main.css` and compiles TypeScript to `dist/`.
 - Vercel serves existing static files first.
 - All remaining routes go to `api/index.ts`, which loads the Express app from `src/server.ts`.
-- Production renders include Vercel Web Analytics and Speed Insights scripts from `/_vercel/insights/script.js` and `/_vercel/speed-insights/script.js`.
+- Production renders include the Vercel Web Analytics and Speed Insights HTML snippets, including the `window.va` and `window.si` queues, with scripts loaded from `/_vercel/insights/script.js` and `/_vercel/speed-insights/script.js`.
 
 Enable Web Analytics and Speed Insights in the Vercel project dashboard so the injected scripts can collect data after deployment.
 
