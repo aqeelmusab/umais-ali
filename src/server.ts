@@ -36,10 +36,12 @@ type ContactEmailSender = (args: SendContactArgs) => Promise<SendContactResult>
 
 export interface CreateAppOptions {
   sendEmail?: ContactEmailSender
+  enableVercelInsights?: boolean
 }
 
 export function createApp(options: CreateAppOptions = {}): Express {
   const sendEmail = options.sendEmail ?? sendContactEmail
+  const enableVercelInsights = options.enableVercelInsights ?? isProduction
   const app = express()
 
   // Trust Vercel's proxy headers so req.ip and rate limiting see the real client IP.
@@ -129,6 +131,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
     socialLinks,
     projects,
     year: new Date().getFullYear(),
+    enableVercelInsights,
   }
 
   const jsonLd = {

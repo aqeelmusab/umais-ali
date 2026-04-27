@@ -12,6 +12,7 @@ This is not a static-only export. The site renders through an Express app and us
 - Contact form validation and honeypot spam trap
 - Resend email delivery with optional Resend dashboard template support
 - Per-IP contact form rate limiting
+- Vercel Web Analytics and Speed Insights
 - Helmet security headers with nonce-based Content Security Policy
 - Tailwind CSS v4 build pipeline
 - Node test suite using `node:test` and `tsx`
@@ -194,6 +195,9 @@ Deployment behavior:
 - `npm run build` generates `public/css/main.css` and compiles TypeScript to `dist/`.
 - Vercel serves existing static files first.
 - All remaining routes go to `api/index.ts`, which loads the Express app from `src/server.ts`.
+- Production renders include Vercel Web Analytics and Speed Insights scripts from `/_vercel/insights/script.js` and `/_vercel/speed-insights/script.js`.
+
+Enable Web Analytics and Speed Insights in the Vercel project dashboard so the injected scripts can collect data after deployment.
 
 Add these variables in Vercel Project Settings:
 

@@ -1,13 +1,14 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import type { AddressInfo } from 'node:net'
-import { createApp } from '../src/server'
+import { createApp, type CreateAppOptions } from '../src/server'
 import { projects } from '../src/data/projects'
 import { services } from '../src/data/site'
 
-async function withServer<T>(fn: (baseUrl: string) => Promise<T>): Promise<T> {
+async function withServer<T>(fn: (baseUrl: string) => Promise<T>, options: CreateAppOptions = {}): Promise<T> {
   const app = createApp({
     sendEmail: async () => ({ delivered: true, id: 'test-email-id' }),
+    ...options,
   })
   const server = app.listen(0)
   try {
@@ -46,6 +47,16 @@ test('GET / includes complete SEO and social metadata', async () => {
     assert.match(html, /<meta name="twitter:site" content="@umaisali">/)
     assert.match(html, /<meta name="twitter:image:alt" content="Umais Ali - SEO that actually moves the needle">/)
   })
+})
+
+test('GET / includes Vercel Analytics and Speed Insights scripts when enabled', async () => {
+  await withServer(async (base) => {
+    const res = await fetch(`${base}/`)
+    assert.equal(res.status, 200)
+    const html = await res.text()
+    assert.ok(html.includes('<script src="/_vercel/insights/script.js" defer></script>'))
+    assert.ok(html.includes('<script src="/_vercel/speed-insights/script.js" defer></script>'))
+  }, { enableVercelInsights: true })
 })
 
 test('GET /projects/:id returns the modal fragment for a real project', async () => {
