@@ -8,7 +8,6 @@ mixin bentoCard(project, sizeClasses, isFeature)
     button.relative.flex.h-full.w-full.flex-col.overflow-hidden.text-left(
       type='button'
       data-project-trigger
-      data-project-id=project.id
       hx-get='/projects/' + project.id
       hx-target='#project-modal-content'
       hx-swap='innerHTML'

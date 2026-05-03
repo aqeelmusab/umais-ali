@@ -1,0 +1,25 @@
+include icons.pug
+
+.flex.flex-col.items-start(class='gap-6 py-4')
+  span.inline-flex.items-center.justify-center.rounded-full.border.border-border(class='h-12 w-12 bg-muted/15 text-foreground')
+    +icon('mail', 'h-5 w-5')
+  h3.font-serif.text-foreground(class='text-3xl md:text-4xl tracking-[-0.02em] leading-tight')
+    | Could not send that through the form.
+    |
+    span.serif-italic.text-muted-foreground Email me directly.
+  p.text-muted-foreground(class='max-w-md text-base leading-relaxed')
+    | Something went wrong on my side, so your message was not delivered. If you still want to connect, send a note to
+    |
+    a.font-medium.text-foreground.underline.underline-offset-4.transition-colors(class='hover:text-primary' href='mailto:' + contactEmail)= contactEmail
+    |
+    | — I read that inbox myself.
+  .flex.flex-wrap.items-center(class='gap-3 pt-1')
+    button.inline-flex.items-center.text-foreground.transition-colors(
+      type='button'
+      hx-get='/contact/form'
+      hx-target='#contact-form-wrap'
+      hx-swap='innerHTML'
+      class='gap-2 text-sm font-medium hover:text-primary'
+    )
+      span Try the form again
+      +icon('arrow-up-right', 'h-3.5 w-3.5')

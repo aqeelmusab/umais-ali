@@ -149,6 +149,27 @@ test('POST /contact returns 200 success fragment on valid input', async () => {
   })
 })
 
+test('POST /contact returns contact send failure partial when email send fails', async () => {
+  await withServer(async (base) => {
+    const res = await fetch(`${base}/contact`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        name: 'Jane Doe',
+        email: 'jane@example.com',
+        message: 'Hello, this is a perfectly reasonable message.',
+      }).toString(),
+    })
+    assert.equal(res.status, 200)
+    const html = await res.text()
+    assert.match(html, /Could not send that through the form/i)
+    assert.match(html, /hello@umaisali\.com/)
+    assert.doesNotMatch(html, /Got it/)
+  }, {
+    sendEmail: async () => ({ delivered: false, error: 'upstream failure' }),
+  })
+})
+
 test('GET /contact/form returns a fresh contact form fragment', async () => {
   await withServer(async (base) => {
     const res = await fetch(`${base}/contact/form`)

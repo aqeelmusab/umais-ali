@@ -1,7 +1,33 @@
 // Pure helpers for the contact form. Exported separately so they can be
 // unit-tested without booting the Express app.
 
-export const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+const EMAIL_MAX = 200
+
+/** Pragmatic validation — not full RFC 5322, but rejects common typos and abuse patterns. */
+export function isValidEmail(email: string): boolean {
+  if (email.length < 5 || email.length > EMAIL_MAX) return false
+  if (/\s/.test(email)) return false
+  const at = email.indexOf('@')
+  if (at <= 0 || at !== email.lastIndexOf('@')) return false
+  const local = email.slice(0, at)
+  const domain = email.slice(at + 1)
+  if (!local || !domain) return false
+  if (local.includes('..') || domain.includes('..')) return false
+  if (local.startsWith('.') || local.endsWith('.')) return false
+  if (domain.startsWith('.') || domain.endsWith('.') || domain.startsWith('-')) return false
+  if (!/^[a-zA-Z0-9._%+-]+$/.test(local)) return false
+  if (!/^[a-zA-Z0-9.-]+$/.test(domain)) return false
+  const labels = domain.split('.')
+  if (labels.length < 2) return false
+  const tld = labels[labels.length - 1]
+  if (tld.length < 2) return false
+  for (const label of labels) {
+    if (!label || label.length > 63) return false
+    if (label.startsWith('-') || label.endsWith('-')) return false
+    if (!/^[a-zA-Z0-9-]+$/.test(label)) return false
+  }
+  return true
+}
 
 export interface ContactBody {
   name?: string
@@ -43,7 +69,7 @@ export function validateContact(body: ContactBody | undefined | null): ContactRe
   if (values.name.length < 2 || values.name.length > 80) {
     errors.name = 'Please enter your name (2 to 80 characters).'
   }
-  if (!EMAIL_RE.test(values.email) || values.email.length > 200) {
+  if (!isValidEmail(values.email)) {
     errors.email = 'Please enter a valid email address.'
   }
   if (values.message.length < 10 || values.message.length > 2000) {

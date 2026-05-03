@@ -86,7 +86,7 @@ html(lang='en' class='bg-background')
       window.htmx.config.includeIndicatorStyles = false;
     script(src='https://unpkg.com/htmx.org@2.0.4' integrity='sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+' crossorigin='anonymous' defer)
 
-  body(class='font-sans antialiased overflow-x-hidden')
+  body(class='font-sans antialiased overflow-x-hidden' tabindex='-1')
     block content
 
     if enableVercelInsights
@@ -96,4 +96,4 @@ html(lang='en' class='bg-background')
       script(nonce=cspNonce).
         window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
       script(src='/_vercel/speed-insights/script.js' defer)
-    script(src='/js/app.js' defer)
+    script(src='/js/site-main.js' defer)

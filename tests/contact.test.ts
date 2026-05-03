@@ -34,7 +34,18 @@ test('validateContact: rejects short / long name', () => {
 })
 
 test('validateContact: rejects invalid emails', () => {
-  for (const email of ['', 'no-at-sign', 'foo@bar', 'foo @bar.co', 'a@b.', '@b.co']) {
+  for (const email of [
+    '',
+    'no-at-sign',
+    'foo@bar',
+    'foo @bar.co',
+    'a@b.',
+    '@b.co',
+    'bad..user@example.com',
+    'user@bad..com',
+    'leading.@example.com',
+    'a@b.c',
+  ]) {
     const r = validateContact({ name: 'Jane Doe', email, message: 'a'.repeat(20) })
     assert.ok(r.errors.email, `expected error for email: "${email}"`)
   }

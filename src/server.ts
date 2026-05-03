@@ -89,7 +89,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
     }),
   )
 
-  // Static assets (images, css, htmx, app.js)
+  // Static assets (images, css, htmx, site-main.js)
   app.use(express.static(path.join(ROOT, 'public'), { maxAge: '1h', etag: true }))
 
   // Form-encoded body parser for the contact form
@@ -102,7 +102,12 @@ export function createApp(options: CreateAppOptions = {}): Express {
     standardHeaders: 'draft-7',
     legacyHeaders: false,
     skip: () => isTest,
-    keyGenerator: (req) => ipKeyGenerator(req.ip ?? ''),
+    keyGenerator: (req) => {
+      const fromProxy = typeof req.ip === 'string' ? req.ip.trim() : ''
+      const fallback = req.socket?.remoteAddress?.trim() ?? ''
+      const key = fromProxy || fallback || 'unknown-client'
+      return ipKeyGenerator(key)
+    },
     handler: (_req, res) => {
       res.status(429).render('partials/contact-form', {
         values: { name: '', email: '', message: '' },
@@ -263,7 +268,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
     // Silently accept honeypot hits to avoid signaling bots.
     if (result.honeypot) {
-      res.render('partials/contact-success', { name: result.values.name || 'there' })
+      res.render('partials/contact-send-success', { name: result.values.name || 'there' })
       return
     }
 
@@ -286,18 +291,23 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
     if (sent.delivered) {
       console.log('[contact] delivered via Resend', { id: sent.id })
-    } else if (sent.skipped) {
+      res.render('partials/contact-send-success', { name: result.values.name })
+      return
+    }
+
+    if (sent.skipped) {
       console.log('[contact] email skipped', {
         reason: sent.skipped,
       })
     } else {
-      // Don't leak the failure to the user — they did their part — but log loudly.
       console.error('[contact] Resend send failed', {
         error: sent.error,
       })
     }
 
-    res.render('partials/contact-success', { name: result.values.name })
+    res.render('partials/contact-send-failure', {
+      contactEmail: CONTACT_EMAIL,
+    })
   })
 
   // 404 fallback

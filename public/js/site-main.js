@@ -154,6 +154,11 @@
   function trapFocus(container, e) {
     const focusables = container.querySelectorAll(FOCUSABLE)
     if (focusables.length === 0) return
+    if (focusables.length === 1) {
+      e.preventDefault()
+      focusables[0].focus()
+      return
+    }
     const first = focusables[0]
     const last = focusables[focusables.length - 1]
     if (e.shiftKey && document.activeElement === first) {
@@ -275,7 +280,7 @@
 
   // Open modal triggers (project cards) — delegated.
   document.addEventListener('click', (e) => {
-    const trigger = e.target.closest('[data-project-id]')
+    const trigger = e.target.closest('[data-project-trigger]')
     if (trigger) {
       lastProjectTrigger = trigger
       openModal()
@@ -362,9 +367,12 @@
     reveals.forEach((el) => el.classList.add('in-view'))
   }
 
-  // Re-scan after HTMX swaps inject new content.
-  document.body.addEventListener('htmx:afterSettle', () => {
-    document.querySelectorAll('.reveal:not(.in-view)').forEach((el) => el.classList.add('in-view'))
+  // Reveal only nodes inside the swap target so existing in-viewport reveals keep their animation.
+  document.body.addEventListener('htmx:afterSettle', (e) => {
+    const detail = e.detail
+    const swapTarget = detail && (detail.target || detail.elt)
+    if (!(swapTarget instanceof HTMLElement) || swapTarget === document.body) return
+    swapTarget.querySelectorAll('.reveal:not(.in-view)').forEach((el) => el.classList.add('in-view'))
   })
 
   // Allow HTMX to swap validation/rate-limit responses — by default it only swaps 2xx.

@@ -34,7 +34,7 @@ This is not a static-only export. The site renders through an Express app and us
 api/index.ts              Vercel serverless entrypoint
 public/                   Static assets served directly
 public/css/main.css       Generated Tailwind CSS bundle
-public/js/app.js          Client-side interaction glue
+public/js/site-main.js    Client-side interaction bundle
 src/server.ts             Express app and routes
 src/contact.ts            Contact form validation
 src/email.ts              Resend email sending
