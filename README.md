@@ -49,14 +49,14 @@ vercel.json               Vercel routing and build config
 ## Requirements
 
 - Node.js 24.x
-- npm
+- [pnpm](https://pnpm.io/installation) (Corepack: `corepack enable` then the version in `package.json` `packageManager` is used automatically)
 
 ## Local Setup
 
 Install dependencies:
 
 ```bash
-npm ci
+pnpm install
 ```
 
 Create a local env file:
@@ -134,7 +134,7 @@ Important notes:
 Run the development server with CSS watching:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 The app defaults to:
@@ -146,13 +146,13 @@ http://localhost:3000
 Run only the TypeScript server watcher:
 
 ```bash
-npm run dev:server
+pnpm dev:server
 ```
 
 Run only the Tailwind watcher:
 
 ```bash
-npm run watch:css
+pnpm watch:css
 ```
 
 ## Build
@@ -160,13 +160,13 @@ npm run watch:css
 Build CSS and TypeScript:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 Start the compiled app locally:
 
 ```bash
-npm start
+pnpm start
 ```
 
 ## Tests
@@ -174,16 +174,16 @@ npm start
 Run the test suite:
 
 ```bash
-npm test
+pnpm test
 ```
 
 Typecheck the tests:
 
 ```bash
-npm run typecheck:tests
+pnpm typecheck:tests
 ```
 
-The server tests inject a fake email sender, so running `npm test` will not send real Resend emails.
+The server tests inject a fake email sender, so running `pnpm test` will not send real Resend emails.
 
 ## Vercel Deployment
 
@@ -191,8 +191,8 @@ The app is configured for Vercel in `vercel.json`.
 
 Deployment behavior:
 
-- `npm ci` installs dependencies.
-- `npm run build` generates `public/css/main.css` and compiles TypeScript to `dist/`.
+- `pnpm install --frozen-lockfile` installs dependencies (configured in `vercel.json`).
+- `pnpm run build` generates `public/css/main.css` and compiles TypeScript to `dist/`.
 - Vercel serves existing static files first.
 - All remaining routes go to `api/index.ts`, which loads the Express app from `src/server.ts`.
 - Production renders include the Vercel Web Analytics and Speed Insights HTML snippets, including the `window.va` and `window.si` queues, with scripts loaded from `/_vercel/insights/script.js` and `/_vercel/speed-insights/script.js`.
@@ -224,7 +224,7 @@ Pug view partials live in `src/views/partials/`.
 After changing styles or Pug class names, run:
 
 ```bash
-npm run build
+pnpm build
 ```
 
 ## Security Notes
