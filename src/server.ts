@@ -73,7 +73,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
           frameAncestors: ["'none'"],
           imgSrc: ["'self'", 'data:'],
           objectSrc: ["'none'"],
-          scriptSrc: ["'self'", cspNonce, 'https://unpkg.com'],
+          scriptSrc: ["'self'", cspNonce, 'https://unpkg.com/htmx.org@2.0.4'],
           scriptSrcAttr: ["'none'"],
           styleSrc: ["'self'"],
           styleSrcAttr: ["'none'"],
@@ -264,6 +264,21 @@ export function createApp(options: CreateAppOptions = {}): Express {
   })
 
   app.post('/contact', contactLimiter, async (req: Request, res: Response) => {
+    // Stateless CSRF protection: verify Origin or Referer matches SITE_URL in production
+    if (isProduction) {
+      const origin = req.get('origin')
+      const referer = req.get('referer')
+      const expectedOrigin = new URL(SITE_URL).origin
+      if (origin && origin !== expectedOrigin) {
+        res.status(403).send('Forbidden: Invalid Origin')
+        return
+      }
+      if (!origin && referer && !referer.startsWith(expectedOrigin)) {
+        res.status(403).send('Forbidden: Invalid Referer')
+        return
+      }
+    }
+
     const result = validateContact(req.body)
 
     // Silently accept honeypot hits to avoid signaling bots.
