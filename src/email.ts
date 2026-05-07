@@ -1,6 +1,6 @@
 import { Resend } from 'resend'
-import { env } from './env'
 import type { ContactValues } from './contact'
+import { env } from './env'
 
 let client: Resend | null = null
 function getClient(): Resend | null {
@@ -21,7 +21,10 @@ function escapeHtml(s: string): string {
 
 // Strip CR/LF from header-bound values to defeat header injection.
 function sanitizeHeaderValue(s: string): string {
-  return s.replace(/[\r\n]+/g, ' ').trim().slice(0, 250)
+  return s
+    .replace(/[\r\n]+/g, ' ')
+    .trim()
+    .slice(0, 250)
 }
 
 export interface SendContactArgs {
@@ -48,21 +51,9 @@ export async function sendContactEmail(args: SendContactArgs): Promise<SendConta
   const subject = `New contact form message from ${safeName}`
   const replyTo = env.CONTACT_REPLY_TO || safeEmail
 
-  const text =
-    `Name: ${values.name}\n` +
-    `Email: ${values.email}\n` +
-    (ip ? `IP: ${ip}\n` : '') +
-    (userAgent ? `User-Agent: ${userAgent}\n` : '') +
-    `\n${values.message}\n`
+  const text = `Name: ${values.name}\nEmail: ${values.email}\n${ip ? `IP: ${ip}\n` : ''}${userAgent ? `User-Agent: ${userAgent}\n` : ''}\n${values.message}\n`
 
-  const html =
-    `<div style="font-family:system-ui,sans-serif;line-height:1.5">` +
-    `<p><strong>Name:</strong> ${escapeHtml(values.name)}</p>` +
-    `<p><strong>Email:</strong> ${escapeHtml(values.email)}</p>` +
-    (ip ? `<p><strong>IP:</strong> ${escapeHtml(ip)}</p>` : '') +
-    (userAgent ? `<p><strong>User-Agent:</strong> ${escapeHtml(userAgent)}</p>` : '') +
-    `<hr/><p style="white-space:pre-wrap">${escapeHtml(values.message)}</p>` +
-    `</div>`
+  const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5"><p><strong>Name:</strong> ${escapeHtml(values.name)}</p><p><strong>Email:</strong> ${escapeHtml(values.email)}</p>${ip ? `<p><strong>IP:</strong> ${escapeHtml(ip)}</p>` : ''}${userAgent ? `<p><strong>User-Agent:</strong> ${escapeHtml(userAgent)}</p>` : ''}<hr/><p style="white-space:pre-wrap">${escapeHtml(values.message)}</p></div>`
 
   try {
     const { data, error } = env.CONTACT_TEMPLATE_ID

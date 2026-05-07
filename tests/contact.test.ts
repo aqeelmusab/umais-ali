@@ -1,5 +1,5 @@
-import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { test } from 'node:test'
 import { validateContact } from '../src/contact'
 
 test('validateContact: accepts a well-formed submission', () => {
@@ -58,11 +58,10 @@ test('validateContact: rejects email longer than 200 chars', () => {
 })
 
 test('validateContact: rejects too-short / too-long message', () => {
+  assert.ok(validateContact({ name: 'Jane Doe', email: 'a@b.co', message: 'short' }).errors.message)
   assert.ok(
-    validateContact({ name: 'Jane Doe', email: 'a@b.co', message: 'short' }).errors.message,
-  )
-  assert.ok(
-    validateContact({ name: 'Jane Doe', email: 'a@b.co', message: 'x'.repeat(2001) }).errors.message,
+    validateContact({ name: 'Jane Doe', email: 'a@b.co', message: 'x'.repeat(2001) }).errors
+      .message,
   )
 })
 

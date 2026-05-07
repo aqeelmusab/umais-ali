@@ -17,7 +17,8 @@ export const projects: Project[] = [
     id: 1,
     title: 'GreenLeaf Organics',
     category: 'E-Commerce SEO',
-    description: 'Took an organic food brand from page three to a real revenue channel in six months.',
+    description:
+      'Took an organic food brand from page three to a real revenue channel in six months.',
     longDescription:
       'GreenLeaf had good products and almost no traffic. They were buried on page three for the keywords that mattered, and the team had been told for two years that the site was fine. It was not. The audit flagged crawl issues, weirdly templated product descriptions, and a URL structure that was confusing both Google and the people running the store. We rewrote a couple hundred product pages, fixed the architecture, and built out a content calendar around purchase intent. Six months in, organic traffic was up 210 percent and organic revenue had grown 175 percent. Their flagship category landed on page one for the first time.',
     tags: ['Technical SEO', 'Content Strategy', 'E-Commerce'],
@@ -31,7 +32,8 @@ export const projects: Project[] = [
     id: 2,
     title: 'CloudStack SaaS',
     category: 'B2B SEO',
-    description: 'Built an organic signup channel for a cloud startup that was paying too much for ads.',
+    description:
+      'Built an organic signup channel for a cloud startup that was paying too much for ads.',
     longDescription:
       'CloudStack was burning through paid budget and wanted a channel that did not get more expensive every quarter. We started bottom of funnel, mapping the keywords their best customers were typing the week before they signed up. From there we built a programmatic system for their docs and comparison pages, and ran a real outreach campaign through technical guest posts. Twelve months later, organic signups were up 340 percent, they ranked on page one for 45 buyer intent keywords, and cost per lead from organic was less than half of what paid was costing them.',
     tags: ['B2B SEO', 'Link Building', 'Programmatic SEO'],
@@ -45,7 +47,8 @@ export const projects: Project[] = [
     id: 3,
     title: 'Metro Dental Group',
     category: 'Local SEO',
-    description: 'Eight clinics, almost no map pack visibility, until they were the default in every neighborhood.',
+    description:
+      'Eight clinics, almost no map pack visibility, until they were the default in every neighborhood.',
     longDescription:
       'Metro Dental had eight locations and almost none of them showed up when someone nearby searched for a dentist. People were finding the competitor across the street. We rebuilt every Google Business Profile, gave each location its own landing page with content that was actually about that neighborhood, added local schema, and ran a steady review campaign. Inside four months, every clinic was in the top three of the local pack for its area. Bookings from organic search went up 65 percent and the average rating moved from 3.8 to 4.6.',
     tags: ['Local SEO', 'Google Business', 'Schema Markup'],

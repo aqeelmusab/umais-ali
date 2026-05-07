@@ -6,7 +6,7 @@
   "main": "dist/server.js",
   "packageManager": "pnpm@10.33.2",
   "pnpm": {
-    "onlyBuiltDependencies": ["@parcel/watcher", "esbuild"]
+    "onlyBuiltDependencies": ["@biomejs/biome", "@parcel/watcher", "esbuild", "simple-git-hooks"]
   },
   "engines": {
     "node": ">=24.0.0 <25.0.0"
@@ -18,10 +18,17 @@
     "build": "pnpm run build:css && pnpm run build:ts",
     "vercel-build": "pnpm run build",
     "start": "node dist/server.js",
+    "preview": "pnpm run build && pnpm run start",
     "dev:server": "tsx watch src/server.ts",
     "dev": "npm-run-all --parallel watch:css dev:server",
-    "typecheck:tests": "tsc -p tsconfig.test.json",
-    "test": "tsx --test tests/**/*.test.ts"
+    "typecheck": "tsc --noEmit && pnpm run typecheck:tests",
+    "typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
+    "test": "tsx --test tests/**/*.test.ts",
+    "lint": "biome check .",
+    "fix": "biome check --write .",
+    "format": "biome format --write .",
+    "verify": "pnpm run typecheck && pnpm run test && pnpm run lint && pnpm run build",
+    "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "@resvg/resvg-js": "^2.6.2",
@@ -41,7 +48,12 @@
     "wawoff2": "^2.0.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
     "npm-run-all": "^4.1.5",
+    "simple-git-hooks": "^2.11.1",
     "tsx": "^4.19.2"
+  },
+  "simple-git-hooks": {
+    "pre-push": "pnpm install --frozen-lockfile --lockfile-only || (echo 'Lockfile out of sync. Run pnpm install.' && exit 1)"
   }
 }

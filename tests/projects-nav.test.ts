@@ -1,7 +1,7 @@
-import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { test } from 'node:test'
+import { type Project, projects as realProjects } from '../src/data/projects'
 import { getProjectNavigation } from '../src/projects-nav'
-import { projects as realProjects, type Project } from '../src/data/projects'
 
 const fixture: Project[] = [
   { id: 10, title: 'A' } as Project,

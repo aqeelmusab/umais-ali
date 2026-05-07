@@ -129,7 +129,7 @@ Important notes:
 - The app sets dynamic `replyTo` from the submitter email after validation.
 - Resend template variables have a 2,000 character limit, so the contact message limit is also 2,000 characters.
 
-## Development
+## Local Development Flow
 
 Run the development server with CSS watching:
 
@@ -137,67 +137,42 @@ Run the development server with CSS watching:
 pnpm dev
 ```
 
-The app defaults to:
+The app defaults to `http://localhost:3000`.
 
-```text
-http://localhost:3000
-```
+### Local Validation and Preview
 
-Run only the TypeScript server watcher:
+Before pushing code, you can run the local `preview` and `verify` scripts to ensure everything is correct:
 
 ```bash
-pnpm dev:server
+pnpm run preview
+pnpm run verify
 ```
 
-Run only the Tailwind watcher:
+The `verify` script runs the full quality gate: typechecking, testing, linting (Biome), and building the app.
 
-```bash
-pnpm watch:css
-```
+## Push and PR Validation
 
-## Build
+This repository enforces a disciplined Git and CI workflow:
 
-Build CSS and TypeScript:
+1. **Local Pre-push Hook**: A git hook (managed by `simple-git-hooks`) automatically runs before `git push`. It performs a fast check (`pnpm install --frozen-lockfile --lockfile-only`) to block the push if your `pnpm-lock.yaml` is out of sync with `package.json`. If it fails, run `pnpm install` and commit the changes before pushing.
+2. **GitHub Actions pipeline**: Every push to `main` and every Pull Request triggers the `Verify` workflow. This pipeline runs the full `pnpm run verify` gate on Node 24.
 
-```bash
-pnpm build
-```
+## Deployment Flow
 
-Start the compiled app locally:
+The deployment model is **host-driven** via Vercel, kept separate from the CI pipeline.
 
-```bash
-pnpm start
-```
+- **Preview Environments**: Vercel automatically deploys every Pull Request to a unique preview URL.
+- **Production**: Vercel automatically deploys pushes to the `main` branch to production.
 
-## Tests
-
-Run the test suite:
-
-```bash
-pnpm test
-```
-
-Typecheck the tests:
-
-```bash
-pnpm typecheck:tests
-```
-
-The server tests inject a fake email sender, so running `pnpm test` will not send real Resend emails.
-
-## Vercel Deployment
-
-The app is configured for Vercel in `vercel.json`.
-
-Deployment behavior:
+The app is configured for Vercel in `vercel.json`. Deployment behavior:
 
 - `pnpm install --frozen-lockfile` installs dependencies (configured in `vercel.json`).
 - `pnpm run build` generates `public/css/main.css` and compiles TypeScript to `dist/`.
 - Vercel serves existing static files first.
 - All remaining routes go to `api/index.ts`, which loads the Express app from `src/server.ts`.
-- Production renders include the Vercel Web Analytics and Speed Insights HTML snippets, including the `window.va` and `window.si` queues, with scripts loaded from `/_vercel/insights/script.js` and `/_vercel/speed-insights/script.js`.
 
-Enable Web Analytics and Speed Insights in the Vercel project dashboard so the injected scripts can collect data after deployment.
+### Critical Integrations
+The application is designed to **fail loudly** in production rather than silently succeeding if critical integrations are missing. During startup, if required environment variables (like `RESEND_API_KEY` and `CONTACT_TO`) are missing, the server will throw an error and crash.
 
 Add these variables in Vercel Project Settings:
 

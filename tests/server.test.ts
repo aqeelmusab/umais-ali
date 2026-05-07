@@ -1,11 +1,14 @@
-import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import type { AddressInfo } from 'node:net'
-import { createApp, type CreateAppOptions } from '../src/server'
+import { test } from 'node:test'
 import { projects } from '../src/data/projects'
 import { services } from '../src/data/site'
+import { type CreateAppOptions, createApp } from '../src/server'
 
-async function withServer<T>(fn: (baseUrl: string) => Promise<T>, options: CreateAppOptions = {}): Promise<T> {
+async function withServer<T>(
+  fn: (baseUrl: string) => Promise<T>,
+  options: CreateAppOptions = {},
+): Promise<T> {
   const app = createApp({
     sendEmail: async () => ({ delivered: true, id: 'test-email-id' }),
     ...options,
@@ -39,26 +42,38 @@ test('GET / includes complete SEO and social metadata', async () => {
     assert.match(html, /<title>Umais Ali \| SEO that actually moves the needle<\/title>/)
     assert.match(html, /<meta name="description"/)
     assert.match(html, /<meta name="robots" content="index, follow">/)
-    assert.match(html, /<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">/)
+    assert.match(
+      html,
+      /<meta name="googlebot" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">/,
+    )
     assert.match(html, /<link rel="canonical" href="https:\/\/umaisali.com\/">/)
     assert.match(html, /<meta property="og:image:width" content="1200">/)
     assert.match(html, /<meta property="og:image:height" content="630">/)
-    assert.match(html, /<meta property="og:image:alt" content="Umais Ali - SEO that actually moves the needle">/)
+    assert.match(
+      html,
+      /<meta property="og:image:alt" content="Umais Ali - SEO that actually moves the needle">/,
+    )
     assert.match(html, /<meta name="twitter:site" content="@umaisali">/)
-    assert.match(html, /<meta name="twitter:image:alt" content="Umais Ali - SEO that actually moves the needle">/)
+    assert.match(
+      html,
+      /<meta name="twitter:image:alt" content="Umais Ali - SEO that actually moves the needle">/,
+    )
   })
 })
 
 test('GET / includes Vercel Analytics and Speed Insights scripts when enabled', async () => {
-  await withServer(async (base) => {
-    const res = await fetch(`${base}/`)
-    assert.equal(res.status, 200)
-    const html = await res.text()
-    assert.ok(html.includes('window.va = window.va || function ()'))
-    assert.ok(html.includes('<script src="/_vercel/insights/script.js" defer></script>'))
-    assert.ok(html.includes('window.si = window.si || function ()'))
-    assert.ok(html.includes('<script src="/_vercel/speed-insights/script.js" defer></script>'))
-  }, { enableVercelInsights: true })
+  await withServer(
+    async (base) => {
+      const res = await fetch(`${base}/`)
+      assert.equal(res.status, 200)
+      const html = await res.text()
+      assert.ok(html.includes('window.va = window.va || function ()'))
+      assert.ok(html.includes('<script src="/_vercel/insights/script.js" defer></script>'))
+      assert.ok(html.includes('window.si = window.si || function ()'))
+      assert.ok(html.includes('<script src="/_vercel/speed-insights/script.js" defer></script>'))
+    },
+    { enableVercelInsights: true },
+  )
 })
 
 test('GET /projects/:id returns the modal fragment for a real project', async () => {
@@ -102,7 +117,10 @@ test('GET /services/:slug renders every service page', async () => {
       assert.equal(res.status, 200)
       const html = await res.text()
       assert.ok(html.includes(service.title), `page should include ${service.title}`)
-      assert.ok(html.includes(service.metaDescription), `page should include metadata for ${service.title}`)
+      assert.ok(
+        html.includes(service.metaDescription),
+        `page should include metadata for ${service.title}`,
+      )
     }
   })
 })
@@ -150,24 +168,27 @@ test('POST /contact returns 200 success fragment on valid input', async () => {
 })
 
 test('POST /contact returns contact send failure partial when email send fails', async () => {
-  await withServer(async (base) => {
-    const res = await fetch(`${base}/contact`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        name: 'Jane Doe',
-        email: 'jane@example.com',
-        message: 'Hello, this is a perfectly reasonable message.',
-      }).toString(),
-    })
-    assert.equal(res.status, 200)
-    const html = await res.text()
-    assert.match(html, /Could not send that through the form/i)
-    assert.match(html, /hello@umaisali\.com/)
-    assert.doesNotMatch(html, /Got it/)
-  }, {
-    sendEmail: async () => ({ delivered: false, error: 'upstream failure' }),
-  })
+  await withServer(
+    async (base) => {
+      const res = await fetch(`${base}/contact`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({
+          name: 'Jane Doe',
+          email: 'jane@example.com',
+          message: 'Hello, this is a perfectly reasonable message.',
+        }).toString(),
+      })
+      assert.equal(res.status, 200)
+      const html = await res.text()
+      assert.match(html, /Could not send that through the form/i)
+      assert.match(html, /hello@umaisali\.com/)
+      assert.doesNotMatch(html, /Got it/)
+    },
+    {
+      sendEmail: async () => ({ delivered: false, error: 'upstream failure' }),
+    },
+  )
 })
 
 test('GET /contact/form returns a fresh contact form fragment', async () => {
@@ -217,7 +238,9 @@ test('GET /og-image.png returns a generated PNG with cache headers', async () =>
     const buf = Buffer.from(await res.arrayBuffer())
     assert.ok(buf.byteLength > 1024, 'PNG payload should be non-trivial')
     // PNG magic bytes
-    assert.deepEqual(buf.subarray(0, 8), Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]))
+    assert.deepEqual(
+      buf.subarray(0, 8),
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    )
   })
 })
-

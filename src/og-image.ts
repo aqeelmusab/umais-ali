@@ -11,9 +11,9 @@
 
 import { promises as fs } from 'node:fs'
 import path from 'node:path'
+import { Resvg } from '@resvg/resvg-js'
 import type { Request, Response } from 'express'
 import satori, { type SatoriOptions } from 'satori'
-import { Resvg } from '@resvg/resvg-js'
 // wawoff2 ships no types; only `decompress` is needed.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore -- no upstream type declarations
@@ -73,7 +73,7 @@ function h(
   props: Record<string, unknown> | null,
   ...children: Node[]
 ): { type: string; props: Record<string, unknown> } {
-  const flat = children.flat(Infinity).filter((c) => c !== null && c !== undefined)
+  const flat = children.flat(Number.POSITIVE_INFINITY).filter((c) => c !== null && c !== undefined)
   return {
     type,
     props: {

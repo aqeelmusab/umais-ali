@@ -1,15 +1,11 @@
-import path from 'node:path'
 import { randomBytes } from 'node:crypto'
 import type { IncomingMessage, ServerResponse } from 'node:http'
+import path from 'node:path'
 import express, { type Express, type Request, type Response } from 'express'
+import { ipKeyGenerator, rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
-import { rateLimit, ipKeyGenerator } from 'express-rate-limit'
-import { projects } from './data/projects'
 import { validateContact } from './contact'
-import { sendContactEmail, type SendContactArgs, type SendContactResult } from './email'
-import { env, isProduction, isTest, assertProductionEnv } from './env'
-import { ogImageHandler } from './og-image.js'
-import { getProjectNavigation } from './projects-nav'
+import { projects } from './data/projects'
 import {
   CONTACT_EMAIL,
   SITE_DESCRIPTION,
@@ -18,16 +14,20 @@ import {
   SITE_URL,
   experience,
   faqs,
+  getServiceBySlug,
   heroStats,
   highlights,
   marquee,
   navLinks,
-  getServiceBySlug,
   services,
   skills,
   socialLinks,
   testimonials,
 } from './data/site'
+import { type SendContactArgs, type SendContactResult, sendContactEmail } from './email'
+import { assertProductionEnv, env, isProduction, isTest } from './env'
+import { ogImageHandler } from './og-image.js'
+import { getProjectNavigation } from './projects-nav'
 
 // Resolve views/public relative to project root (works for both `tsx` and compiled `dist`).
 const ROOT = path.resolve(__dirname, '..')
@@ -83,9 +83,10 @@ export function createApp(options: CreateAppOptions = {}): Express {
       crossOriginEmbedderPolicy: false,
       crossOriginResourcePolicy: { policy: 'cross-origin' },
       referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
-      hsts: env.ENABLE_HSTS && isProduction
-        ? { maxAge: 60 * 60 * 24 * 365, includeSubDomains: true, preload: true }
-        : false,
+      hsts:
+        env.ENABLE_HSTS && isProduction
+          ? { maxAge: 60 * 60 * 24 * 365, includeSubDomains: true, preload: true }
+          : false,
     }),
   )
 
@@ -217,7 +218,9 @@ export function createApp(options: CreateAppOptions = {}): Express {
       return
     }
 
-    const relatedServices = services.filter((candidate) => service.relatedSlugs.includes(candidate.slug))
+    const relatedServices = services.filter((candidate) =>
+      service.relatedSlugs.includes(candidate.slug),
+    )
 
     const serviceJsonLd = {
       ...jsonLd,

@@ -3,9 +3,7 @@
  * Replaces the React hooks (useScrollLock, useFocusTrap, useInView, useScroll).
  * Stays vanilla so it composes with HTMX.
  */
-(function () {
-  'use strict'
-
+;(() => {
   // ─── Scroll lock (single source of truth) ──────────────────────────────
   let scrollLockCount = 0
   let smoothScrollFrame = 0
@@ -19,7 +17,7 @@
   }
 
   function easeOutQuart(t) {
-    return 1 - Math.pow(1 - t, 4)
+    return 1 - (1 - t) ** 4
   }
 
   function clampScroll(value) {
@@ -31,9 +29,11 @@
     let node = target instanceof Element ? target : null
     while (node && node !== document.body) {
       const style = window.getComputedStyle(node)
-      const canScroll = /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight
+      const canScroll =
+        /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight
       if (canScroll) {
-        const canScrollDown = deltaY > 0 && node.scrollTop + node.clientHeight < node.scrollHeight - 1
+        const canScrollDown =
+          deltaY > 0 && node.scrollTop + node.clientHeight < node.scrollHeight - 1
         const canScrollUp = deltaY < 0 && node.scrollTop > 1
         if (canScrollDown || canScrollUp) return true
       }
@@ -84,10 +84,12 @@
     if (
       prefersReducedMotion() ||
       document.documentElement.classList.contains('is-scroll-locked') ||
-      event.ctrlKey || event.metaKey ||
+      event.ctrlKey ||
+      event.metaKey ||
       Math.abs(event.deltaX) > Math.abs(event.deltaY) ||
       canScrollInside(event.target, event.deltaY)
-    ) return
+    )
+      return
 
     event.preventDefault()
     cancelAnimationFrame(smoothScrollFrame)
@@ -102,9 +104,13 @@
   }
 
   window.addEventListener('wheel', onWheelSmooth, { passive: false })
-  window.addEventListener('scroll', () => {
-    if (!isWheelScrolling) wheelTarget = window.scrollY
-  }, { passive: true })
+  window.addEventListener(
+    'scroll',
+    () => {
+      if (!isWheelScrolling) wheelTarget = window.scrollY
+    },
+    { passive: true },
+  )
 
   function lockScroll() {
     if (scrollLockCount === 0) {
@@ -136,12 +142,19 @@
       return null
     }
 
-    if (url.origin !== window.location.origin || url.pathname !== window.location.pathname || !url.hash) return null
+    if (
+      url.origin !== window.location.origin ||
+      url.pathname !== window.location.pathname ||
+      !url.hash
+    )
+      return null
     return document.getElementById(decodeURIComponent(url.hash.slice(1)))
   }
 
   function scrollToAnchorTarget(target) {
-    const navOffset = nav ? Math.ceil(nav.getBoundingClientRect().height + nav.getBoundingClientRect().top + 16) : 0
+    const navOffset = nav
+      ? Math.ceil(nav.getBoundingClientRect().height + nav.getBoundingClientRect().top + 16)
+      : 0
     const top = Math.max(0, window.scrollY + target.getBoundingClientRect().top - navOffset)
     smoothScrollTo(top)
     if (target.id) history.pushState(null, '', `#${target.id}`)
@@ -222,9 +235,9 @@
   if (menuOpen) menuOpen.addEventListener('click', openMenu)
   if (menuClose) menuClose.addEventListener('click', closeMenu)
   if (menu) {
-    menu.querySelectorAll('[data-close-menu]').forEach((el) =>
+    for (const el of menu.querySelectorAll('[data-close-menu]')) {
       el.addEventListener('click', closeMenu)
-    )
+    }
   }
 
   document.addEventListener('click', (e) => {
@@ -235,8 +248,8 @@
     if (!target) return
 
     e.preventDefault()
-    if (menu && menu.classList.contains('is-open')) closeMenu()
-    if (modal && modal.classList.contains('is-open')) closeModal()
+    if (menu?.classList.contains('is-open')) closeMenu()
+    if (modal?.classList.contains('is-open')) closeModal()
     requestAnimationFrame(() => scrollToAnchorTarget(target))
   })
 
@@ -288,7 +301,7 @@
   })
   // HTMX delivers prev/next markup into the same container; keep modal open.
   document.body.addEventListener('htmx:afterSwap', (e) => {
-    if (e.detail && e.detail.target && e.detail.target.id === 'project-modal-content') {
+    if (e.detail?.target && e.detail.target.id === 'project-modal-content') {
       openModal()
     }
   })
@@ -303,16 +316,16 @@
     // "/" — jump to work (only when nothing is focused/typed in)
     if (
       e.key === '/' &&
-      !e.metaKey && !e.ctrlKey && !e.altKey &&
-      !(modal && modal.classList.contains('is-open')) &&
-      !(menu && menu.classList.contains('is-open'))
+      !e.metaKey &&
+      !e.ctrlKey &&
+      !e.altKey &&
+      !modal?.classList.contains('is-open') &&
+      !menu?.classList.contains('is-open')
     ) {
       const target = document.activeElement
-      const isTyping = target && (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable
-      )
+      const isTyping =
+        target &&
+        (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable)
       if (!isTyping) {
         const work = document.getElementById('work')
         if (work) {
@@ -323,17 +336,17 @@
     }
 
     if (e.key === 'Escape') {
-      if (modal && modal.classList.contains('is-open')) {
+      if (modal?.classList.contains('is-open')) {
         closeModal()
         return
       }
-      if (menu && menu.classList.contains('is-open')) {
+      if (menu?.classList.contains('is-open')) {
         closeMenu()
         return
       }
     }
     // Modal arrow nav
-    if (modal && modal.classList.contains('is-open')) {
+    if (modal?.classList.contains('is-open')) {
       if (e.key === 'ArrowLeft') {
         const prev = modal.querySelector('[data-modal-prev]')
         if (prev && !prev.disabled) prev.click()
@@ -343,7 +356,7 @@
       } else if (e.key === 'Tab') {
         trapFocus(modal, e)
       }
-    } else if (menu && menu.classList.contains('is-open') && e.key === 'Tab') {
+    } else if (menu?.classList.contains('is-open') && e.key === 'Tab') {
       trapFocus(menu, e)
     }
   })
@@ -353,18 +366,22 @@
   if ('IntersectionObserver' in window && reveals.length) {
     const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
+        for (const entry of entries) {
           if (entry.isIntersecting) {
             entry.target.classList.add('in-view')
             io.unobserve(entry.target)
           }
-        })
+        }
       },
-      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' },
     )
-    reveals.forEach((el) => io.observe(el))
+    for (const el of reveals) {
+      io.observe(el)
+    }
   } else {
-    reveals.forEach((el) => el.classList.add('in-view'))
+    for (const el of reveals) {
+      el.classList.add('in-view')
+    }
   }
 
   // Reveal only nodes inside the swap target so existing in-viewport reveals keep their animation.
@@ -372,7 +389,9 @@
     const detail = e.detail
     const swapTarget = detail && (detail.target || detail.elt)
     if (!(swapTarget instanceof HTMLElement) || swapTarget === document.body) return
-    swapTarget.querySelectorAll('.reveal:not(.in-view)').forEach((el) => el.classList.add('in-view'))
+    for (const el of swapTarget.querySelectorAll('.reveal:not(.in-view)')) {
+      el.classList.add('in-view')
+    }
   })
 
   // Allow HTMX to swap validation/rate-limit responses — by default it only swaps 2xx.
@@ -398,14 +417,19 @@
   if (themeBtn) {
     const setLabel = () => {
       const t = document.documentElement.getAttribute('data-theme') || 'dark'
-      themeBtn.setAttribute('aria-label', t === 'light' ? 'Switch to dark theme' : 'Switch to light theme')
+      themeBtn.setAttribute(
+        'aria-label',
+        t === 'light' ? 'Switch to dark theme' : 'Switch to light theme',
+      )
       themeBtn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false')
     }
     themeBtn.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme') || 'dark'
       const next = current === 'light' ? 'dark' : 'light'
       document.documentElement.setAttribute('data-theme', next)
-      try { localStorage.setItem('theme', next) } catch (_) {}
+      try {
+        localStorage.setItem('theme', next)
+      } catch (_) {}
       setLabel()
     })
     setLabel()

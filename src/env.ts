@@ -58,10 +58,8 @@ export function assertProductionEnv(): void {
   if (!env.RESEND_API_KEY) missing.push('RESEND_API_KEY')
   if (!env.CONTACT_TO) missing.push('CONTACT_TO')
   if (missing.length > 0) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      `[env] Missing recommended production env vars: ${missing.join(', ')}. ` +
-        `Contact form submissions will be logged but not emailed.`,
+    throw new Error(
+      `[env] Missing required production env vars: ${missing.join(', ')}. Application cannot start without critical integrations.`,
     )
   }
 }
