@@ -29,10 +29,51 @@ coverage/
 .leindex/
 
 # ── Editor / IDE ────────────────────────────────────────────────────────────
+# JetBrains (WebStorm, IntelliJ, PyCharm, Rider…)
 .idea/
+*.iml
+*.iws
+*.ipr
+
+# VS Code
 .vscode/
+.copilotignore
+
+# Vim / Neovim
 *.swp
 *.swo
+*.swn
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+.\#*
+.dir-locals.el
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# TextMate / BBEdit
+*.tmproj
+*.tmtags
+
+# Zed
+.zed/
+
+# Cursor
+.cursor/
+.cursorignore
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# NetBeans
+nbproject/
 
 # ── OS ──────────────────────────────────────────────────────────────────────
 .DS_Store

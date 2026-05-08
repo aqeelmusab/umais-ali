@@ -244,3 +244,79 @@ test('GET /og-image.png returns a generated PNG with cache headers', async () =>
     )
   })
 })
+
+// ─── CSRF protection tests (csrfProtection: true simulates production) ───────
+
+const validContactBody = new URLSearchParams({
+  name: 'Jane Doe',
+  email: 'jane@example.com',
+  message: 'Hello, this is a perfectly reasonable message.',
+}).toString()
+
+test('POST /contact rejects mismatched Origin with 403 when CSRF enabled', async () => {
+  await withServer(
+    async (base) => {
+      const res = await fetch(`${base}/contact`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          origin: 'https://evil.example.com',
+        },
+        body: validContactBody,
+      })
+      assert.equal(res.status, 403)
+      const text = await res.text()
+      assert.match(text, /forbidden/i)
+    },
+    { csrfProtection: true },
+  )
+})
+
+test('POST /contact accepts matching Origin when CSRF enabled', async () => {
+  await withServer(
+    async (base) => {
+      const res = await fetch(`${base}/contact`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          origin: 'https://umaisali.com',
+        },
+        body: validContactBody,
+      })
+      // Should reach validation/email logic, not be blocked
+      assert.notEqual(res.status, 403)
+    },
+    { csrfProtection: true },
+  )
+})
+
+test('POST /contact rejects mismatched Referer (no Origin) with 403 when CSRF enabled', async () => {
+  await withServer(
+    async (base) => {
+      const res = await fetch(`${base}/contact`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          referer: 'https://evil.example.com/page',
+        },
+        body: validContactBody,
+      })
+      assert.equal(res.status, 403)
+    },
+    { csrfProtection: true },
+  )
+})
+
+test('POST /contact allows request with no Origin and no Referer when CSRF enabled', async () => {
+  await withServer(
+    async (base) => {
+      const res = await fetch(`${base}/contact`, {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        body: validContactBody,
+      })
+      assert.notEqual(res.status, 403)
+    },
+    { csrfProtection: true },
+  )
+})

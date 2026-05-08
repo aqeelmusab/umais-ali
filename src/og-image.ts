@@ -176,10 +176,14 @@ async function renderPng(): Promise<Buffer> {
 
 /** Lazy-cache the rendered PNG in memory; the design has no per-request inputs. */
 export function getOgImage(): Promise<Buffer> {
-  pngPromise ??= renderPng().catch((err) => {
-    pngPromise = null // allow retry on next request
-    throw err
-  })
+  if (!pngPromise) {
+    const attempt = renderPng()
+    // On failure, clear only if this attempt is still the active one (handles concurrent failures).
+    attempt.catch(() => {
+      if (pngPromise === attempt) pngPromise = null
+    })
+    pngPromise = attempt
+  }
   return pngPromise
 }
 

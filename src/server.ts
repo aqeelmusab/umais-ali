@@ -37,11 +37,13 @@ type ContactEmailSender = (args: SendContactArgs) => Promise<SendContactResult>
 export interface CreateAppOptions {
   sendEmail?: ContactEmailSender
   enableVercelInsights?: boolean
+  csrfProtection?: boolean
 }
 
 export function createApp(options: CreateAppOptions = {}): Express {
   const sendEmail = options.sendEmail ?? sendContactEmail
   const enableVercelInsights = options.enableVercelInsights ?? isProduction
+  const csrfEnabled = options.csrfProtection ?? isProduction
   const app = express()
 
   // Trust Vercel's proxy headers so req.ip and rate limiting see the real client IP.
@@ -268,7 +270,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
   app.post('/contact', contactLimiter, async (req: Request, res: Response) => {
     // Stateless CSRF protection: verify Origin or Referer matches SITE_URL in production
-    if (isProduction) {
+    if (csrfEnabled) {
       const origin = req.get('origin')
       const referer = req.get('referer')
       const expectedOrigin = new URL(SITE_URL).origin
@@ -299,7 +301,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
     }
 
     const ip = req.ip
-    const userAgent = req.get('user-agent') ?? ''
+    const userAgent = (req.get('user-agent') ?? '').slice(0, 500)
 
     const sent = await sendEmail({
       values: result.values,
@@ -344,7 +346,10 @@ export function createApp(options: CreateAppOptions = {}): Express {
 let serverlessApp: Express | null = null
 
 export default function handler(req: IncomingMessage, res: ServerResponse): void {
-  serverlessApp ??= createApp()
+  if (!serverlessApp) {
+    assertProductionEnv()
+    serverlessApp = createApp()
+  }
   serverlessApp(req, res)
 }
 

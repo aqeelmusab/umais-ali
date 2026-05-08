@@ -57,6 +57,8 @@ export function assertProductionEnv(): void {
   const missing: string[] = []
   if (!env.RESEND_API_KEY) missing.push('RESEND_API_KEY')
   if (!env.CONTACT_TO) missing.push('CONTACT_TO')
+  if (!env.CONTACT_FROM || env.CONTACT_FROM.includes('onboarding@resend.dev'))
+    missing.push('CONTACT_FROM')
   if (missing.length > 0) {
     throw new Error(
       `[env] Missing required production env vars: ${missing.join(', ')}. Application cannot start without critical integrations.`,
