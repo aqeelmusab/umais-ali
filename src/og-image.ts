@@ -16,7 +16,7 @@ import type { Request, Response } from 'express'
 import satori, { type SatoriOptions } from 'satori'
 // wawoff2 ships no types; only `decompress` is needed.
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore -- no upstream type declarations
+// @ts-expect-error -- no upstream type declarations
 import wawoff2 from 'wawoff2'
 import { SITE_NAME, SITE_URL } from './data/site'
 

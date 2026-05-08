@@ -150,8 +150,9 @@
 }
 
 @theme inline {
-  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  --font-sans:
+    "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
+    sans-serif;
   --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
@@ -198,7 +199,9 @@
     font-family: var(--font-sans);
     font-feature-settings: "cv11", "ss01", "ss03";
     letter-spacing: -0.005em;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    transition:
+      background-color 0.4s ease,
+      color 0.4s ease;
   }
   html.is-scroll-locked {
     overflow: hidden;
@@ -370,7 +373,7 @@ body::before {
   animation-delay: 0.24s;
 }
 .stagger-5 {
-  animation-delay: 0.30s;
+  animation-delay: 0.3s;
 }
 .stagger-6 {
   animation-delay: 0.36s;
@@ -457,7 +460,8 @@ body::before {
 }
 
 .hero-grid-bg {
-  background-image: linear-gradient(var(--hero-grid-color) 1px, transparent 1px),
+  background-image:
+    linear-gradient(var(--hero-grid-color) 1px, transparent 1px),
     linear-gradient(to right, var(--hero-grid-color) 1px, transparent 1px);
   background-size: 64px 64px;
   mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black 40%, transparent 80%);
@@ -575,7 +579,9 @@ html {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--hairline);
-  box-shadow: 0 1px 0 0 oklch(from var(--foreground) l c h / 0.04) inset, var(--shadow-elev);
+  box-shadow:
+    0 1px 0 0 oklch(from var(--foreground) l c h / 0.04) inset,
+    var(--shadow-elev);
 }
 
 /* ── Mobile menu open state ──────────────────── */
@@ -583,15 +589,17 @@ html {
   opacity: 0;
   pointer-events: none;
   transform: translateY(-0.75rem);
-  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1), transform 0.35s
-    cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 #mobile-menu > * {
   opacity: 0;
   transform: translateY(0.75rem);
-  transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1), transform 0.32s
-    cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
 }
 #mobile-menu.is-open {
   opacity: 1;
@@ -626,7 +634,9 @@ html {
   background-clip: padding-box;
   clip-path: inset(0 round var(--radius));
   isolation: isolate;
-  transition: opacity 0.28s ease, transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:
+    opacity 0.28s ease,
+    transform 0.42s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 #project-modal.is-open .modal-card {
@@ -644,7 +654,9 @@ html {
   opacity: 0;
   transform: translateY(1rem);
   pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
 }
 #scroll-top.is-visible {
   opacity: 1;
@@ -666,7 +678,6 @@ html {
 /* ── Bento card hover-lift ───────────────────── */
 .bento-card {
   position: relative;
-  overflow: hidden;
   overflow: clip;
   border-radius: var(--radius);
   background: var(--card);
@@ -676,7 +687,10 @@ html {
   clip-path: inset(0 round var(--radius));
   isolation: isolate;
   transform: translateZ(0);
-  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, filter 0.4s ease;
+  transition:
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease,
+    filter 0.4s ease;
 }
 
 details > p {
@@ -716,7 +730,9 @@ details > p {
   background: var(--card);
 }
 .bento-card .bento-image {
-  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+  transition:
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.6s ease;
   filter: saturate(0.92) contrast(1.02);
 }
 .bento-card:hover .bento-image {

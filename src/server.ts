@@ -8,10 +8,6 @@ import { validateContact } from './contact'
 import { projects } from './data/projects'
 import {
   CONTACT_EMAIL,
-  SITE_DESCRIPTION,
-  SITE_NAME,
-  SITE_TITLE,
-  SITE_URL,
   experience,
   faqs,
   getServiceBySlug,
@@ -19,6 +15,10 @@ import {
   highlights,
   marquee,
   navLinks,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_TITLE,
+  SITE_URL,
   services,
   skills,
   socialLinks,
