@@ -1,21 +1,21 @@
 {
   "name": "Umais Ali",
-  "short_name": "Umais.",
+  "short_name": "Umais",
   "icons": [
     {
-      "src": "/web-app-manifest-192x192.png",
+      "src": "/favicons/web-app-manifest-192x192.png?v=2.4.2",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/web-app-manifest-512x512.png",
+      "src": "/favicons/web-app-manifest-512x512.png?v=2.4.2",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#000000",
-  "background_color": "#000000",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone"
 }
