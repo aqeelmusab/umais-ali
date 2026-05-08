@@ -1,0 +1,18 @@
+# Shell scripts and Git hooks must stay LF even when checked out on Windows,
+# otherwise the sh shebang parser on Linux / macOS sees `#!/usr/bin/env sh\r`
+# and fails to locate the interpreter.
+*.sh text eol=lf
+.githooks/* text eol=lf
+
+# Web / Node sources: normalize to LF so Windows checkouts do not rewrite the
+# whole tree and pollute diffs with CRLF-only noise.
+*.ts text eol=lf
+*.tsx text eol=lf
+*.mjs text eol=lf
+*.cjs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf

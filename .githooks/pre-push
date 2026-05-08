@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+# Block pushes when pnpm-lock.yaml is out of sync with package.json.
+# CI runs `pnpm install --frozen-lockfile`; this catches the same drift locally.
+
+set -e
+
+echo "↪ Verifying pnpm-lock.yaml is in sync…"
+
+if ! pnpm install --frozen-lockfile --prefer-offline >/dev/null 2>&1; then
+  echo ""
+  echo "✗ pnpm-lock.yaml is out of sync with package.json (or install failed)"
+  echo ""
+  echo "  Fix:"
+  echo "    pnpm install"
+  echo "    git add pnpm-lock.yaml"
+  echo "    git commit -m 'Sync pnpm-lock.yaml'"
+  echo ""
+  echo "  Then re-run 'git push'."
+  echo ""
+  exit 1
+fi
+
+echo "✓ Lockfile in sync"
