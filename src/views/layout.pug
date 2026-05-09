@@ -12,15 +12,17 @@ html(lang='en' class='bg-background')
     meta(name='theme-color' content='#fbf8f1' media='(prefers-color-scheme: light)')
 
     //- Apply saved theme BEFORE first paint to avoid flash.
+    //- Explicit light/dark in localStorage wins; otherwise follow prefers-color-scheme.
     script(nonce=cspNonce).
       (function () {
         try {
           var stored = localStorage.getItem('theme');
-          var prefers = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-          var theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+          var prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+          var prefers = prefersLight ? 'light' : 'dark';
+          var theme = stored === 'light' || stored === 'dark' ? stored : prefers;
           document.documentElement.setAttribute('data-theme', theme);
         } catch (_) {
-          document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.setAttribute('data-theme', 'light');
         }
       })();
 

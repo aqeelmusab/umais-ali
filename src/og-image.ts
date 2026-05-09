@@ -23,7 +23,7 @@ import { SITE_NAME, SITE_URL } from './data/site'
 const ROOT = path.resolve(__dirname, '..')
 const FONT_DIR = path.join(ROOT, 'public', 'fonts')
 
-// Match the dark-theme tokens declared in src/styles/main.css.
+// Match the dark-theme tokens declared in `src/styles/main.css` (`:root[data-theme="dark"]`).
 const COLORS = {
   background: '#15130f',
   foreground: '#fbf8f1',
@@ -64,7 +64,7 @@ function getFonts(): Promise<SatoriOptions['fonts']> {
 }
 
 /**
- * Tiny `h()` helper so this file reads like JSX without needing a JSX runtime.
+ * Tiny `h()` helper so this file reads like JSX  ithout needing a JSX runtime.
  * Satori accepts the same `{ type, props }` shape React.createElement produces.
  */
 type Node = string | { type: string; props: Record<string, unknown> } | null
