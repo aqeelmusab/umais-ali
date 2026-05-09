@@ -1,21 +1,21 @@
 # Umais Ali Portfolio
 
-A client portfolio website for Umais Ali, an SEO Executive. The application is built with Node.js, Express, Pug, HTMX, Tailwind CSS, and TypeScript.
+A client portfolio site for Umais Ali, an SEO Executive. It runs on Node.js with Express, Pug for views, HTMX for light interactivity, Tailwind CSS for styling, and TypeScript on the server.
 
-This project is not a static export. The site renders via an Express application and uses a Node runtime for dynamic routes and the contact form. On Vercel, it runs as a serverless Node function with static assets served from the `public/` directory.
+This is not a static export. Pages render through Express, and the Node runtime handles dynamic routes and the contact form. On Vercel the app runs as a serverless Node function, with static files served from `public/`.
 
 ## Features
 
 * Responsive portfolio landing page
-* Server-rendered views using Pug
-* Project modal fragments powered by HTMX
-* Contact form validation with a honeypot spam trap
-* Email delivery via Resend with support for dashboard templates
-* Per-IP contact form rate limiting
-* Vercel Web Analytics and Speed Insights integration
-* Helmet security headers and nonce-based Content Security Policy
-* Tailwind CSS v4 build pipeline
-* Node test suite utilizing `node:test` and `tsx`
+* Server-rendered views with Pug
+* Project modals via HTMX fragments
+* Contact form validation and a honeypot field
+* Outbound email through Resend, including dashboard templates when configured
+* Per-IP rate limiting on the contact form
+* Vercel Web Analytics and Speed Insights when enabled
+* Helmet security headers and a nonce-based Content Security Policy
+* Tailwind CSS v4 CLI build
+* Tests with Node's built-in test runner and `tsx`
 
 ## Tech Stack
 
@@ -47,8 +47,8 @@ vercel.json               Vercel routing and build config
 
 ## Requirements
 
-* Node.js 24.x
-* [pnpm](https://pnpm.io/installation) (Enable via Corepack: `corepack enable`. The version specified in `package.json` will be used automatically)
+* Node.js 24.x (see `.nvmrc` if you use a version manager)
+* pnpm: enable [Corepack](https://nodejs.org/api/corepack.html) (`corepack enable`), then installs follow the `packageManager` field in `package.json` so everyone uses the same pnpm release
 
 ## Local Setup
 
@@ -64,17 +64,17 @@ Create a local environment file:
 cp .env.example .env
 ```
 
-On Windows PowerShell, use `Copy-Item` if `cp` is unavailable:
+On Windows PowerShell, use `Copy-Item` if `cp` is not available:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Fill in `.env` with the values required for contact form email delivery.
+Edit `.env` with the values you need for contact email to send.
 
 ## Environment Variables
 
-Required for production contact form delivery:
+Required for production contact delivery:
 
 ```env
 RESEND_API_KEY=
@@ -83,14 +83,14 @@ CONTACT_TO=
 CONTACT_TEMPLATE_ID=
 ```
 
-Recommended for Vercel:
+Recommended on Vercel:
 
 ```env
 TRUST_PROXY=1
 ENABLE_HSTS=true
 ```
 
-Optional settings:
+Optional:
 
 ```env
 CONTACT_REPLY_TO=
@@ -98,20 +98,20 @@ CONTACT_RATE_WINDOW_MS=600000
 CONTACT_RATE_MAX=5
 ```
 
-Local development defaults:
+Local defaults:
 
 ```env
 NODE_ENV=development
 PORT=3000
 ```
 
-Vercel sets `NODE_ENV` automatically, and serverless functions do not require a custom `PORT`.
+Vercel sets `NODE_ENV` for you. You do not set `PORT` for serverless functions.
 
 ### Resend Template
 
-The application can send contact emails using a published Resend dashboard template when `CONTACT_TEMPLATE_ID` is set.
+When `CONTACT_TEMPLATE_ID` is set, the app can send through a published Resend dashboard template.
 
-The template should define the following variables:
+The template should expose these variables:
 
 ```text
 name
@@ -121,60 +121,58 @@ ip
 userAgent
 ```
 
-Important notes:
+Notes:
 
-* The Resend template must be published, not just saved as a draft.
-* Leave the dashboard template Reply-To empty or set it to a fixed email address.
-* The application sets a dynamic `replyTo` address from the submitter's email after validation.
-* Resend template variables have a 2,000 character limit, which also limits the contact message to 2,000 characters.
+* The template must be published, not left as a draft only.
+* Leave Reply-To empty in the dashboard template, or set it to a fixed address you control.
+* After validation, the app sets `replyTo` from the submitter's address.
+* Resend caps template variable length at 2,000 characters, which also caps the contact message length.
 
-## Local Development Flow
+## Local Development
 
-Run the development server with CSS watching enabled:
+Start the dev server with CSS watching:
 
 ```bash
 pnpm dev
 ```
 
-The application defaults to `http://localhost:3000`.
+Default URL: `http://localhost:3000`.
 
-### Local Validation and Preview
+### Before You Push
 
-Before pushing code, run the local preview and verify scripts to ensure everything is correct:
+Build and run locally, then run the full check script:
 
 ```bash
 pnpm run preview
 pnpm run verify
 ```
 
-The `verify` script runs the full quality gate: typechecking, testing, linting with Biome, and building the application.
+`verify` runs TypeScript checks, tests, Biome lint, and a production build in one command.
 
-## Push and PR Validation
+## Push and CI
 
-This repository enforces a strict Git and CI workflow:
+1. **Pre-push hook:** `simple-git-hooks` runs on `git push`. It checks that `pnpm-lock.yaml` matches `package.json` (`pnpm install --frozen-lockfile --lockfile-only`). If that passes, it runs `pnpm run typecheck` and `pnpm test`. If the lockfile step fails, run `pnpm install`, commit the lockfile change, and push again.
+2. **GitHub Actions:** Pushes to `main` and pull requests against `main` run the Verify workflow: install with a frozen lockfile, then `pnpm run verify`, on Node 24.
 
-1. **Local Pre-push Hook**: A git hook managed by `simple-git-hooks` automatically runs before `git push`. It performs a fast check (`pnpm install --frozen-lockfile --lockfile-only`) to block the push if `pnpm-lock.yaml` is out of sync with `package.json`. If it fails, run `pnpm install` and commit the changes before pushing.
-2. **GitHub Actions Pipeline**: Every push to `main` and every Pull Request triggers the Verify workflow. This pipeline runs the full `pnpm run verify` gate on Node 24.
+## Deployment
 
-## Deployment Flow
+Hosting is Vercel. CI and deploy are separate concerns.
 
-The deployment model is host-driven via Vercel and separate from the CI pipeline.
+* **Preview:** Each pull request gets its own preview URL.
+* **Production:** Pushes to `main` go to production.
 
-* **Preview Environments**: Vercel automatically deploys every Pull Request to a unique preview URL.
-* **Production**: Vercel automatically deploys pushes to the `main` branch to production.
+`vercel.json` wires the app to Vercel. In short:
 
-The application is configured for Vercel in `vercel.json`. Deployment behavior is as follows:
+* `pnpm install --frozen-lockfile` during the build (see `vercel.json`).
+* `pnpm run build` writes `public/css/main.css` and compiles TypeScript into `dist/`.
+* Static files under `public/` are served as-is.
+* Other requests hit `api/index.ts`, which loads the Express app from `src/server.ts`.
 
-* `pnpm install --frozen-lockfile` installs dependencies as configured in `vercel.json`.
-* `pnpm run build` generates `public/css/main.css` and compiles TypeScript to `dist/`.
-* Vercel serves existing static files first.
-* All remaining routes go to `api/index.ts`, which loads the Express application from `src/server.ts`.
+### Production Env and Startup Checks
 
-### Critical Integrations
+If required mail settings are missing in production (for example `RESEND_API_KEY` or `CONTACT_TO`), the process exits on startup so the problem is obvious instead of the site running without mail.
 
-The application is designed to fail loudly in production instead of silently succeeding if critical integrations are missing. During startup, if required environment variables like `RESEND_API_KEY` and `CONTACT_TO` are missing, the server will throw an error and crash.
-
-Add these variables in your Vercel Project Settings:
+Set these in Vercel project settings (use your real sender domain in Resend):
 
 ```env
 RESEND_API_KEY=your_resend_api_key
@@ -185,18 +183,16 @@ TRUST_PROXY=1
 ENABLE_HSTS=true
 ```
 
-Use the actual verified sender domain configured in Resend.
-
 ## Content Updates
 
-Most page copy and structured content is located in:
+Most copy and structured content lives in:
 
 * `src/data/site.ts`
 * `src/data/projects.ts`
 
-Pug view partials are located in `src/views/partials/`.
+Pug partials sit under `src/views/partials/`.
 
-After changing styles or Pug class names, run:
+After style or class changes that affect the built CSS, run:
 
 ```bash
 pnpm build
@@ -204,8 +200,8 @@ pnpm build
 
 ## Security Notes
 
-* `.env` is ignored and must never be committed.
-* Helmet is enabled with a nonce-based Content Security Policy.
-* Contact form requests are rate limited.
-* User-submitted email content is escaped before inline HTML email fallback rendering.
-* Tests use a fake email sender to avoid accidental live email delivery.
+* `.env` is gitignored. Do not commit secrets.
+* Helmet runs with a nonce-based Content Security Policy.
+* The contact endpoint is rate limited.
+* User-supplied email content is escaped before any inline HTML fallback for email.
+* Tests stub the mail sender so nothing goes to Resend by accident.
