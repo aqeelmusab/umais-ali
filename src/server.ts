@@ -111,9 +111,14 @@ export function createApp(options: CreateAppOptions = {}): Express {
       const key = fromProxy || fallback || 'unknown-client'
       return ipKeyGenerator(key)
     },
-    handler: (_req, res) => {
+    handler: (req, res) => {
+      const b = req.body ?? {}
       res.status(429).render('partials/contact-form', {
-        values: { name: '', email: '', message: '' },
+        values: {
+          name: (b.name ?? '').toString().trim(),
+          email: (b.email ?? '').toString().trim(),
+          message: (b.message ?? '').toString().trim(),
+        },
         errors: { message: 'Too many requests. Please try again in a few minutes.' },
       })
     },
