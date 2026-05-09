@@ -5,14 +5,6 @@
   "description": "Umais Ali — SEO Executive portfolio (Node + Express + Pug + HTMX + Tailwind).",
   "main": "dist/server.js",
   "packageManager": "pnpm@11.0.9",
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "@biomejs/biome",
-      "@parcel/watcher",
-      "esbuild",
-      "simple-git-hooks"
-    ]
-  },
   "engines": {
     "node": ">=24.0.0"
   },
