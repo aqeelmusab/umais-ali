@@ -9,11 +9,12 @@ This is not a static export. Pages render through Express, and the Node runtime 
 * Responsive portfolio landing page
 * Server-rendered views with Pug
 * Project modals via HTMX fragments
-* Contact form validation and a honeypot field
+* Contact form validation, honeypot field, and Origin/Referer CSRF check
 * Outbound email through Resend, including dashboard templates when configured
 * Per-IP rate limiting on the contact form
 * Vercel Web Analytics and Speed Insights when enabled
 * Helmet security headers and a nonce-based Content Security Policy
+* Self-hosted HTMX runtime so no third-party script is needed
 * Tailwind CSS v4 CLI build
 * Tests with Node's built-in test runner and `tsx`
 
@@ -30,19 +31,20 @@ This is not a static export. Pages render through Express, and the Node runtime 
 ## Project Structure
 
 ```text
-api/index.ts              Vercel serverless entrypoint
-public/                   Static assets served directly
-public/css/main.css       Generated Tailwind CSS bundle
-public/js/site-main.js    Client-side interaction bundle
-src/server.ts             Express app and routes
-src/contact.ts            Contact form validation
-src/email.ts              Resend email sending
-src/env.ts                Environment variable parsing
-src/data/                 Site and project content
-src/styles/main.css       Tailwind source CSS
-src/views/                Pug layouts, pages, and partials
-tests/                    Node test suite
-vercel.json               Vercel routing and build config
+api/index.ts                  Vercel serverless entrypoint
+public/                       Static assets served directly
+public/css/main.css           Generated Tailwind CSS bundle (built, gitignored)
+public/js/site-main.js        Client-side interaction bundle
+public/js/htmx-2.0.4.min.js   Self-hosted HTMX runtime, pinned with SRI
+src/server.ts                 Express app and routes
+src/contact.ts                Contact form validation and value coercion
+src/email.ts                  Resend email sending
+src/env.ts                    Environment variable parsing
+src/data/                     Site and project content
+src/styles/main.css           Tailwind source CSS
+src/views/                    Pug layouts, pages, and partials
+tests/                        Node test suite
+vercel.json                   Vercel routing and build config
 ```
 
 ## Requirements
@@ -109,7 +111,7 @@ Vercel sets `NODE_ENV` for you. You do not set `PORT` for serverless functions.
 
 ### Resend Template
 
-When `CONTACT_TEMPLATE_ID` is set, the app can send through a published Resend dashboard template.
+When `CONTACT_TEMPLATE_ID` is set, the app sends through a published Resend dashboard template instead of the inline HTML/text fallback.
 
 The template should expose these variables:
 
@@ -117,6 +119,7 @@ The template should expose these variables:
 name
 email
 message
+subject
 ip
 userAgent
 ```
@@ -124,8 +127,9 @@ userAgent
 Notes:
 
 * The template must be published, not left as a draft only.
-* Leave Reply-To empty in the dashboard template, or set it to a fixed address you control.
-* After validation, the app sets `replyTo` from the submitter's address.
+* `subject` is supplied as a variable so the template can use it (`{{ subject }}`) or ignore it. The app no longer sends a `subject` field at the top level when a template is used, so the dashboard's own subject line wins by default.
+* `from` is also deferred to the template when one is configured. Set the From address in the Resend dashboard.
+* Leave Reply-To empty in the dashboard template, or set it to a fixed address you control. After validation, the app sets `replyTo` from the submitter's address (or from `CONTACT_REPLY_TO` if you set that). Both are sanitized to strip stray newlines before sending.
 * Resend caps template variable length at 2,000 characters, which also caps the contact message length.
 
 ## Local Development
@@ -201,7 +205,13 @@ pnpm build
 ## Security Notes
 
 * `.env` is gitignored. Do not commit secrets.
-* Helmet runs with a nonce-based Content Security Policy.
-* The contact endpoint is rate limited.
-* User-supplied email content is escaped before any inline HTML fallback for email.
+* Helmet runs with a nonce-based Content Security Policy. `script-src` is `'self'` plus a per-request nonce. No external script CDNs are listed.
+* HTMX is served from `/js/htmx-2.0.4.min.js` and pinned to a SHA-384 integrity hash in the layout. To upgrade, replace the file, recompute the hash with `openssl dgst -sha384 -binary <file> | openssl base64 -A`, and update the `integrity` value in `src/views/layout.pug`.
+* The contact endpoint is protected by:
+  * A honeypot field (`website`). Submissions that fill it get a fake success response so bots cannot tell their hit was rejected.
+  * Per-IP rate limiting (defaults: 5 requests per 10 minutes).
+  * Stateless CSRF check on `Origin` and `Referer` in production. The check parses the URL and compares origins exactly, so a host like `umaisali.com.attacker.example` cannot pass through a string-prefix match.
+  * Server-side validation of name (2 to 80 chars), email (basic shape plus length cap), and message (10 to 2000 chars).
+* User-supplied email content is escaped before going into the inline HTML fallback. Header values (`subject`, `replyTo`) are stripped of CR/LF and length-capped to defeat header injection.
+* Body parsing is limited to 32kb of `application/x-www-form-urlencoded`.
 * Tests stub the mail sender so nothing goes to Resend by accident.

@@ -49,7 +49,10 @@ export async function sendContactEmail(args: SendContactArgs): Promise<SendConta
   const safeName = sanitizeHeaderValue(values.name)
   const safeEmail = sanitizeHeaderValue(values.email)
   const subject = `New contact form message from ${safeName}`
-  const replyTo = env.CONTACT_REPLY_TO || safeEmail
+  // CONTACT_REPLY_TO is operator-controlled but still goes into a header, so
+  // sanitize defensively in case a stray newline in env config tries to smuggle
+  // extra headers.
+  const replyTo = env.CONTACT_REPLY_TO ? sanitizeHeaderValue(env.CONTACT_REPLY_TO) : safeEmail
 
   const text = `Name: ${values.name}\nEmail: ${values.email}\n${ip ? `IP: ${ip}\n` : ''}${userAgent ? `User-Agent: ${userAgent}\n` : ''}\n${values.message}\n`
 
@@ -57,10 +60,11 @@ export async function sendContactEmail(args: SendContactArgs): Promise<SendConta
 
   try {
     const { data, error } = env.CONTACT_TEMPLATE_ID
-      ? await resend.emails.send({
-          from: env.CONTACT_FROM,
+      ? // When a template is configured, defer subject/from to whatever the
+        // template defines. We expose our generated subject as a `{{ subject }}`
+        // variable so authors can opt in without us silently overriding it.
+        await resend.emails.send({
           to: env.CONTACT_TO,
-          subject,
           replyTo,
           template: {
             id: env.CONTACT_TEMPLATE_ID,
@@ -68,6 +72,7 @@ export async function sendContactEmail(args: SendContactArgs): Promise<SendConta
               name: values.name,
               email: values.email,
               message: values.message,
+              subject,
               ip: ip ?? '',
               userAgent: userAgent ?? '',
             },

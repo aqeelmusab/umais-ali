@@ -394,10 +394,12 @@
     }
   })
 
-  // Allow HTMX to swap validation/rate-limit responses — by default it only swaps 2xx.
-  // Without this, the user sees nothing happen when the server returns a form fragment.
+  // Allow HTMX to swap validation / rate-limit / CSRF-reject responses — by default
+  // it only swaps 2xx. Without this, the user sees nothing happen when the server
+  // returns a form fragment.
+  const SWAPPABLE_ERROR_STATUSES = new Set([403, 422, 429])
   document.body.addEventListener('htmx:beforeSwap', (e) => {
-    if (e.detail.xhr && (e.detail.xhr.status === 422 || e.detail.xhr.status === 429)) {
+    if (e.detail.xhr && SWAPPABLE_ERROR_STATUSES.has(e.detail.xhr.status)) {
       e.detail.shouldSwap = true
       e.detail.isError = false
     }

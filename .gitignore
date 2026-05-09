@@ -27,10 +27,23 @@ coverage/
 .cache/
 .vercel/
 .leindex/
+.pnpm-store/
+.npm/
+
+# ── Packaging ───────────────────────────────────────────────────────────────
+# pnpm/npm pack output and local tarballs.
+*.tgz
+
+# ── Scratch ─────────────────────────────────────────────────────────────────
+tmp/
+temp/
+*.bak
+*.backup
 
 # ── Editor / IDE ────────────────────────────────────────────────────────────
-# JetBrains (WebStorm, IntelliJ, PyCharm, Rider…)
+# JetBrains (WebStorm, IntelliJ, PyCharm, Rider, Fleet)
 .idea/
+.fleet/
 *.iml
 *.iws
 *.ipr
@@ -38,6 +51,7 @@ coverage/
 # VS Code
 .vscode/
 .copilotignore
+.history/
 
 # Vim / Neovim
 *.swp
@@ -77,4 +91,8 @@ nbproject/
 
 # ── OS ──────────────────────────────────────────────────────────────────────
 .DS_Store
+.AppleDouble
+.LSOverride
 Thumbs.db
+ehthumbs.db
+Desktop.ini

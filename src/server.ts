@@ -4,7 +4,7 @@ import path from 'node:path'
 import express, { type Express, type Request, type Response } from 'express'
 import { ipKeyGenerator, rateLimit } from 'express-rate-limit'
 import helmet from 'helmet'
-import { validateContact } from './contact'
+import { coerceContactValues, validateContact } from './contact'
 import { projects } from './data/projects'
 import {
   CONTACT_EMAIL,
@@ -75,7 +75,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
           frameAncestors: ["'none'"],
           imgSrc: ["'self'", 'data:'],
           objectSrc: ["'none'"],
-          scriptSrc: ["'self'", cspNonce, 'https://unpkg.com/htmx.org@2.0.4'],
+          scriptSrc: ["'self'", cspNonce],
           scriptSrcAttr: ["'none'"],
           styleSrc: ["'self'"],
           styleSrcAttr: ["'none'"],
@@ -108,17 +108,15 @@ export function createApp(options: CreateAppOptions = {}): Express {
     keyGenerator: (req) => {
       const fromProxy = typeof req.ip === 'string' ? req.ip.trim() : ''
       const fallback = req.socket?.remoteAddress?.trim() ?? ''
-      const key = fromProxy || fallback || 'unknown-client'
+      const key = fromProxy || fallback
+      // ipKeyGenerator normalizes IPv6; bypass it for the unknown-client fallback
+      // since it isn't a real IP and the function's behavior on non-IPs isn't a contract.
+      if (!key) return 'unknown-client'
       return ipKeyGenerator(key)
     },
     handler: (req, res) => {
-      const b = req.body ?? {}
       res.status(429).render('partials/contact-form', {
-        values: {
-          name: (b.name ?? '').toString().trim(),
-          email: (b.email ?? '').toString().trim(),
-          message: (b.message ?? '').toString().trim(),
-        },
+        values: coerceContactValues(req.body),
         errors: { message: 'Too many requests. Please try again in a few minutes.' },
       })
     },
@@ -274,18 +272,38 @@ export function createApp(options: CreateAppOptions = {}): Express {
   })
 
   app.post('/contact', contactLimiter, async (req: Request, res: Response) => {
-    // Stateless CSRF protection: verify Origin or Referer matches SITE_URL in production
+    // Stateless CSRF protection: verify Origin or Referer matches SITE_URL in production.
+    // We compare parsed origins, not string prefixes — a `startsWith` check is bypassable
+    // by a host like `umaisali.com.evil.example`.
     if (csrfEnabled) {
       const origin = req.get('origin')
       const referer = req.get('referer')
       const expectedOrigin = new URL(SITE_URL).origin
+      const rejectCsrf = (reason: string): void => {
+        console.warn('[contact] CSRF reject', { reason, origin, referer })
+        res.status(403).render('partials/contact-form', {
+          values: coerceContactValues(req.body),
+          errors: {
+            message:
+              'We could not verify the origin of this request. Please reload the page and try again.',
+          },
+        })
+      }
       if (origin && origin !== expectedOrigin) {
-        res.status(403).send('Forbidden: Invalid Origin')
+        rejectCsrf('origin-mismatch')
         return
       }
-      if (!origin && referer && !referer.startsWith(expectedOrigin)) {
-        res.status(403).send('Forbidden: Invalid Referer')
-        return
+      if (!origin && referer) {
+        let refererOrigin: string | null = null
+        try {
+          refererOrigin = new URL(referer).origin
+        } catch {
+          // malformed Referer header — treat as mismatch
+        }
+        if (refererOrigin !== expectedOrigin) {
+          rejectCsrf('referer-mismatch')
+          return
+        }
       }
     }
 

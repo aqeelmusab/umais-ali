@@ -266,7 +266,44 @@ test('POST /contact rejects mismatched Origin with 403 when CSRF enabled', async
       })
       assert.equal(res.status, 403)
       const text = await res.text()
-      assert.match(text, /forbidden/i)
+      // Renders the contact form fragment with a recoverable error message,
+      // so HTMX can swap it into the page instead of failing silently.
+      assert.match(text, /id="contact-form"/)
+      assert.match(text, /could not verify the origin/i)
+    },
+    { csrfProtection: true },
+  )
+})
+
+test('POST /contact rejects prefix-attack Referer (umaisali.com.evil.example) when CSRF enabled', async () => {
+  await withServer(
+    async (base) => {
+      const res = await fetch(`${base}/contact`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          referer: 'https://umaisali.com.evil.example/page',
+        },
+        body: validContactBody,
+      })
+      assert.equal(res.status, 403)
+    },
+    { csrfProtection: true },
+  )
+})
+
+test('POST /contact rejects malformed Referer when CSRF enabled', async () => {
+  await withServer(
+    async (base) => {
+      const res = await fetch(`${base}/contact`, {
+        method: 'POST',
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+          referer: 'not a url',
+        },
+        body: validContactBody,
+      })
+      assert.equal(res.status, 403)
     },
     { csrfProtection: true },
   )

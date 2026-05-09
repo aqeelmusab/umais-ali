@@ -56,13 +56,20 @@ export interface ContactResult {
   ok: boolean
 }
 
-export function validateContact(body: ContactBody | undefined | null): ContactResult {
+/** Coerce raw form input into trimmed strings. Shared with the rate-limit handler
+ * so error responses preserve whatever the user typed. */
+export function coerceContactValues(body: ContactBody | undefined | null): ContactValues {
   const b = body ?? {}
-  const values: ContactValues = {
+  return {
     name: (b.name ?? '').toString().trim(),
     email: (b.email ?? '').toString().trim(),
     message: (b.message ?? '').toString().trim(),
   }
+}
+
+export function validateContact(body: ContactBody | undefined | null): ContactResult {
+  const b = body ?? {}
+  const values = coerceContactValues(b)
   const honeypot = (b.website ?? '').toString().trim().length > 0
 
   const errors: ContactErrors = {}

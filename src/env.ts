@@ -13,7 +13,11 @@ function int(name: string, fallback: number): number {
   const v = process.env[name]
   if (v === undefined || v === '') return fallback
   const n = Number(v)
-  return Number.isFinite(n) ? n : fallback
+  if (!Number.isFinite(n)) {
+    console.warn(`[env] ${name}=${JSON.stringify(v)} is not numeric — falling back to ${fallback}`)
+    return fallback
+  }
+  return n
 }
 
 function bool(name: string, fallback: boolean): boolean {
