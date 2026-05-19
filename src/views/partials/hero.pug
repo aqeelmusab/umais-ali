@@ -43,14 +43,14 @@ section#top.relative.overflow-hidden(class='px-6 pt-32 pb-20 md:px-12 md:pt-44 m
     //- CTAs + keyboard hint
     .flex.flex-wrap.items-center.animate-fade-up.stagger-3(class='mt-10 gap-4')
       a.hover-glow.group.inline-flex.items-center.rounded-full.bg-foreground.font-medium.text-background.transition-all.duration-300(
-        href='#contact'
+        href=homeSectionHref('contact')
         class='gap-2 h-12 pl-6 pr-5 text-sm hover:bg-foreground/90 active:scale-[0.98]'
       )
         | Start a project
         span.inline-flex.transition-transform.duration-300(class='group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
           +icon('arrow-up-right', 'h-4 w-4')
       a.group.inline-flex.items-center.rounded-full.border.border-border.font-medium.text-foreground.transition-colors.duration-300(
-        href='#work'
+        href=homeSectionHref('work')
         class='gap-2 h-12 px-6 text-sm hover:border-foreground/40 hover:bg-foreground/3'
       )
         | See the work

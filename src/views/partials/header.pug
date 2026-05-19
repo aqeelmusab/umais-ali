@@ -26,7 +26,7 @@ header#site-nav.site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.ro
         +icon('sun', 'h-4 w-4')
 
     a.group.hidden.items-center.rounded-full.bg-foreground.font-medium.text-background.transition-all.duration-300(
-      href='#contact'
+      href=homeSectionHref('contact')
       class='gap-2 h-10 pl-5 pr-4 text-sm md:inline-flex md:-mr-1 hover:bg-foreground/90'
     )
       span Let's talk
@@ -66,7 +66,7 @@ header#site-nav.site-nav.fixed.z-40.mx-auto.flex.items-center.justify-between.ro
   .flex.items-center.justify-between.border-t.border-border(class='gap-4 px-8 py-6')
     a.font-mono.lowercase.text-muted-foreground(class='text-xs tracking-[0.18em]' href='mailto:' + site.contactEmail)= site.contactEmail
     a.inline-flex.items-center.rounded-full.bg-foreground.font-medium.text-background(
-      href='#contact'
+      href=homeSectionHref('contact')
       data-close-menu
       class='gap-2 h-11 px-5 text-sm'
     )

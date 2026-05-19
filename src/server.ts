@@ -13,12 +13,14 @@ import {
   getServiceBySlug,
   heroStats,
   highlights,
+  homeSectionHref,
   marquee,
   navLinks,
   SITE_DESCRIPTION,
   SITE_NAME,
   SITE_TITLE,
   SITE_URL,
+  sectionHref,
   services,
   skills,
   socialLinks,
@@ -53,6 +55,9 @@ export function createApp(options: CreateAppOptions = {}): Express {
   app.set('view engine', 'pug')
   app.set('views', path.join(ROOT, 'src', 'views'))
   app.disable('x-powered-by')
+
+  app.locals.homeSectionHref = homeSectionHref
+  app.locals.sectionHref = sectionHref
 
   app.use((_req, res, next) => {
     res.locals.cspNonce = randomBytes(16).toString('base64')

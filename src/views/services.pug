@@ -24,14 +24,14 @@ block content
               | an operating channel, not another folder of recommendations.
             .flex.flex-wrap.items-center.animate-fade-up.stagger-2(class='mt-10 gap-4')
               a.hover-glow.group.inline-flex.items-center.rounded-full.bg-foreground.font-medium.text-background.transition-all.duration-300(
-                href='#services-list'
+                href=sectionHref('services-list')
                 class='gap-2 h-12 pl-6 pr-5 text-sm hover:bg-foreground/90 active:scale-[0.98]'
               )
                 | View services
                 span.inline-flex.transition-transform.duration-300(class='group-hover:translate-x-0.5 group-hover:-translate-y-0.5')
                   +icon('arrow-down', 'h-4 w-4')
               a.group.inline-flex.items-center.rounded-full.border.border-border.font-medium.text-foreground.transition-colors.duration-300(
-                href='#contact'
+                href=sectionHref('contact')
                 class='gap-2 h-12 px-6 text-sm hover:border-foreground/40 hover:bg-foreground/3'
               )
                 | Start a project

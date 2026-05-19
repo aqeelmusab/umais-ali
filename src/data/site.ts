@@ -4,11 +4,31 @@ export const SITE_TITLE = 'Umais Ali | SEO that actually moves the needle'
 export const SITE_DESCRIPTION =
   'I help teams turn search into a real growth channel. Technical audits, content systems, link building, and migrations that hold up after launch. Five years in, forty something projects, three million plus organic visits.'
 
+/** Section ids on the home page (hero, work, about, contact). */
+export const homeSections = {
+  top: 'top',
+  work: 'work',
+  about: 'about',
+  contact: 'contact',
+} as const
+
+export type HomeSectionId = (typeof homeSections)[keyof typeof homeSections]
+
+/** Link to a home section from any route (e.g. nav, 404). */
+export function homeSectionHref(section: HomeSectionId): string {
+  return `/#${section}`
+}
+
+/** Same-page section link (e.g. contact block at the bottom of /services). */
+export function sectionHref(sectionId: string): string {
+  return `#${sectionId}`
+}
+
 export const navLinks = [
-  { label: 'Work', href: '/#work' },
+  { label: 'Work', href: homeSectionHref('work') },
   { label: 'Services', href: '/services' },
-  { label: 'About', href: '/#about' },
-  { label: 'Contact', href: '/#contact' },
+  { label: 'About', href: homeSectionHref('about') },
+  { label: 'Contact', href: homeSectionHref('contact') },
 ]
 
 export const heroStats = [

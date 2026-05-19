@@ -241,8 +241,8 @@
   }
 
   document.addEventListener('click', (e) => {
-    const link = e.target.closest('a[href^="#"]')
-    if (!link) return
+    const link = e.target.closest('a[href]')
+    if (!link || link.target === '_blank' || link.hasAttribute('download')) return
 
     const target = getAnchorTarget(link)
     if (!target) return
