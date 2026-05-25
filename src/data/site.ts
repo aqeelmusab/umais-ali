@@ -4,10 +4,11 @@ export const SITE_TITLE = 'Umais Ali | SEO that actually moves the needle'
 export const SITE_DESCRIPTION =
   'I help teams turn search into a real growth channel. Technical audits, content systems, link building, and migrations that hold up after launch. Five years in, forty something projects, three million plus organic visits.'
 
-/** Section ids on the home page (hero, work, about, contact). */
+/** Section ids on the home page (hero, work, services, about, contact). */
 export const homeSections = {
   top: 'top',
   work: 'work',
+  services: 'services',
   about: 'about',
   contact: 'contact',
 } as const
@@ -26,7 +27,7 @@ export function sectionHref(sectionId: string): string {
 
 export const navLinks = [
   { label: 'Work', href: homeSectionHref('work') },
-  { label: 'Services', href: '/services' },
+  { label: 'Services', href: homeSectionHref('services') },
   { label: 'About', href: homeSectionHref('about') },
   { label: 'Contact', href: homeSectionHref('contact') },
 ]
