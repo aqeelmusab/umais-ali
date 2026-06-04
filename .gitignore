@@ -42,6 +42,7 @@ temp/
 
 # ── Editor / IDE ────────────────────────────────────────────────────────────
 # JetBrains (WebStorm, IntelliJ, PyCharm, Rider, Fleet)
+.air/
 .idea/
 .fleet/
 *.iml
