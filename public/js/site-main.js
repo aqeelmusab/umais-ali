@@ -173,7 +173,7 @@
       return
     }
     const first = focusables[0]
-    const last = focusables[focusables.length - 1]
+    const last = focusables.item(focusables.length - 1)
     if (e.shiftKey && document.activeElement === first) {
       e.preventDefault()
       last.focus()
