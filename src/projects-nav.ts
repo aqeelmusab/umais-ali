@@ -15,14 +15,17 @@ export function getProjectNavigation(
   if (!Number.isFinite(id)) return null
   const index = projects.findIndex((p) => p.id === id)
   if (index === -1) return null
-  const project = projects[index]
+  const project = projects.at(index)
+  if (project === undefined) return null
   const hasPrev = index > 0
   const hasNext = index < projects.length - 1
+  const prevProject = hasPrev ? projects.at(index - 1) : null
+  const nextProject = hasNext ? projects.at(index + 1) : null
   return {
     project,
     hasPrev,
     hasNext,
-    prevId: hasPrev ? projects[index - 1].id : null,
-    nextId: hasNext ? projects[index + 1].id : null,
+    prevId: prevProject ? prevProject.id : null,
+    nextId: nextProject ? nextProject.id : null,
   }
 }
