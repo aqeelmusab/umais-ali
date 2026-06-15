@@ -2,7 +2,7 @@
   "name": "umais-ali",
   "version": "2.4.2",
   "private": true,
-  "description": "Umais Ali — SEO Executive portfolio (Node + Express + Pug + HTMX + Tailwind).",
+  "description": "Umais Ali: SEO Executive portfolio (Node + Express + Pug + HTMX + Tailwind).",
   "main": "dist/server.js",
   "packageManager": "pnpm@11.6.0",
   "engines": {
