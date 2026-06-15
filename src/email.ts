@@ -56,22 +56,7 @@ export async function sendContactEmail(args: SendContactArgs): Promise<SendConta
 
   const text = `Name: ${values.name}\nEmail: ${values.email}\n${ip ? `IP: ${ip}\n` : ''}${userAgent ? `User-Agent: ${userAgent}\n` : ''}\n${values.message}\n`
 
-  const html = [
-    '<div style="font-family:system-ui,sans-serif;line-height:1.5">',
-    '<p><strong>Name:</strong> ',
-    escapeHtml(values.name),
-    '</p>',
-    '<p><strong>Email:</strong> ',
-    escapeHtml(values.email),
-    '</p>',
-    ip ? ['<p><strong>IP:</strong> ', escapeHtml(ip), '</p>'].join('') : '',
-    userAgent ? ['<p><strong>User-Agent:</strong> ', escapeHtml(userAgent), '</p>'].join('') : '',
-    '<hr/>',
-    '<p style="white-space:pre-wrap">',
-    escapeHtml(values.message),
-    '</p>',
-    '</div>',
-  ].join('')
+  const html = `<div style="font-family:system-ui,sans-serif;line-height:1.5"><p><strong>Name:</strong> ${escapeHtml(values.name)}</p><p><strong>Email:</strong> ${escapeHtml(values.email)}</p>${ip ? `<p><strong>IP:</strong> ${escapeHtml(ip)}</p>` : ''}${userAgent ? `<p><strong>User-Agent:</strong> ${escapeHtml(userAgent)}</p>` : ''}<hr/><p style="white-space:pre-wrap">${escapeHtml(values.message)}</p></div>`
 
   try {
     const { data, error } = env.CONTACT_TEMPLATE_ID
