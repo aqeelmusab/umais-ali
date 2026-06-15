@@ -4,7 +4,7 @@
   "private": true,
   "description": "Umais Ali: SEO Executive portfolio (Node + Express + Pug + HTMX + Tailwind).",
   "main": "dist/server.js",
-  "packageManager": "pnpm@11.6.0",
+  "packageManager": "pnpm@11.7.0",
   "engines": {
     "node": ">=24.0.0"
   },
