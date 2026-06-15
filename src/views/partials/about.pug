@@ -4,7 +4,7 @@ section#about.relative(class='px-6 py-24 md:px-12 md:py-32 lg:px-20')
   .mx-auto(class='max-w-6xl')
     .grid.grid-cols-1(class='gap-12 lg:grid-cols-12 lg:gap-16')
 
-      //- LEFT — narrative
+      //- LEFT: narrative
       .flex.flex-col(class='lg:col-span-7')
         span.eyebrow About
         h2.font-serif.text-foreground(class='mt-6 text-4xl md:text-5xl tracking-tight leading-[1.05]')
@@ -27,14 +27,14 @@ section#about.relative(class='px-6 py-24 md:px-12 md:py-32 lg:px-20')
             | get me, not an account manager. If we work together you will have my
             | number, my Slack, and my honest opinion when something is a bad idea.
 
-        //- Highlight stats — hairline rail, not chips.
+        //- Highlight stats: hairline rail, not chips.
         .grid.grid-cols-2.border-t.border-border(class='mt-12 gap-y-8 gap-x-10 pt-10 sm:grid-cols-4')
           each h in highlights
             .flex.flex-col(class='gap-1')
               span.num-display.text-foreground(class='text-3xl md:text-4xl')= h.value
               span.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.18em]')= h.label
 
-      //- RIGHT — experience timeline + skills
+      //- RIGHT: experience timeline + skills
       .flex.flex-col(class='gap-12 lg:col-span-5')
         div
           span.eyebrow Where I've been

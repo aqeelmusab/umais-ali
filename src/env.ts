@@ -13,7 +13,7 @@ function parseIntVal(name: string, value: string | undefined, fallback: number):
   const n = Number(value)
   if (!Number.isFinite(n)) {
     console.warn(
-      `[env] ${name}=${JSON.stringify(value)} is not numeric — falling back to ${fallback}`,
+      `[env] ${name}=${JSON.stringify(value)} is not numeric, falling back to ${fallback}`,
     )
     return fallback
   }

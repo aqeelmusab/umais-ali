@@ -278,7 +278,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
 
   app.post('/contact', contactLimiter, async (req: Request, res: Response) => {
     // Stateless CSRF protection: verify Origin or Referer matches SITE_URL in production.
-    // We compare parsed origins, not string prefixes — a `startsWith` check is bypassable
+    // We compare parsed origins, not string prefixes, a `startsWith` check is bypassable
     // by a host like `umaisali.com.evil.example`.
     if (csrfEnabled) {
       const origin = req.get('origin')
@@ -303,7 +303,7 @@ export function createApp(options: CreateAppOptions = {}): Express {
         try {
           refererOrigin = new URL(referer).origin
         } catch {
-          // malformed Referer header — treat as mismatch
+          // malformed Referer header, treat as mismatch
         }
         if (refererOrigin !== expectedOrigin) {
           rejectCsrf('referer-mismatch')

@@ -1,5 +1,5 @@
 /**
- * Dynamic Open Graph image — the poster that appears in link previews.
+ * Dynamic Open Graph image: the poster that appears in link previews.
  *
  * Built with Satori (layout) + @resvg/resvg-js (PNG), in the spirit of the
  * Next.js `og-image.tsx` / `@vercel/og` pattern. Reuses the site's self-hosted
@@ -47,7 +47,7 @@ async function loadFont(file: string): Promise<Buffer> {
 async function loadFonts(): Promise<SatoriOptions['fonts']> {
   // Geist + JetBrains Mono ship as variable fonts whose `fvar` table breaks
   // satori's opentype parser, so the OG card uses Instrument Serif (regular +
-  // italic) — the same display face used for headings on the site.
+  // italic), the same display face used for headings on the site.
   const [serif, italic] = await Promise.all([
     loadFont('instrument-serif-latin.woff2'),
     loadFont('instrument-serif-italic-latin.woff2'),
@@ -141,7 +141,7 @@ function buildTree(): ReturnType<typeof h> {
       ),
     ),
 
-    // Footer line — role left, URL right
+    // Footer line: role left, URL right
     h(
       'div',
       {

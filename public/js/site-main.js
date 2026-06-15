@@ -1,5 +1,5 @@
 /**
- * umais-ali — small client glue.
+ * umais-ali, small client glue.
  * Replaces the React hooks (useScrollLock, useFocusTrap, useInView, useScroll).
  * Stays vanilla so it composes with HTMX.
  */
@@ -285,13 +285,13 @@
     modal.setAttribute('aria-hidden', 'true')
     modal.setAttribute('inert', '')
     unlockScroll()
-    // Clear after the fade-out transition (300ms — see CSS)
+    // Clear after the fade-out transition (300ms, see CSS)
     setTimeout(() => {
       if (modalContent && !modal.classList.contains('is-open')) modalContent.innerHTML = ''
     }, 300)
   }
 
-  // Open modal triggers (project cards) — delegated.
+  // Open modal triggers (project cards), delegated.
   document.addEventListener('click', (e) => {
     const trigger = e.target.closest('[data-project-trigger]')
     if (trigger) {
@@ -306,14 +306,14 @@
     }
   })
 
-  // Modal close buttons (delegated — content is HTMX-swapped)
+  // Modal close buttons (delegated, content is HTMX-swapped)
   document.addEventListener('click', (e) => {
     if (e.target.closest('[data-modal-close]')) closeModal()
   })
 
   // ─── Global keyboard handlers ─────────────────────────────────────────
   document.addEventListener('keydown', (e) => {
-    // "/" — jump to work (only when nothing is focused/typed in)
+    // "/" jumps to work (only when nothing is focused/typed in)
     if (
       e.key === '/' &&
       !e.metaKey &&
@@ -394,7 +394,7 @@
     }
   })
 
-  // Allow HTMX to swap validation / rate-limit / CSRF-reject responses — by default
+  // Allow HTMX to swap validation / rate-limit / CSRF-reject responses, by default
   // it only swaps 2xx. Without this, the user sees nothing happen when the server
   // returns a form fragment.
   const SWAPPABLE_ERROR_STATUSES = new Set([403, 422, 429])

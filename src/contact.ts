@@ -3,7 +3,7 @@
 
 const EMAIL_MAX = 200
 
-/** Pragmatic validation — not full RFC 5322, but rejects common typos and abuse patterns. */
+/** Pragmatic validation, not full RFC 5322, but rejects common typos and abuse patterns. */
 export function isValidEmail(email: string): boolean {
   if (email.length < 5 || email.length > EMAIL_MAX) return false
   if (/\s/.test(email)) return false
@@ -33,7 +33,7 @@ export interface ContactBody {
   name?: string
   email?: string
   message?: string
-  // honeypot — bots typically fill all fields
+  // honeypot, bots typically fill all fields
   website?: string
 }
 
