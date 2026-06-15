@@ -40,6 +40,8 @@ src/server.ts                 Express app and routes
 src/contact.ts                Contact form validation and value coercion
 src/email.ts                  Resend email sending
 src/env.ts                    Environment variable parsing
+src/og-image.ts               Dynamic Open Graph image (Satori + resvg-js)
+src/projects-nav.ts           Prev/next project navigation helper
 src/data/                     Site and project content
 src/styles/main.css           Tailwind source CSS
 src/views/                    Pug layouts, pages, and partials
