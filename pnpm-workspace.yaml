@@ -14,3 +14,4 @@ allowBuilds:
 
 minimumReleaseAgeExclude:
   - "@biomejs/*"
+  - '@types/node@24.13.3'
