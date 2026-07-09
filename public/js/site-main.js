@@ -7,10 +7,6 @@
   // ─── Scroll lock (single source of truth) ──────────────────────────────
   let scrollLockCount = 0
   let smoothScrollFrame = 0
-  let wheelScrollFrame = 0
-  let wheelTarget = 0
-  let wheelCurrent = 0
-  let isWheelScrolling = false
 
   function prefersReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -25,36 +21,10 @@
     return Math.min(max, Math.max(0, value))
   }
 
-  function canScrollInside(target, deltaY) {
-    let node = target instanceof Element ? target : null
-    while (node && node !== document.body) {
-      const style = window.getComputedStyle(node)
-      const canScroll =
-        /(auto|scroll)/.test(style.overflowY) && node.scrollHeight > node.clientHeight
-      if (canScroll) {
-        const canScrollDown =
-          deltaY > 0 && node.scrollTop + node.clientHeight < node.scrollHeight - 1
-        const canScrollUp = deltaY < 0 && node.scrollTop > 1
-        if (canScrollDown || canScrollUp) return true
-      }
-      node = node.parentElement
-    }
-    return false
-  }
-
-  function runWheelScroll() {
-    wheelCurrent += (wheelTarget - wheelCurrent) * 0.16
-    if (Math.abs(wheelTarget - wheelCurrent) < 0.5) {
-      wheelCurrent = wheelTarget
-      window.scrollTo(0, wheelCurrent)
-      wheelScrollFrame = 0
-      isWheelScrolling = false
-      return
-    }
-    window.scrollTo(0, wheelCurrent)
-    wheelScrollFrame = requestAnimationFrame(runWheelScroll)
-  }
-
+  // Deliberate, one-shot smooth scroll used for anchor clicks and the
+  // scroll-to-top button only. Regular wheel/trackpad/touch scrolling is left
+  // to the browser so it stays on the compositor thread (native momentum,
+  // no input lag).
   function smoothScrollTo(top, duration = 900) {
     if (prefersReducedMotion()) {
       window.scrollTo(0, top)
@@ -62,9 +32,6 @@
     }
 
     cancelAnimationFrame(smoothScrollFrame)
-    cancelAnimationFrame(wheelScrollFrame)
-    wheelScrollFrame = 0
-    isWheelScrolling = false
     const start = window.scrollY
     const target = clampScroll(top)
     const distance = target - start
@@ -79,38 +46,6 @@
 
     smoothScrollFrame = requestAnimationFrame(tick)
   }
-
-  function onWheelSmooth(event) {
-    if (
-      prefersReducedMotion() ||
-      document.documentElement.classList.contains('is-scroll-locked') ||
-      event.ctrlKey ||
-      event.metaKey ||
-      Math.abs(event.deltaX) > Math.abs(event.deltaY) ||
-      canScrollInside(event.target, event.deltaY)
-    )
-      return
-
-    event.preventDefault()
-    cancelAnimationFrame(smoothScrollFrame)
-    const deltaFactor = event.deltaMode === 1 ? 18 : event.deltaMode === 2 ? window.innerHeight : 1
-    if (!isWheelScrolling) {
-      wheelCurrent = window.scrollY
-      wheelTarget = wheelCurrent
-      isWheelScrolling = true
-    }
-    wheelTarget = clampScroll(wheelTarget + event.deltaY * deltaFactor)
-    if (!wheelScrollFrame) wheelScrollFrame = requestAnimationFrame(runWheelScroll)
-  }
-
-  window.addEventListener('wheel', onWheelSmooth, { passive: false })
-  window.addEventListener(
-    'scroll',
-    () => {
-      if (!isWheelScrolling) wheelTarget = window.scrollY
-    },
-    { passive: true },
-  )
 
   function lockScroll() {
     if (scrollLockCount === 0) {
