@@ -22,10 +22,10 @@ article.flex.flex-col(class='gap-0')
 
     //- LEFT: visual + headline
     .relative.flex.flex-col.bg-card(class='lg:col-span-7 border-b border-border lg:border-b-0 lg:border-r')
-      .relative.aspect-video.w-full.overflow-hidden(class='bg-muted')
+      .modal-reveal.relative.aspect-video.w-full.overflow-hidden(class='bg-muted')
         img.h-full.w-full.object-cover(src=project.image alt=project.title loading='lazy')
         .absolute.inset-0(class='bg-linear-to-t from-background/80 via-background/0 to-transparent' aria-hidden='true')
-      .flex.flex-col(class='gap-4 p-6 md:p-10')
+      .modal-reveal.flex.flex-col(class='gap-4 p-6 md:p-10')
         h2#project-modal-title.font-serif.text-foreground(class='text-3xl md:text-5xl tracking-tight leading-[1.05]')
           = project.title + '. '
           span.serif-italic.text-muted-foreground= project.description
@@ -39,12 +39,12 @@ article.flex.flex-col(class='gap-0')
     //- RIGHT: narrative + meta sidebar
     .flex.flex-col(class='lg:col-span-5')
       //- Narrative
-      .flex.flex-col.border-b.border-border(class='gap-4 p-6 md:p-10')
+      .modal-reveal.flex.flex-col.border-b.border-border(class='gap-4 p-6 md:p-10')
         span.eyebrow The story
         p.text-muted-foreground(class='text-base leading-relaxed')= project.longDescription
 
       //- Meta rail
-      dl.grid.grid-cols-2.bg-border(class='gap-px')
+      dl.modal-reveal.grid.grid-cols-2.bg-border(class='gap-px')
         .flex.flex-col.bg-background(class='gap-1 p-6 md:p-8')
           dt.font-mono.uppercase.text-muted-foreground(class='text-[0.65rem] tracking-[0.22em]') Client
           dd.font-serif.text-foreground(class='mt-1 text-lg tracking-[-0.01em]')= project.client
@@ -59,14 +59,14 @@ article.flex.flex-col(class='gap-0')
           dd.font-serif.text-foreground(class='mt-1 text-lg tracking-[-0.01em]')= project.category
 
       //- Tags
-      .flex.flex-col.border-t.border-border(class='gap-3 p-6 md:p-10')
+      .modal-reveal.flex.flex-col.border-t.border-border(class='gap-3 p-6 md:p-10')
         span.eyebrow What it took
         ul.flex.flex-wrap(class='gap-2')
           each tag in project.tags
             li.inline-flex.items-center.rounded-full.border.border-border.font-mono.text-muted-foreground(class='bg-card/40 px-3 py-1 text-[0.7rem]')= tag
 
       //- CTA
-      .mt-auto.border-t.border-border(class='p-6 md:p-10')
+      .modal-reveal.mt-auto.border-t.border-border(class='p-6 md:p-10')
         a.group.inline-flex.items-center.rounded-full.bg-foreground.font-medium.text-background.transition-all.duration-300(
           href=homeSectionHref('contact')
           data-modal-close

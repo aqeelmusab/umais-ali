@@ -296,38 +296,8 @@
     }
   })
 
-  // ─── Reveal-on-scroll (replaces useInView) ────────────────────────────
-  const reveals = document.querySelectorAll('.reveal')
-  if ('IntersectionObserver' in window && reveals.length) {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view')
-            io.unobserve(entry.target)
-          }
-        }
-      },
-      { threshold: 0.1, rootMargin: '0px 0px -10% 0px' },
-    )
-    for (const el of reveals) {
-      io.observe(el)
-    }
-  } else {
-    for (const el of reveals) {
-      el.classList.add('in-view')
-    }
-  }
-
-  // Reveal only nodes inside the swap target so existing in-viewport reveals keep their animation.
-  document.body.addEventListener('htmx:afterSettle', (e) => {
-    const detail = e.detail
-    const swapTarget = detail && (detail.target || detail.elt)
-    if (!(swapTarget instanceof HTMLElement) || swapTarget === document.body) return
-    for (const el of swapTarget.querySelectorAll('.reveal:not(.in-view)')) {
-      el.classList.add('in-view')
-    }
-  })
+  // Reveal-on-scroll and modal-content stagger now live in animations.js
+  // (GSAP-driven where available, with a plain-visibility fallback).
 
   // Allow HTMX to swap validation / rate-limit / CSRF-reject responses, by default
   // it only swaps 2xx. Without this, the user sees nothing happen when the server

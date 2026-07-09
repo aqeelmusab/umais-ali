@@ -86,7 +86,7 @@ html(lang='en' class='bg-background')
       window.htmx = window.htmx || {};
       window.htmx.config = window.htmx.config || {};
       window.htmx.config.includeIndicatorStyles = false;
-    script(src='/js/htmx-2.0.4.min.js' integrity='sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+' defer)
+    script(src='/js/htmx-2.0.10.min.js' integrity='sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V' defer)
 
   body(class='font-sans antialiased overflow-x-hidden' tabindex='-1')
     block content
@@ -98,4 +98,6 @@ html(lang='en' class='bg-background')
       script(nonce=cspNonce).
         window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
       script(src='/_vercel/speed-insights/script.js' defer)
+    script(src='/js/gsap-3.15.0.min.js' integrity='sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly' defer)
+    script(src='/js/animations.js' defer)
     script(src='/js/site-main.js' defer)
