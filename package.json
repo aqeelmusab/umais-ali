@@ -1,6 +1,6 @@
 {
   "name": "umais-ali",
-  "version": "2.4.4",
+  "version": "2.4.5",
   "private": true,
   "description": "Umais Ali: SEO Executive portfolio (Node + Express + Pug + HTMX + Tailwind).",
   "main": "dist/server.js",
@@ -38,10 +38,10 @@
     "express-rate-limit": "8.5.2",
     "helmet": "8.2.0",
     "pug": "3.0.4",
-    "resend": "6.17.1",
+    "resend": "6.17.2",
     "satori": "0.26.0",
     "tailwindcss": "4.3.2",
-    "typescript": "6.0.3",
+    "typescript": "7.0.2",
     "wawoff2": "2.0.1"
   },
   "devDependencies": {
