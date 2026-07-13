@@ -693,6 +693,31 @@ html {
   pointer-events: none;
 }
 
+/* ── Theme change: NameDrop-style circular reveal ────── */
+/* Driven by the View Transitions API in src/scripts/page.ts (feature
+   detected; skipped entirely under `prefers-reduced-motion` or on browsers
+   without support, which just get an instant swap). The browser's default
+   cross-fade between the old/new snapshots is turned off here so the only
+   motion is the expanding-circle `clip-path` the script animates directly
+   on `::view-transition-new(root)` from the click point, like an ink drop
+   or NameDrop-style ripple washing the new theme in. `isolation: isolate`
+   + explicit z-index keeps the new snapshot painted above the old one so
+   the growing circle actually reveals it instead of just cross-fading. */
+::view-transition-group(root) {
+  animation-duration: 0s;
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+::view-transition-old(root) {
+  z-index: 1;
+}
+::view-transition-new(root) {
+  z-index: 2;
+}
+
 /* ── Animated hamburger / close morph ────────── */
 /* Pure CSS, driven off the `aria-expanded` attribute the click handler in
    src/scripts/page.ts already toggles for accessibility, so the morph

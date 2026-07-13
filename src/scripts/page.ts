@@ -353,9 +353,74 @@ export function initPageInteractions(): void {
       themeBtn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false')
     }
 
-    themeBtn.addEventListener('click', () => {
-      const current = document.documentElement.getAttribute('data-theme') || 'light'
-      const next = current === 'light' ? 'dark' : 'light'
+    // A bright, multi-ring pulse at the click point - the NameDrop-style
+    // "devices have found each other" flash - layered above the
+    // view-transition circle-reveal below. A hot core flashes then two thin
+    // rings ripple outward and fade, `mix-blend-mode: screen` so they read
+    // as actual light rather than a flat gradient smear. The color pair
+    // stays in the SAME gold hue family as the site's actual `--brand`
+    // (~hue 70-80, see design-tokens memory) in both directions, rather
+    // than introducing an unrelated blue for "night" - the site has no
+    // blue anywhere in its identity, so a cool moonlight-blue ripple read
+    // as off-brand. Direction is instead signaled by saturation/lightness:
+    // switching TO light is vivid, saturated sunrise gold; switching TO
+    // dark is the same hue desaturated down to a pale, silvery "moonlit
+    // gold". Everything here only ever animates `transform`/`opacity` (the
+    // blur is a static, never-animated filter), so it's cheap and
+    // GPU-composited; the whole cluster is a handful of throwaway elements
+    // removed once they finish.
+    function spawnThemeGlow(x: number, y: number, next: 'light' | 'dark') {
+      const [core1, core2, ringColor] =
+        next === 'dark'
+          ? ['oklch(0.96 0.015 85)', 'oklch(0.62 0.035 80)', 'oklch(0.68 0.03 82)']
+          : ['oklch(0.97 0.04 85)', 'oklch(0.8 0.16 70)', 'oklch(0.82 0.15 72)']
+
+      const container = document.createElement('div')
+      container.setAttribute('aria-hidden', 'true')
+      container.style.cssText = `position:fixed;left:${x}px;top:${y}px;width:0;height:0;pointer-events:none;z-index:2147483647;`
+      document.body.appendChild(container)
+
+      const maxDim = Math.max(window.innerWidth, window.innerHeight)
+
+      const core = document.createElement('div')
+      core.style.cssText = `position:absolute;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:9999px;mix-blend-mode:screen;filter:blur(3px);background:radial-gradient(circle, ${core1} 0%, ${core2} 40%, transparent 72%);`
+      container.appendChild(core)
+
+      const makeRing = () => {
+        const ring = document.createElement('div')
+        ring.style.cssText = `position:absolute;left:0;top:0;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:9999px;mix-blend-mode:screen;filter:blur(1px);border:2px solid ${ringColor};box-shadow:0 0 14px 1px ${ringColor};`
+        container.appendChild(ring)
+        return ring
+      }
+      const ring1 = makeRing()
+      const ring2 = makeRing()
+
+      const ring1Scale = (maxDim * 0.5) / 56
+      const ring2Scale = (maxDim * 0.72) / 56
+
+      const coreAnim = animate(
+        core,
+        { transform: ['scale(0)', 'scale(1.7)', 'scale(1)'], opacity: [0, 1, 0] },
+        { duration: 1, ease: [0.16, 1, 0.3, 1] },
+      )
+      const ring1Anim = animate(
+        ring1,
+        { transform: ['scale(0.2)', `scale(${ring1Scale})`], opacity: [1, 0] },
+        { duration: 0.85, ease: 'easeOut' },
+      )
+      const ring2Anim = animate(
+        ring2,
+        { transform: ['scale(0.2)', `scale(${ring2Scale})`], opacity: [0.8, 0] },
+        { duration: 1.05, delay: 0.12, ease: 'easeOut' },
+      )
+
+      const cleanup = () => container.remove()
+      Promise.all([coreAnim.finished, ring1Anim.finished, ring2Anim.finished])
+        .then(cleanup)
+        .catch(cleanup)
+    }
+
+    function applyTheme(next: 'light' | 'dark') {
       document.documentElement.setAttribute('data-theme', next)
       try {
         localStorage.setItem('theme', next)
@@ -367,13 +432,68 @@ export function initPageInteractions(): void {
       // for the equivalent on first load.
       const meta = document.querySelector('meta[name="theme-color"]')
       if (meta) meta.setAttribute('content', next === 'dark' ? '#000000' : '#fbf8f1')
+    }
+
+    themeBtn.addEventListener('click', (e) => {
+      const current = document.documentElement.getAttribute('data-theme') || 'light'
+      const next = current === 'light' ? 'dark' : 'light'
+      const reduced = prefersReducedMotion()
+
+      // NameDrop-style circular reveal: the new theme washes in as an
+      // expanding circle from wherever the toggle was clicked (falls back
+      // to the button's own center for keyboard activation, where
+      // clientX/Y are 0). Uses the native View Transitions API rather than
+      // manually snapshotting the page, so the "old vs. new screenshot"
+      // work is done by the browser's compositor, not JS/canvas - the only
+      // animation this script drives directly is the `clip-path` circle
+      // radius on the transition's own pseudo-element. Feature-detected
+      // and skipped under reduced motion, in which case it's an instant
+      // swap exactly like before.
+      if (!reduced && typeof document.startViewTransition === 'function') {
+        const mouseEvent = e as MouseEvent
+        const rect = themeBtn.getBoundingClientRect()
+        const x = mouseEvent.clientX || rect.left + rect.width / 2
+        const y = mouseEvent.clientY || rect.top + rect.height / 2
+        const endRadius = Math.hypot(
+          Math.max(x, window.innerWidth - x),
+          Math.max(y, window.innerHeight - y),
+        )
+
+        spawnThemeGlow(x, y, next)
+
+        // A short beat between the glow igniting and the theme actually
+        // washing in - NameDrop's card doesn't slide up the instant the
+        // devices touch either, the glow gets a moment to register first.
+        window.setTimeout(() => {
+          const transition = document.startViewTransition(() => applyTheme(next))
+          transition.ready
+            .then(() => {
+              document.documentElement.animate(
+                {
+                  clipPath: [
+                    `circle(0px at ${x}px ${y}px)`,
+                    `circle(${endRadius}px at ${x}px ${y}px)`,
+                  ],
+                },
+                {
+                  duration: 700,
+                  easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+                  pseudoElement: '::view-transition-new(root)',
+                },
+              )
+            })
+            .catch(() => {})
+        }, 120)
+      } else {
+        applyTheme(next)
+      }
 
       // The sun/moon crossfade morph itself is pure CSS (transform/opacity
       // transitions keyed off `data-theme`, see global.css), so it costs
       // nothing here. This adds a single, cheap, one-shot spring "squish"
       // on top for tactile click feedback; transform-only, GPU-composited,
       // and only ever runs in response to a real click.
-      if (!prefersReducedMotion()) {
+      if (!reduced) {
         animate(
           themeBtn,
           { scale: [1, 0.82, 1.08, 1] },
