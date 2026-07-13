@@ -1,0 +1,47 @@
+---
+import Footer from '../components/layout/Footer.astro'
+import Header from '../components/layout/Header.astro'
+import Icon from '../components/layout/Icon.astro'
+import { homeSectionHref } from '../data/site'
+import BaseLayout from '../layouts/BaseLayout.astro'
+---
+<BaseLayout
+  title="Page Not Found | Umais Ali"
+  description="The page you requested could not be found."
+  robots="noindex, nofollow"
+>
+  <Header />
+
+  <main id="main" class="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-32 md:px-12 lg:px-20">
+    {/* Soft grid bg */}
+    <div class="pointer-events-none absolute inset-0 mask-[radial-gradient(ellipse_at_center,black_30%,transparent_75%)] opacity-40" aria-hidden="true">
+      <div class="h-full w-full bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-size-[48px_48px]"></div>
+    </div>
+
+    <div class="relative mx-auto flex max-w-3xl flex-col items-start gap-8 text-left">
+      <span class="eyebrow">Error 404</span>
+      <h1 class="font-serif text-foreground text-6xl md:text-8xl tracking-[-0.03em] leading-[0.95]">
+        That page
+        <br />
+        <span class="serif-italic text-muted-foreground">took a wrong turn.</span>
+      </h1>
+      <p class="text-muted-foreground max-w-xl text-base md:text-lg leading-relaxed">
+        Either the link is old, the page moved, or I broke something while
+        shipping. Either way, here is the way back.
+      </p>
+      <div class="flex flex-wrap gap-3 mt-2">
+        <a class="group inline-flex items-center rounded-full bg-foreground font-medium text-background transition-all duration-300 gap-3 h-12 px-6 text-sm hover:bg-foreground/90 active:scale-[0.98]" href="/">
+          <span>Back home</span>
+          <span class="inline-flex transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+            <Icon name="arrow-up-right" class="h-3.5 w-3.5" />
+          </span>
+        </a>
+        <a class="inline-flex items-center rounded-full border border-border text-foreground transition-colors gap-2 h-12 px-6 text-sm hover:border-foreground/40 hover:bg-card" href={homeSectionHref('contact')}>
+          <span>Tell me what broke</span>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>

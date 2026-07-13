@@ -1,5 +1,6 @@
 export interface Project {
   id: number
+  slug: string
   title: string
   category: string
   description: string
@@ -15,6 +16,7 @@ export interface Project {
 export const projects: Project[] = [
   {
     id: 1,
+    slug: 'greenleaf-organics',
     title: 'GreenLeaf Organics',
     category: 'E-Commerce SEO',
     description:
@@ -30,6 +32,7 @@ export const projects: Project[] = [
   },
   {
     id: 2,
+    slug: 'cloudstack-saas',
     title: 'CloudStack SaaS',
     category: 'B2B SEO',
     description:
@@ -45,6 +48,7 @@ export const projects: Project[] = [
   },
   {
     id: 3,
+    slug: 'metro-dental-group',
     title: 'Metro Dental Group',
     category: 'Local SEO',
     description:
@@ -60,6 +64,7 @@ export const projects: Project[] = [
   },
   {
     id: 4,
+    slug: 'stylevault-magazine',
     title: 'StyleVault Magazine',
     category: 'Content SEO',
     description: 'A fashion blog with great writing and no traffic. Three quarters later, both.',
@@ -74,6 +79,7 @@ export const projects: Project[] = [
   },
   {
     id: 5,
+    slug: 'fitpro-equipment',
     title: 'FitPro Equipment',
     category: 'Technical SEO',
     description: 'A botched migration cost them 40 percent of traffic. We got it back, then some.',

@@ -22,6 +22,8 @@ pnpm-debug.log*
 
 # ── Test output ─────────────────────────────────────────────────────────────
 coverage/
+playwright-report/
+test-results/
 
 # ── Caches ──────────────────────────────────────────────────────────────────
 .cache/
@@ -29,6 +31,7 @@ coverage/
 .leindex/
 .pnpm-store/
 .npm/
+.astro/
 
 # ── Packaging ───────────────────────────────────────────────────────────────
 # pnpm/npm pack output and local tarballs.
@@ -89,6 +92,8 @@ nbproject/
 # Agent instruction / memory files
 AGENTS.md
 agents.md
+MIGRATION-PLAN.md
+migration-plan.md
 CLAUDE.md
 claude.md
 GEMINI.md

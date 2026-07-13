@@ -3,8 +3,11 @@ packages:
 
 # Force the patched esbuild (GHSA-gv7w-rqvm-qjhr, GHSA-g7r4-m6w7-qqqr).
 # tsx pulls esbuild ~0.28.0, which 0.28.1 satisfies.
+# Force the patched path-to-regexp (GHSA-9wv6-86v2-598j, ReDoS), pulled in
+# transitively by @astrojs/vercel -> @vercel/routing-utils.
 overrides:
   esbuild: "~0.28.1"
+  path-to-regexp@<6.3.0: "^6.3.0"
 
 allowBuilds:
   "@biomejs/biome": true

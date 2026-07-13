@@ -1,58 +1,56 @@
 # Umais Ali Portfolio
 
-A client portfolio site for Umais Ali, an SEO Executive. It runs on Node.js with Express, Pug for views, HTMX for light interactivity, Tailwind CSS for styling, and TypeScript on the server.
+A client portfolio site for Umais Ali, an SEO Executive. It is a highly optimized, modern static site built on Astro, Svelte 5 (islands), and TypeScript, using Tailwind CSS 4 for styling, and Motion for animation.
 
-This is not a static export. Pages render through Express, and the Node runtime handles dynamic routes and the contact form. On Vercel the app runs as a serverless Node function, with static files served from `public/`.
+All content pages are prerendered and served from the edge. The only server side behavior is a single on-demand serverless endpoint for the contact form submissions.
 
 ## Features
 
-* Responsive portfolio landing page
-* Server-rendered views with Pug
-* Project modals via HTMX fragments
-* Contact form validation, honeypot field, and Origin/Referer CSRF check
+* Responsive, high performance portfolio landing page
+* Fully pre-rendered static routes with Astro layouts, pages, and components
+* Progressive enhancement Svelte 5 island for accessible, stateful project dialogs and URL/history synchronization
+* Independent static project detail routes for rich SEO indexation
+* Contact form validation, honeypot field, and exact Origin/Referer CSRF check
 * Outbound email through Resend, including dashboard templates when configured
-* Per-IP rate limiting on the contact form
-* Vercel Web Analytics and Speed Insights when enabled
-* Helmet security headers and a nonce-based Content Security Policy
-* Self-hosted HTMX runtime so no third-party script is needed
-* Tailwind CSS v4 CLI build
-* Tests with Node's built-in test runner and `tsx`
+* Per-IP rate limiting on the form submissions
+* Vercel Web Analytics and Speed Insights when deployed
+* Edge-native security headers and Content Security Policy configured in `vercel.json`
+* Native browser scripts for frictionless theme persistence and sticky layouts
+* Tailwind CSS v4 Vite compilation integration
+* Fast, lightweight tests with Node's built-in test runner and `tsx`
 
 ## Tech Stack
 
-* **Runtime:** Node.js 24
-* **Framework:** Express 5
-* **Templating:** Pug 3
-* **Frontend:** HTMX 2, Tailwind CSS 4
-* **Language:** TypeScript 6
+* **Build & SSG:** Astro
+* **Client Island:** Svelte 5
+* **Interactions & Animation:** Motion
+* **CSS & Style Compilation:** Tailwind CSS 4, `@tailwindcss/vite`
+* **Language:** TypeScript
 * **Email:** Resend
-* **Hosting:** Vercel
+* **Hosting Adapter:** `@astrojs/vercel`
 
 ## Project Structure
 
 ```text
-api/index.ts                  Vercel serverless entrypoint
-public/                       Static assets served directly
-public/css/main.css           Generated Tailwind CSS bundle (built, gitignored)
-public/js/site-main.js        Client-side interaction bundle
-public/js/htmx-2.0.4.min.js   Self-hosted HTMX runtime, pinned with SRI
-src/server.ts                 Express app and routes
-src/contact.ts                Contact form validation and value coercion
-src/email.ts                  Resend email sending
-src/env.ts                    Environment variable parsing
-src/og-image.ts               Dynamic Open Graph image (Satori + resvg-js)
-src/projects-nav.ts           Prev/next project navigation helper
-src/data/                     Site and project content
-src/styles/main.css           Tailwind source CSS
-src/views/                    Pug layouts, pages, and partials
-tests/                        Node test suite
-vercel.json                   Vercel routing and build config
+astro.config.ts               Astro project & integration settings
+svelte.config.js              Svelte compilation parameters
+vercel.json                   Vercel security headers and config
+src/layouts/BaseLayout.astro  Central Astro document wrapper and metadata
+src/components/layout/        Reusable head, footer, icon, and logo Astro snippets
+src/components/sections/      Individual landing page blocks
+src/components/islands/       Svelte client islands (ProjectDialog)
+src/pages/                    Astro pre-rendered structural pages and API endpoints
+src/pages/api/contact.ts      On-demand serverless contact submission endpoint
+src/pages/og-image.png.ts     Static pre-rendered OG image builder (Satori + Resvg)
+src/scripts/                  Lightweight typescript client behaviors
+src/data/                     Site and project structured data
+tests/                        Instant native Node test suite (unit and endpoint checks)
 ```
 
 ## Requirements
 
-* Node.js 24.x (see `.nvmrc` if you use a version manager)
-* pnpm: enable [Corepack](https://nodejs.org/api/corepack.html) (`corepack enable`), then installs follow the `packageManager` field in `package.json` so everyone uses the same pnpm release
+* Node.js 24.x (see `.nvmrc`)
+* pnpm: pin to `pnpm@11.11.0` via `packageManager` field in `package.json`
 
 ## Local Setup
 
@@ -68,7 +66,7 @@ Create a local environment file:
 cp .env.example .env
 ```
 
-On Windows PowerShell, use `Copy-Item` if `cp` is not available:
+On Windows PowerShell, use `Copy-Item`:
 
 ```powershell
 Copy-Item .env.example .env
@@ -109,7 +107,7 @@ NODE_ENV=development
 PORT=3000
 ```
 
-Vercel sets `NODE_ENV` for you. You do not set `PORT` for serverless functions.
+Vercel sets `NODE_ENV` for you.
 
 ### Resend Template
 
@@ -129,65 +127,40 @@ userAgent
 Notes:
 
 * The template must be published, not left as a draft only.
-* `subject` is supplied as a variable so the template can use it (`{{ subject }}`) or ignore it. The app no longer sends a `subject` field at the top level when a template is used, so the dashboard's own subject line wins by default.
+* `subject` is supplied as a variable so the template can use it (`{{ subject }}`).
 * `from` is also deferred to the template when one is configured. Set the From address in the Resend dashboard.
-* Leave Reply-To empty in the dashboard template, or set it to a fixed address you control. After validation, the app sets `replyTo` from the submitter's address (or from `CONTACT_REPLY_TO` if you set that). Both are sanitized to strip stray newlines before sending.
-* Resend caps template variable length at 2,000 characters, which also caps the contact message length.
+* Leave Reply-To empty in the dashboard template. After validation, the app sets `replyTo` from the submitter's address. Both are sanitized to strip stray newlines before sending.
+* Resend caps template variable length at 2,000 characters.
 
 ## Local Development
 
-Start the dev server with CSS watching:
+Start the Astro dev server:
 
 ```bash
 pnpm dev
 ```
 
-Default URL: `http://localhost:3000`.
+Default URL: `http://localhost:4321`.
 
 ### Before You Push
 
-Build and run locally, then run the full check script:
+Build and run locally, then run the full check verification:
 
 ```bash
 pnpm run preview
 pnpm run verify
 ```
 
-`verify` runs TypeScript checks, tests, Biome lint, and a production build in one command.
+`verify` runs Astro sync, typecheck (including tests), Node unit & endpoint tests, Biome linting, and Astro production compilation in one go.
 
 ## Push and CI
 
-1. **Pre-push hook:** `simple-git-hooks` runs on `git push`. It checks that `pnpm-lock.yaml` matches `package.json` (`pnpm install --frozen-lockfile --lockfile-only`). If that passes, it runs `pnpm run typecheck` and `pnpm test`. If the lockfile step fails, run `pnpm install`, commit the lockfile change, and push again.
-2. **GitHub Actions:** Pushes to `main` and pull requests against `main` run the Verify workflow: install with a frozen lockfile, then `pnpm run verify`, on Node 24.
+1. **Pre-push hook:** `simple-git-hooks` runs on the push event. It checks lockfile consistency, then runs `pnpm run typecheck` and `pnpm test`.
+2. **GitHub Actions:** Verify workflow runs on all pushes or PRs to `main` with Node 24.
 
 ## Deployment
 
-Hosting is Vercel. CI and deploy are separate concerns.
-
-* **Preview:** Each pull request gets its own preview URL.
-* **Production:** Pushes to `main` go to production.
-
-`vercel.json` wires the app to Vercel. In short:
-
-* `pnpm install --frozen-lockfile` during the build (see `vercel.json`).
-* `pnpm run build` writes `public/css/main.css` and compiles TypeScript into `dist/`.
-* Static files under `public/` are served as-is.
-* Other requests hit `api/index.ts`, which loads the Express app from `src/server.ts`.
-
-### Production Env and Startup Checks
-
-If required mail settings are missing in production (for example `RESEND_API_KEY` or `CONTACT_TO`), the process exits on startup so the problem is obvious instead of the site running without mail.
-
-Set these in Vercel project settings (use your real sender domain in Resend):
-
-```env
-RESEND_API_KEY=your_resend_api_key
-CONTACT_FROM=Umais Ali <hello@submissions.umaisali.com>
-CONTACT_TO=hello@umaisali.com
-CONTACT_TEMPLATE_ID=your_published_resend_template_id
-TRUST_PROXY=1
-ENABLE_HSTS=true
-```
+Hosting is Vercel. CI and deploy are separate concerns. Astro's Vercel adapter generates edge-ready pre-rendered assets and endpoints automatically.
 
 ## Content Updates
 
@@ -196,24 +169,15 @@ Most copy and structured content lives in:
 * `src/data/site.ts`
 * `src/data/projects.ts`
 
-Pug partials sit under `src/views/partials/`.
-
-After style or class changes that affect the built CSS, run:
-
-```bash
-pnpm build
-```
+After editing data or stylesheet classes, run `pnpm run verify` to test.
 
 ## Security Notes
 
-* `.env` is gitignored. Do not commit secrets.
-* Helmet runs with a nonce-based Content Security Policy. `script-src` is `'self'` plus a per-request nonce. No external script CDNs are listed.
-* HTMX is served from `/js/htmx-2.0.4.min.js` and pinned to a SHA-384 integrity hash in the layout. To upgrade, replace the file, recompute the hash with `openssl dgst -sha384 -binary <file> | openssl base64 -A`, and update the `integrity` value in `src/views/layout.pug`.
+* Security headers and a strict Content Security Policy are served directly from the Vercel CDN layer via `vercel.json` for ultimate edge speed.
 * The contact endpoint is protected by:
-  * A honeypot field (`website`). Submissions that fill it get a fake success response so bots cannot tell their hit was rejected.
-  * Per-IP rate limiting (defaults: 5 requests per 10 minutes).
-  * Stateless CSRF check on `Origin` and `Referer` in production. The check parses the URL and compares origins exactly, so a host like `umaisali.com.attacker.example` cannot pass through a string-prefix match.
-  * Server-side validation of name (2 to 80 chars), email (basic shape plus length cap), and message (10 to 2000 chars).
-* User-supplied email content is escaped before going into the inline HTML fallback. Header values (`subject`, `replyTo`) are stripped of CR/LF and length-capped to defeat header injection.
-* Body parsing is limited to 32kb of `application/x-www-form-urlencoded`.
+  * A honeypot field (`website`). Submissions that fill it get a fake success response to bot crawlers.
+  * Per-IP rate limiting.
+  * Stateless CSRF check on `Origin` and `Referer`.
+  * Server-side validation.
+* User-supplied email content is escaped before going into the inline HTML fallback. Header values are stripped of CR/LF and length-capped.
 * Tests stub the mail sender so nothing goes to Resend by accident.

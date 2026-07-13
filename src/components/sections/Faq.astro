@@ -1,0 +1,37 @@
+---
+import { faqs } from '../../data/site'
+import Icon from '../layout/Icon.astro'
+---
+<section id="faq" class="relative px-6 py-24 md:px-12 md:py-32 lg:px-20">
+  <div class="mx-auto max-w-6xl">
+    <div class="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-16">
+
+      <div class="flex flex-col lg:col-span-4">
+        <span class="eyebrow">Frequently asked</span>
+        <h2 class="font-serif text-foreground mt-6 text-4xl md:text-5xl tracking-tight leading-[1.05]">
+          The questions
+          <br />
+          <span class="serif-italic text-muted-foreground">I get a lot.</span>
+        </h2>
+        <p class="text-muted-foreground mt-6 text-sm md:text-base max-w-sm">
+          Did not see yours? Send a note. I read everything that comes through.
+        </p>
+      </div>
+
+      <div class="flex flex-col lg:col-span-8">
+        {faqs.map((item) => (
+          <details class="group border-b border-border transition-colors duration-300 py-6 hover:border-foreground/30">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-6">
+              <span class="font-serif text-foreground text-xl md:text-2xl tracking-[-0.015em] leading-snug">{item.q}</span>
+              <span class="inline-flex shrink-0 items-center justify-center rounded-full border border-border text-muted-foreground transition-all duration-300 h-9 w-9 group-hover:text-foreground group-open:rotate-45 group-open:border-foreground/40 group-open:bg-card">
+                <Icon name="plus" class="h-4 w-4" />
+              </span>
+            </summary>
+            <p class="text-muted-foreground mt-4 text-sm md:text-base leading-relaxed max-w-2xl">{item.a}</p>
+          </details>
+        ))}
+      </div>
+
+    </div>
+  </div>
+</section>

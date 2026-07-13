@@ -29,8 +29,8 @@ function sanitizeHeaderValue(s: string): string {
 
 export interface SendContactArgs {
   values: ContactValues
-  ip?: string
-  userAgent?: string
+  ip?: string | undefined
+  userAgent?: string | undefined
 }
 
 export interface SendContactResult {
