@@ -317,7 +317,7 @@ onMount(() => {
             <div class="relative flex flex-col bg-card lg:col-span-7 border-b border-border lg:border-b-0 lg:border-r">
               <div class="modal-reveal relative aspect-video w-full overflow-hidden bg-muted">
                 <img class="h-full w-full object-cover" src={activeProject.image} alt={activeProject.title} />
-                <div class="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent animate-fade" aria-hidden="true"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-background/80 via-transparent to-transparent animate-fade" aria-hidden="true"></div>
               </div>
               <div class="modal-reveal flex flex-col gap-4 p-6 md:p-10">
                 <h2 id="project-modal-title" class="font-serif text-foreground text-3xl md:text-5xl tracking-tight leading-[1.05]">

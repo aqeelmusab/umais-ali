@@ -136,7 +136,7 @@ const { values = {}, errors = {} } = Astro.props as Props
                   aria-invalid={errors.message ? "true" : "false"}
                   aria-describedby={errors.message ? "cf-message-err" : undefined}
                   class:list={[
-                    "w-full rounded-xl bg-background/60 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors focus:bg-background resize-y min-h-[10rem]",
+                    "w-full rounded-xl bg-background/60 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors focus:bg-background resize-y min-h-40",
                     errors.message ? "border-destructive focus:border-destructive" : "border-border focus:border-foreground/40"
                   ]}
                 >{values.message || ""}</textarea>
@@ -162,7 +162,7 @@ const { values = {}, errors = {} } = Astro.props as Props
                       <Icon name="arrow-up-right" class="h-3.5 w-3.5" />
                     </span>
                   </span>
-                  <span class="indicator inline-flex items-center gap-2 hidden">
+                  <span class="indicator inline-flex items-center gap-2">
                     <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                       <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
                       <path d="M22 12a10 10 0 0 1-10 10" stroke-linecap="round"></path>
