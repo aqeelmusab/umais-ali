@@ -162,7 +162,7 @@ const { values = {}, errors = {} } = Astro.props as Props
                       <Icon name="arrow-up-right" class="h-3.5 w-3.5" />
                     </span>
                   </span>
-                  <span class="indicator inline-flex items-center gap-2 hidden">
+                  <span class="indicator inline-flex items-center gap-2" style="display: none;">
                     <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                       <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
                       <path d="M22 12a10 10 0 0 1-10 10" stroke-linecap="round"></path>
@@ -197,11 +197,11 @@ const { values = {}, errors = {} } = Astro.props as Props
       const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
       if (btn) btn.disabled = true;
 
-      const hideEl = form.querySelector('.indicator-hide');
-      const showEl = form.querySelector('.indicator');
+      const hideEl = form.querySelector('.indicator-hide') as HTMLElement | null;
+      const showEl = form.querySelector('.indicator') as HTMLElement | null;
       if (hideEl && showEl) {
-        hideEl.classList.add('hidden');
-        showEl.classList.remove('hidden');
+        hideEl.style.display = 'none';
+        showEl.style.display = 'inline-flex';
       }
 
       try {
@@ -249,8 +249,8 @@ const { values = {}, errors = {} } = Astro.props as Props
 
           if (btn) btn.disabled = false;
           if (hideEl && showEl) {
-            hideEl.classList.remove('hidden');
-            showEl.classList.add('hidden');
+            hideEl.style.display = 'inline-flex';
+            showEl.style.display = 'none';
           }
 
           // Clear old errors
