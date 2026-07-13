@@ -44,14 +44,26 @@ const enableVercelInsights = import.meta.env.PROD
 <html lang="en" class="bg-surface">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="application-name" content={SITE_NAME} />
     <meta name="apple-mobile-web-app-title" content={SITE_NAME} />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!-- "black-translucent" makes iOS's status bar fully transparent so the
+         page's own background shows through it instead of a solid system
+         color, completing the full-bleed effect from `viewport-fit=cover`
+         above (only takes effect once added to the home screen, but is
+         harmless/ignored in a regular Safari tab). -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="author" content={SITE_NAME} />
     <meta name="color-scheme" content="dark light" />
     <meta name="format-detection" content="telephone=no" />
-    <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#fbf8f1" media="(prefers-color-scheme: light)" />
+    <!-- Single, JS-updated tag (see public/js/theme-init.js and
+         src/scripts/page.ts) rather than two `media`-scoped tags: those
+         only track the OS's prefers-color-scheme, not the site's actual
+         toggled theme, so the browser's own chrome (iOS status/toolbar
+         tint, Android address bar) could end up mismatched against the
+         page. Default here is light; corrected before first paint. -->
+    <meta name="theme-color" content="#fbf8f1" />
 
     <!-- Apply saved theme BEFORE first paint to avoid flash. -->
     <script is:inline src="/js/theme-init.js"></script>
@@ -87,7 +99,7 @@ const enableVercelInsights = import.meta.env.PROD
     <meta name="twitter:image" content={pageImage} />
     <meta name="twitter:image:alt" content={pageImageAlt} />
 
-    <link rel="manifest" href="/favicons/site.webmanifest?v=2.4.2" />
+    <link rel="manifest" href="/favicons/site.webmanifest?v=2.4.3" />
     <link rel="icon" href="/favicons/favicon.svg?v=2.4.2" type="image/svg+xml" />
     <link rel="icon" href="/favicons/favicon-96x96.png?v=2.4.2" sizes="96x96" type="image/png" />
     <link rel="icon" href="/favicons/favicon.ico?v=2.4.2" />

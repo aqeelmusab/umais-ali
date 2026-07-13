@@ -3,7 +3,14 @@ import { CONTACT_EMAIL, homeSectionHref, navLinks } from '../../data/site'
 import Icon from './Icon.astro'
 import Logo from './Logo.astro'
 ---
-<header id="site-nav" class="site-nav fixed z-50 mx-auto flex items-center justify-between rounded-full top-4 left-4 right-4 h-14 max-w-6xl px-3 md:top-6 md:left-8 md:right-8 md:px-4" aria-label="Primary">
+{/* `viewport-fit=cover` (see BaseLayout.astro) lets the page background
+    extend fully behind the iOS notch/status bar and Android cutouts
+    instead of leaving a hard edge there, but that means fixed-position
+    UI now needs its own safe-area clearance so it doesn't slide under
+    a notch in landscape or a punch-hole camera. `max(Xrem, env(...))`
+    keeps the existing spacing on safe-area-free devices and only grows
+    it where an inset actually exists. */}
+<header id="site-nav" class="site-nav fixed z-50 mx-auto flex items-center justify-between rounded-full top-[max(1rem,env(safe-area-inset-top))] left-[max(1rem,env(safe-area-inset-left))] right-[max(1rem,env(safe-area-inset-right))] h-14 max-w-6xl px-3 md:top-[max(1.5rem,env(safe-area-inset-top))] md:left-[max(2rem,env(safe-area-inset-left))] md:right-[max(2rem,env(safe-area-inset-right))] md:px-4" aria-label="Primary">
   <Logo />
 
   <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
@@ -31,7 +38,7 @@ import Logo from './Logo.astro'
       </span>
     </a>
 
-    <button id="mobile-menu-toggle" class="hamburger inline-flex items-center justify-center rounded-full text-ink transition-colors h-10 w-10 md:hidden hover:bg-ink/5" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+    <button id="mobile-menu-toggle" class="hamburger relative -left-1 inline-flex items-center justify-center rounded-full text-ink transition-colors h-10 w-10 md:hidden hover:bg-ink/5" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
       <span class="hamburger-bars" aria-hidden="true">
         <span class="hamburger-bar"></span>
         <span class="hamburger-bar"></span>

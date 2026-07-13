@@ -362,6 +362,12 @@ export function initPageInteractions(): void {
       } catch {}
       setLabel()
 
+      // Keep the browser chrome (iOS status/toolbar tint, Android address
+      // bar) matching the newly-active theme; see public/js/theme-init.js
+      // for the equivalent on first load.
+      const meta = document.querySelector('meta[name="theme-color"]')
+      if (meta) meta.setAttribute('content', next === 'dark' ? '#000000' : '#fbf8f1')
+
       // The sun/moon crossfade morph itself is pure CSS (transform/opacity
       // transitions keyed off `data-theme`, see global.css), so it costs
       // nothing here. This adds a single, cheap, one-shot spring "squish"
