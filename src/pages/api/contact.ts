@@ -70,6 +70,16 @@ function verifyCsrf(request: Request): boolean {
   return true
 }
 
+// Escape user-supplied text for safe inclusion in HTML responses (XSS prevention).
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 // Standard HTML pages served as no-JS fallback responses
 function renderHtmlPage(title: string, contentHtml: string): Response {
   const html = `<!DOCTYPE html>
@@ -125,11 +135,15 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   // 2. Extract Client IP
-  const ip =
+  let rawIp =
     clientAddress ||
     request.headers.get('x-forwarded-for') ||
     request.headers.get('x-real-ip') ||
     'unknown'
+  if (rawIp.includes(',')) {
+    rawIp = rawIp.split(',')[0]?.trim() || 'unknown'
+  }
+  const ip = rawIp
 
   // 3. Throttling / Rate-Limiting Check
   const { throttled, retryAfter } = isThrottled(ip)
@@ -177,6 +191,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   // 6. Handle silent accept on honeypots
   if (result.honeypot) {
     const fakeName = result.values.name || 'there'
+    const safeFakeName = escapeHtml(fakeName)
     if (request.headers.get('accept')?.includes('application/json')) {
       return new Response(JSON.stringify({ ok: true, name: fakeName }), {
         status: 200,
@@ -187,7 +202,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return renderHtmlPage(
       'Message Sent Successfully',
       `<h2 class="font-serif text-3xl text-foreground mb-4">Message sent...</h2>
-       <p class="text-muted-foreground text-sm leading-relaxed mb-6">Thanks for reaching out, ${fakeName}! I'll inspect your details and follow up soon.</p>
+       <p class="text-muted-foreground text-sm leading-relaxed mb-6">Thanks for reaching out, ${safeFakeName}! I'll inspect your details and follow up soon.</p>
        <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
     )
   }
@@ -229,6 +244,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   if (sent.delivered) {
     console.log('[contact] delivered via Resend', { id: sent.id })
+    const safeName = escapeHtml(result.values.name)
     if (request.headers.get('accept')?.includes('application/json')) {
       return new Response(JSON.stringify({ ok: true, name: result.values.name }), {
         status: 200,
@@ -239,7 +255,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return renderHtmlPage(
       'Message Received',
       `<h2 class="font-serif text-3xl text-foreground mb-4">Got it. <span class="serif-italic text-muted-foreground">Talk soon.</span></h2>
-       <p class="text-muted-foreground text-sm leading-relaxed mb-6">Thanks for the note, ${result.values.name}. I read every message myself, so the reply will come from me. Usually within a day.</p>
+       <p class="text-muted-foreground text-sm leading-relaxed mb-6">Thanks for the note, ${safeName}. I read every message myself, so the reply will come from me. Usually within a day.</p>
        <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
     )
   }

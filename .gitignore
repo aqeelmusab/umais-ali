@@ -29,6 +29,7 @@ coverage/
 .leindex/
 .pnpm-store/
 .npm/
+.astro/
 
 # ── Packaging ───────────────────────────────────────────────────────────────
 # pnpm/npm pack output and local tarballs.

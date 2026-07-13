@@ -184,6 +184,15 @@ const { values = {}, errors = {} } = Astro.props as Props
 <script>
   import { CONTACT_EMAIL } from '../../data/site';
 
+  function escapeHtml(s: string): string {
+    return s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
   const wrap = document.getElementById('contact-form-wrap');
   if (wrap) {
     const originalFormHtml = wrap.innerHTML;
@@ -222,6 +231,7 @@ const { values = {}, errors = {} } = Astro.props as Props
 
         if (res.status === 200) {
           const data = await res.json();
+          const cleanName = escapeHtml(data.name || 'there');
           wrap.innerHTML = `
             <div class="flex flex-col items-start gap-6 py-4 animate-fade">
               <span class="inline-flex items-center justify-center rounded-full border border-primary h-12 w-12 bg-primary/10 text-primary">
@@ -233,7 +243,7 @@ const { values = {}, errors = {} } = Astro.props as Props
                 Got it. <span class="serif-italic text-muted-foreground">Talk soon.</span>
               </h3>
               <p class="text-muted-foreground max-w-md text-base leading-relaxed font-sans">
-                Thanks for the note, ${data.name || 'there'}. I read every message myself, so the reply will come from me, not a template. Usually within a day, sometimes faster.
+                Thanks for the note, ${cleanName}. I read every message myself, so the reply will come from me, not a template. Usually within a day, sometimes faster.
               </p>
               <button id="send-another-btn" class="inline-flex items-center text-foreground transition-colors gap-2 text-sm font-medium hover:text-primary mt-2" type="button">
                 <span>Send another</span>
@@ -280,6 +290,29 @@ const { values = {}, errors = {} } = Astro.props as Props
               }
             }
           }
+        } else if (res.status === 403 || res.status === 429) {
+          const data = await res.json();
+          if (btn) btn.disabled = false;
+          if (hideEl && showEl) {
+            hideEl.style.display = 'inline-flex';
+            showEl.style.display = 'none';
+          }
+
+          form.querySelectorAll('.text-destructive').forEach(el => el.remove());
+          
+          let alertMsg = 'Request failed. Please reload and try again.';
+          if (res.status === 429 && data.errors?.message) {
+            alertMsg = data.errors.message;
+          } else if (data.message) {
+            alertMsg = data.message;
+          }
+
+          const errEl = document.createElement('p');
+          errEl.className = 'text-destructive mt-4 text-xs font-sans text-center border border-destructive/20 bg-destructive/5 rounded-lg py-3 px-4';
+          errEl.textContent = alertMsg;
+
+          // Append general error above the button or at the bottom of the form
+          form.appendChild(errEl);
         } else {
           throw new Error('Server error');
         }
