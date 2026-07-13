@@ -160,6 +160,7 @@ export function initPageInteractions(): void {
     for (const el of menuStaggerItems) {
       el.style.removeProperty('opacity')
       el.style.removeProperty('transform')
+      el.style.removeProperty('filter')
     }
   }
 
@@ -181,29 +182,41 @@ export function initPageInteractions(): void {
       menu.style.display = 'flex'
       menu.style.removeProperty('opacity')
       menu.style.removeProperty('transform')
+      menu.style.removeProperty('filter')
       resetMenuStaggerItems()
     } else {
       // Set the pre-animation state before revealing the sheet so nothing
       // flashes fully open for a frame before Motion takes over. The sheet
-      // itself only ever fades (no scale/translate): this is a full-bleed
-      // `inset-0`-style overlay, so scaling or shifting it revealed a sliver
-      // of the real page at the edges mid-transition. All of the actual
-      // motion lives in the staggered nav-link reveal below instead.
+      // itself only ever fades + blurs-in (no scale/translate): this is a
+      // full-bleed `inset-0`-style overlay, so scaling or shifting it
+      // revealed a sliver of the real page at the edges mid-transition. A
+      // blur filter doesn't affect box geometry, so it's safe here and
+      // matches the same "blur-focus" reveal used by the project card
+      // entrance animation in src/scripts/animations.ts. The staggered
+      // nav-link/footer reveal below reuses that same recipe (opacity + y
+      // + blur, same easing curve) so the two read as one consistent
+      // motion language across the site.
       menu.style.opacity = '0'
+      menu.style.filter = 'blur(10px)'
       for (const el of menuStaggerItems) {
         el.style.opacity = '0'
-        el.style.transform = 'translateY(1.1rem)'
+        el.style.transform = 'translateY(1.75rem)'
+        el.style.filter = 'blur(10px)'
       }
 
       menu.style.display = 'flex'
 
-      menuAnimation = animate(menu, { opacity: [0, 1] }, { duration: 0.3, ease: 'easeOut' })
+      menuAnimation = animate(
+        menu,
+        { opacity: [0, 1], filter: ['blur(10px)', 'blur(0px)'] },
+        { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+      )
       animate(
         menuStaggerItems,
-        { opacity: [0, 1], y: ['1.1rem', '0rem'] },
+        { opacity: [0, 1], y: ['1.75rem', '0rem'], filter: ['blur(10px)', 'blur(0px)'] },
         {
-          duration: 0.55,
-          delay: stagger(0.05, { startDelay: 0.12 }),
+          duration: 0.7,
+          delay: stagger(0.06, { startDelay: 0.12 }),
           ease: [0.16, 1, 0.3, 1],
         },
       )
@@ -239,6 +252,7 @@ export function initPageInteractions(): void {
       menu.style.display = 'none'
       menu.style.removeProperty('opacity')
       menu.style.removeProperty('transform')
+      menu.style.removeProperty('filter')
       resetMenuStaggerItems()
     }
 
@@ -247,7 +261,11 @@ export function initPageInteractions(): void {
       return
     }
 
-    menuAnimation = animate(menu, { opacity: [1, 0] }, { duration: 0.22, ease: 'easeIn' })
+    menuAnimation = animate(
+      menu,
+      { opacity: [1, 0], filter: ['blur(0px)', 'blur(8px)'] },
+      { duration: 0.25, ease: 'easeIn' },
+    )
     menuAnimation.finished.then(finishClose).catch(finishClose)
   }
 
