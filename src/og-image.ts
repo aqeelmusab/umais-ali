@@ -20,7 +20,7 @@ import satori, { type SatoriOptions } from 'satori'
 import wawoff2 from 'wawoff2'
 import { SITE_NAME, SITE_URL } from './data/site'
 
-const ROOT = path.resolve(__dirname, '..')
+const ROOT = process.cwd()
 const FONT_DIR = path.join(ROOT, 'public', 'fonts')
 
 // Match the dark-theme tokens declared in `src/styles/main.css` (`:root[data-theme="dark"]`).
