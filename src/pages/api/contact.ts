@@ -242,8 +242,15 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     userAgent,
   })
 
-  if (sent.delivered) {
-    console.log('[contact] delivered via Resend', { id: sent.id })
+  if (sent.delivered || sent.skipped) {
+    if (sent.delivered) {
+      console.log('[contact] delivered via Resend', { id: sent.id })
+    } else {
+      // Resend isn't configured (e.g. local/CI without secrets). Treat the
+      // submission as accepted since it passed validation; we just couldn't
+      // dispatch the notification email.
+      console.log('[contact] email skipped', { reason: sent.skipped })
+    }
     const safeName = escapeHtml(result.values.name)
     if (request.headers.get('accept')?.includes('application/json')) {
       return new Response(JSON.stringify({ ok: true, name: result.values.name }), {
