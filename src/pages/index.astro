@@ -11,7 +11,9 @@ import SelectedWork from '../components/sections/SelectedWork.astro'
 import Services from '../components/sections/Services.astro'
 import Testimonials from '../components/sections/Testimonials.astro'
 import BaseLayout from '../layouts/BaseLayout.astro'
+import ProjectDialog from '../components/islands/ProjectDialog.svelte'
 
+import { projects } from '../data/projects'
 import { createSiteGraph } from '../lib/seo/structured-data'
 
 const jsonLd = createSiteGraph()
@@ -29,6 +31,7 @@ const jsonLd = createSiteGraph()
     <Contact />
   </main>
   <Footer />
+  <ProjectDialog projects={projects} client:load />
   <ScrollToTop />
 
   <script>
