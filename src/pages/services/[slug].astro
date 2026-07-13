@@ -1,28 +1,27 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/layout/Header.astro';
-import Contact from '../../components/sections/Contact.astro';
-import Footer from '../../components/layout/Footer.astro';
-import ScrollToTop from '../../components/layout/ScrollToTop.astro';
-import Icon from '../../components/layout/Icon.astro';
-
-import { services, sectionHref } from '../../data/site';
-import { createServiceGraph } from '../../lib/seo/structured-data';
+import Footer from '../../components/layout/Footer.astro'
+import Header from '../../components/layout/Header.astro'
+import Icon from '../../components/layout/Icon.astro'
+import ScrollToTop from '../../components/layout/ScrollToTop.astro'
+import Contact from '../../components/sections/Contact.astro'
+import { sectionHref, services } from '../../data/site'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { createServiceGraph } from '../../lib/seo/structured-data'
 
 export function getStaticPaths() {
   return services.map((service) => ({
     params: { slug: service.slug },
     props: { service },
-  }));
+  }))
 }
 
-const { service } = Astro.props;
+const { service } = Astro.props
 
 const relatedServices = services.filter((candidate) =>
-  service.relatedSlugs.includes(candidate.slug)
-);
+  service.relatedSlugs.includes(candidate.slug),
+)
 
-const jsonLd = createServiceGraph(service);
+const jsonLd = createServiceGraph(service)
 ---
 <BaseLayout
   title={service.metaTitle}

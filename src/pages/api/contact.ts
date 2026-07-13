@@ -1,70 +1,73 @@
-import type { APIRoute } from 'astro';
-import { validateContact } from '../../contact';
-import { sendContactEmail } from '../../email';
-import { SITE_URL, CONTACT_EMAIL } from '../../data/site';
-import { env } from '../../env';
+import type { APIRoute } from 'astro'
+import { validateContact } from '../../contact'
+import { CONTACT_EMAIL, SITE_URL } from '../../data/site'
+import { sendContactEmail } from '../../email'
+import { env } from '../../env'
 
 // Disable build-time prerendering for this dynamic POST endpoint.
-export const prerender = false;
+export const prerender = false
 
 // Simple in-memory rate limiter for best-effort throttling (e.g., local development).
 interface RateLimitInfo {
-  count: number;
-  resetAt: number;
+  count: number
+  resetAt: number
 }
-const rateLimiterCache = new Map<string, RateLimitInfo>();
+const rateLimiterCache = new Map<string, RateLimitInfo>()
 
 function isThrottled(ip: string): { throttled: boolean; retryAfter: number } {
-  const now = Date.now();
-  const windowMs = env.CONTACT_RATE_WINDOW_MS;
-  const maxRequests = env.CONTACT_RATE_MAX;
+  const now = Date.now()
+  const windowMs = env.CONTACT_RATE_WINDOW_MS
+  const maxRequests = env.CONTACT_RATE_MAX
 
-  const info = rateLimiterCache.get(ip);
+  const info = rateLimiterCache.get(ip)
   if (!info || now > info.resetAt) {
     rateLimiterCache.set(ip, {
       count: 1,
       resetAt: now + windowMs,
-    });
-    return { throttled: false, retryAfter: 0 };
+    })
+    return { throttled: false, retryAfter: 0 }
   }
 
   if (info.count >= maxRequests) {
-    const remainingSeconds = Math.ceil((info.resetAt - now) / 1000);
-    return { throttled: true, retryAfter: remainingSeconds };
+    const remainingSeconds = Math.ceil((info.resetAt - now) / 1000)
+    return { throttled: true, retryAfter: remainingSeconds }
   }
 
-  info.count++;
-  return { throttled: false, retryAfter: 0 };
+  info.count++
+  return { throttled: false, retryAfter: 0 }
 }
 
 // Helper to check CSRF origin matching
 function verifyCsrf(request: Request): boolean {
-  if (!import.meta.env.PROD) return true; // Bypass CSRF check in dev/preview if desired, but we check env.
-  const csrfEnabled = true; // Enabled in prod
-  if (!csrfEnabled) return true;
+  const isProdOrTest = import.meta.env
+    ? import.meta.env.PROD
+    : env.NODE_ENV === 'production' || env.NODE_ENV === 'test'
+  if (!isProdOrTest) return true // Bypass CSRF check in dev/preview if desired, but we check env.
+  const csrfEnabled = true // Enabled in prod/test
+  if (!csrfEnabled) return true
 
-  const origin = request.headers.get('origin');
-  const referer = request.headers.get('referer');
-  const expectedOrigin = new URL(SITE_URL).origin;
+  const origin = request.headers.get('origin')
+  const referer = request.headers.get('referer')
+  const expectedOrigin = new URL(SITE_URL).origin
 
   if (origin && origin !== expectedOrigin) {
-    console.warn('[contact] CSRF origin mismatch', { origin, expectedOrigin });
-    return false;
+    console.warn('[contact] CSRF origin mismatch', { origin, expectedOrigin })
+    return false
   }
 
   if (!origin && referer) {
     try {
-      const refererOrigin = new URL(referer).origin;
+      const refererOrigin = new URL(referer).origin
       if (refererOrigin !== expectedOrigin) {
-        console.warn('[contact] CSRF referer mismatch', { referer, expectedOrigin });
-        return false;
+        console.warn('[contact] CSRF referer mismatch', { referer, expectedOrigin })
+        return false
       }
     } catch {
-      return false;
+      return false
     }
   }
 
-  return true;
+  return true
 }
 
 // Standard HTML pages served as no-JS fallback responses
@@ -102,11 +105,11 @@ function renderHtmlPage(title: string, contentHtml: string): Response {
       <p>&copy; ${new Date().getFullYear()} Umais Ali. All rights reserved.</p>
     </footer>
   </body>
-</html>`;
+</html>`
 
   return new Response(html, {
     headers: { 'Content-Type': 'text/html; charset=utf-8' },
-  });
+  })
 }
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
@@ -117,15 +120,19 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
         ok: false,
         message: 'Invalid request origin. Please reload and try again.',
       }),
-      { status: 403, headers: { 'Content-Type': 'application/json' } }
-    );
+      { status: 403, headers: { 'Content-Type': 'application/json' } },
+    )
   }
 
   // 2. Extract Client IP
-  const ip = clientAddress || request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
+  const ip =
+    clientAddress ||
+    request.headers.get('x-forwarded-for') ||
+    request.headers.get('x-real-ip') ||
+    'unknown'
 
   // 3. Throttling / Rate-Limiting Check
-  const { throttled, retryAfter } = isThrottled(ip);
+  const { throttled, retryAfter } = isThrottled(ip)
   if (throttled) {
     if (request.headers.get('accept')?.includes('application/json')) {
       return new Response(
@@ -133,55 +140,56 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
           ok: false,
           errors: { message: `Too many requests. Please try again in ${retryAfter} seconds.` },
         }),
-        { status: 429, headers: { 'Content-Type': 'application/json' } }
-      );
+        { status: 429, headers: { 'Content-Type': 'application/json' } },
+      )
     }
 
     return renderHtmlPage(
       'Rate Limit Exceeded',
       `<h2 class="font-serif text-3xl text-foreground mb-4">Please slow down.</h2>
        <p class="text-muted-foreground text-sm leading-relaxed mb-6">You've sent too many messages recently. Please wait a bit before trying again.</p>
-       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`
-    );
+       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
+    )
   }
 
   // 4. Parse content type body
-  let body: any = {};
-  const contentType = request.headers.get('content-type') || '';
+  let body: unknown = {}
+  const contentType = request.headers.get('content-type') || ''
   try {
     if (contentType.includes('application/json')) {
-      body = await request.json();
+      body = await request.json()
     } else {
-      const text = await request.text();
-      const params = new URLSearchParams(text);
-      body = Object.fromEntries(params.entries());
+      const text = await request.text()
+      const params = new URLSearchParams(text)
+      body = Object.fromEntries(params.entries())
     }
-  } catch (err) {
-    return new Response(
-      JSON.stringify({ ok: false, message: 'Invalid payload.' }),
-      { status: 400, headers: { 'Content-Type': 'application/json' } }
-    );
+  } catch (_err) {
+    return new Response(JSON.stringify({ ok: false, message: 'Invalid payload.' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 
   // 5. Conduct form integrity & validation checks
-  const result = validateContact(body);
+  // biome-ignore lint/suspicious/noExplicitAny: library body shape
+  const result = validateContact(body as any)
 
   // 6. Handle silent accept on honeypots
   if (result.honeypot) {
-    const fakeName = result.values.name || 'there';
+    const fakeName = result.values.name || 'there'
     if (request.headers.get('accept')?.includes('application/json')) {
-      return new Response(
-        JSON.stringify({ ok: true, name: fakeName }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ ok: true, name: fakeName }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     return renderHtmlPage(
       'Message Sent Successfully',
       `<h2 class="font-serif text-3xl text-foreground mb-4">Message sent...</h2>
        <p class="text-muted-foreground text-sm leading-relaxed mb-6">Thanks for reaching out, ${fakeName}! I'll inspect your details and follow up soon.</p>
-       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`
-    );
+       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
+    )
   }
 
   if (!result.ok) {
@@ -193,8 +201,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
           values: result.values,
           message: 'Validation failed.',
         }),
-        { status: 422, headers: { 'Content-Type': 'application/json' } }
-      );
+        { status: 422, headers: { 'Content-Type': 'application/json' } },
+      )
     }
 
     // fallback rendering with retry instructions
@@ -206,52 +214,52 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
          ${result.errors.email ? `<li>${result.errors.email}</li>` : ''}
          ${result.errors.message ? `<li>${result.errors.message}</li>` : ''}
        </ul>
-       <a href="/#contact" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Try again</a>`
-    );
+       <a href="/#contact" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Try again</a>`,
+    )
   }
 
   // 7. Fire Email Orchestration
-  const userAgent = (request.headers.get('user-agent') ?? '').slice(0, 500);
+  const userAgent = (request.headers.get('user-agent') ?? '').slice(0, 500)
 
   const sent = await sendContactEmail({
     values: result.values,
     ip,
     userAgent,
-  });
+  })
 
   if (sent.delivered) {
-    console.log('[contact] delivered via Resend', { id: sent.id });
+    console.log('[contact] delivered via Resend', { id: sent.id })
     if (request.headers.get('accept')?.includes('application/json')) {
-      return new Response(
-        JSON.stringify({ ok: true, name: result.values.name }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ ok: true, name: result.values.name }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     return renderHtmlPage(
       'Message Received',
       `<h2 class="font-serif text-3xl text-foreground mb-4">Got it. <span class="serif-italic text-muted-foreground">Talk soon.</span></h2>
        <p class="text-muted-foreground text-sm leading-relaxed mb-6">Thanks for the note, ${result.values.name}. I read every message myself, so the reply will come from me. Usually within a day.</p>
-       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`
-    );
+       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
+    )
   }
 
   // Handle email sending failure
-  console.error('[contact] Resend delivery failure', { error: sent.error });
+  console.error('[contact] Resend delivery failure', { error: sent.error })
   if (request.headers.get('accept')?.includes('application/json')) {
     return new Response(
       JSON.stringify({
         ok: false,
         error: 'Upstream dispatcher error',
       }),
-      { status: 502, headers: { 'Content-Type': 'application/json' } }
-    );
+      { status: 502, headers: { 'Content-Type': 'application/json' } },
+    )
   }
 
   return renderHtmlPage(
     'Delivery Failure',
     `<h2 class="font-serif text-3xl text-foreground mb-4">Could not send via form.</h2>
      <p class="text-muted-foreground text-sm leading-relaxed mb-6">Something went wrong on our side. Please connect by emailing me directly at <a class="font-medium text-foreground underline hover:text-primary transition-colors" href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>
-     <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`
-  );
-};
+     <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
+  )
+}

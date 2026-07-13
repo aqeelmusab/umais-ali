@@ -246,7 +246,7 @@ const { values = {}, errors = {} } = Astro.props as Props
           `;
         } else if (res.status === 422) {
           const data = await res.json();
-          
+
           if (btn) btn.disabled = false;
           if (hideEl && showEl) {
             hideEl.classList.remove('hidden');
@@ -271,7 +271,7 @@ const { values = {}, errors = {} } = Astro.props as Props
                 field.setAttribute('aria-describedby', `cf-${key}-err`);
                 field.classList.add('border-destructive');
                 field.classList.remove('border-border', 'focus:border-foreground/40');
-                
+
                 const errEl = document.createElement('p');
                 errEl.className = 'text-destructive mt-2 text-xs font-sans';
                 errEl.id = `cf-${key}-err`;

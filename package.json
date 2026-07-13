@@ -9,24 +9,19 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "build:css": "tailwindcss -i ./src/styles/main.css -o ./public/css/main.css --minify",
-    "watch:css": "tailwindcss -i ./src/styles/main.css -o ./public/css/main.css --watch",
-    "build:ts": "tsc",
-    "vendor:sync": "node scripts/vendor-assets.mjs",
-    "build": "pnpm run vendor:sync && pnpm run build:css && pnpm run build:ts",
-    "vercel-build": "pnpm run build",
-    "start": "node dist/server.js",
-    "preview": "pnpm run build && pnpm run start",
-    "dev:server": "tsx watch src/server.ts",
-    "dev": "npm-run-all --parallel watch:css dev:server",
-    "typecheck": "tsc --noEmit && pnpm run typecheck:tests",
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "sync": "astro sync",
+    "typecheck": "astro check && pnpm run typecheck:tests",
     "typecheck:tests": "tsc -p tsconfig.test.json --noEmit",
-    "test": "tsx --test tests/**/*.test.ts",
+    "test": "NODE_ENV=test tsx --test tests/**/*.test.ts",
     "lint": "biome check .",
     "fix": "biome check --write .",
     "format": "biome format --write .",
-    "verify": "pnpm run typecheck && pnpm run test && pnpm run lint && pnpm run build",
-    "prepare": "simple-git-hooks && node scripts/vendor-assets.mjs"
+    "verify": "pnpm run sync && pnpm run typecheck && pnpm run test && pnpm run lint && pnpm run build",
+    "prepare": "simple-git-hooks"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",

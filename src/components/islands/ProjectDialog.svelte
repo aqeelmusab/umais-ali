@@ -1,224 +1,226 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
-  import { animate, stagger } from 'motion';
-  import type { Project } from '../../data/projects';
-  import { lockScroll, unlockScroll } from '../../scripts/page';
+import { animate, stagger } from 'motion'
+import { onMount, tick } from 'svelte'
+import type { Project } from '../../data/projects'
+import { lockScroll, unlockScroll } from '../../scripts/page'
 
-  export let projects: Project[] = [];
+export let projects: Project[] = []
 
-  let activeIndex: number | null = null;
-  let prevActiveIndex: number | null = null;
-  let isOpen = false;
-  let returnUrl = '/';
-  let triggerElement: HTMLElement | null = null;
-  let modalContainer: HTMLElement;
-  let animatePromise: Promise<void> | null = null;
+let activeIndex: number | null = null
+let prevActiveIndex: number | null = null
+let isOpen = false
+let returnUrl = '/'
+let triggerElement: HTMLElement | null = null
+let modalContainer: HTMLElement
+let animatePromise: Promise<void> | null = null
 
-  $: activeProject = activeIndex !== null ? projects[activeIndex] : null;
+$: activeProject = activeIndex !== null ? projects[activeIndex] : null
 
-  function prefersReducedMotion(): boolean {
-    if (typeof window === 'undefined') return false;
-    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function prefersReducedMotion(): boolean {
+  if (typeof window === 'undefined') return false
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches
+}
+
+export function openProject(index: number, trigger: HTMLElement | null = null) {
+  if (index < 0 || index >= projects.length) return
+  prevActiveIndex = activeIndex
+  activeIndex = index
+  triggerElement = trigger || triggerElement
+
+  if (!isOpen) {
+    isOpen = true
+    lockScroll()
+    returnUrl = window.location.pathname + window.location.search
   }
 
-  export function openProject(index: number, trigger: HTMLElement | null = null) {
-    if (index < 0 || index >= projects.length) return;
-    prevActiveIndex = activeIndex;
-    activeIndex = index;
-    triggerElement = trigger || triggerElement;
-    
-    if (!isOpen) {
-      isOpen = true;
-      lockScroll();
-      returnUrl = window.location.pathname + window.location.search;
-    }
-
-    const project = projects[index];
-    if (project) {
-      const targetUrl = `/projects/${project.slug}`;
-      history.pushState({ projectIndex: index }, '', targetUrl);
-    }
-
-    tick().then(() => {
-      focusCloseButton();
-      triggerStaggerAnimation();
-    });
+  const project = projects[index]
+  if (project) {
+    const targetUrl = `/projects/${project.slug}`
+    history.pushState({ projectIndex: index }, '', targetUrl)
   }
 
-  export function closeProject() {
-    if (!isOpen) return;
-    isOpen = false;
-    activeIndex = null;
-    prevActiveIndex = null;
-    unlockScroll();
+  tick().then(() => {
+    focusCloseButton()
+    triggerStaggerAnimation()
+  })
+}
 
-    history.pushState(null, '', returnUrl);
+export function closeProject() {
+  if (!isOpen) return
+  isOpen = false
+  activeIndex = null
+  prevActiveIndex = null
+  unlockScroll()
 
-    if (triggerElement && document.contains(triggerElement)) {
-      triggerElement.focus({ preventScroll: true });
+  history.pushState(null, '', returnUrl)
+
+  if (triggerElement && document.contains(triggerElement)) {
+    triggerElement.focus({ preventScroll: true })
+  }
+  triggerElement = null
+}
+
+function goPrev() {
+  if (activeIndex !== null && activeIndex > 0) {
+    openProject(activeIndex - 1)
+  }
+}
+
+function goNext() {
+  if (activeIndex !== null && activeIndex < projects.length - 1) {
+    openProject(activeIndex + 1)
+  }
+}
+
+function focusCloseButton() {
+  if (!modalContainer) return
+  const closeBtn = modalContainer.querySelector('[data-modal-close]') as HTMLElement | null
+  if (closeBtn) {
+    closeBtn.focus({ preventScroll: true })
+  }
+}
+
+const FOCUSABLE_SELECTOR =
+  'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
+function trapFocus(e: KeyboardEvent) {
+  if (!modalContainer) return
+  const focusables = modalContainer.querySelectorAll(FOCUSABLE_SELECTOR) as NodeListOf<HTMLElement>
+  if (focusables.length === 0) return
+  if (focusables.length === 1) {
+    e.preventDefault()
+    focusables[0]?.focus()
+    return
+  }
+  const first = focusables[0]
+  const last = focusables[focusables.length - 1]
+  if (e.shiftKey && document.activeElement === first) {
+    e.preventDefault()
+    last?.focus()
+  } else if (!e.shiftKey && document.activeElement === last) {
+    e.preventDefault()
+    first?.focus()
+  }
+}
+
+function triggerStaggerAnimation() {
+  if (prefersReducedMotion() || !modalContainer) {
+    const reveals = modalContainer.querySelectorAll('.modal-reveal') as NodeListOf<HTMLElement>
+    for (const el of reveals) {
+      el.style.opacity = '1'
+      el.style.transform = 'none'
     }
-    triggerElement = null;
+    return
   }
 
-  function goPrev() {
-    if (activeIndex !== null && activeIndex > 0) {
-      openProject(activeIndex - 1);
-    }
+  const blocks = modalContainer.querySelectorAll('.modal-reveal') as NodeListOf<HTMLElement>
+  if (!blocks.length) return
+
+  // Reset styles
+  for (const el of blocks) {
+    el.style.opacity = '0'
+    el.style.transform = 'translateY(18px)'
   }
 
-  function goNext() {
-    if (activeIndex !== null && activeIndex < projects.length - 1) {
-      openProject(activeIndex + 1);
-    }
+  animate(
+    Array.from(blocks),
+    {
+      opacity: [0, 1],
+      y: [18, 0],
+    },
+    {
+      duration: 0.55,
+      delay: stagger(0.07, { startDelay: 0.05 }),
+      ease: [0.34, 1.56, 0.64, 1],
+    },
+  )
+}
+
+function handleKeydown(e: KeyboardEvent) {
+  if (!isOpen) return
+
+  if (e.key === 'Escape') {
+    e.preventDefault()
+    closeProject()
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault()
+    goPrev()
+  } else if (e.key === 'ArrowRight') {
+    e.preventDefault()
+    goNext()
+  } else if (e.key === 'Tab') {
+    trapFocus(e)
   }
+}
 
-  function focusCloseButton() {
-    if (!modalContainer) return;
-    const closeBtn = modalContainer.querySelector('[data-modal-close]') as HTMLElement | null;
-    if (closeBtn) {
-      closeBtn.focus({ preventScroll: true });
-    }
-  }
-
-  const FOCUSABLE_SELECTOR =
-    'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
-
-  function trapFocus(e: KeyboardEvent) {
-    if (!modalContainer) return;
-    const focusables = modalContainer.querySelectorAll(FOCUSABLE_SELECTOR) as NodeListOf<HTMLElement>;
-    if (focusables.length === 0) return;
-    if (focusables.length === 1) {
-      e.preventDefault();
-      focusables[0]?.focus();
-      return;
-    }
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    if (e.shiftKey && document.activeElement === first) {
-      e.preventDefault();
-      last?.focus();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      e.preventDefault();
-      first?.focus();
-    }
-  }
-
-  function triggerStaggerAnimation() {
-    if (prefersReducedMotion() || !modalContainer) {
-      const reveals = modalContainer.querySelectorAll('.modal-reveal') as NodeListOf<HTMLElement>;
-      for (const el of reveals) {
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-      }
-      return;
-    }
-
-    const blocks = modalContainer.querySelectorAll('.modal-reveal') as NodeListOf<HTMLElement>;
-    if (!blocks.length) return;
-
-    // Reset styles
-    for (const el of blocks) {
-      el.style.opacity = '0';
-      el.style.transform = 'translateY(18px)';
-    }
-
-    animate(
-      Array.from(blocks),
-      {
-        opacity: [0, 1],
-        y: [18, 0],
-      },
-      {
-        duration: 0.55,
-        delay: stagger(0.07, { startDelay: 0.05 }),
-        ease: [0.34, 1.56, 0.64, 1],
-      }
-    );
-  }
-
-  function handleKeydown(e: KeyboardEvent) {
-    if (!isOpen) return;
-
-    if (e.key === 'Escape') {
-      e.preventDefault();
-      closeProject();
-    } else if (e.key === 'ArrowLeft') {
-      e.preventDefault();
-      goPrev();
-    } else if (e.key === 'ArrowRight') {
-      e.preventDefault();
-      goNext();
-    } else if (e.key === 'Tab') {
-      trapFocus(e);
-    }
-  }
-
-  onMount(() => {
-    // Progressive enhancement click interception of project cards
-    const handleTriggerClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const trigger = target.closest('[data-project-trigger]') as HTMLAnchorElement | null;
-      if (trigger) {
-        const rawId = trigger.getAttribute('data-project-id');
-        if (rawId) {
-          e.preventDefault();
-          const id = Number(rawId);
-          const index = projects.findIndex((p) => p.id === id);
-          if (index !== -1) {
-            openProject(index, trigger);
-          }
+onMount(() => {
+  // Progressive enhancement click interception of project cards
+  const handleTriggerClick = (e: MouseEvent) => {
+    const target = e.target as HTMLElement
+    const trigger = target.closest('[data-project-trigger]') as HTMLAnchorElement | null
+    if (trigger) {
+      const rawId = trigger.getAttribute('data-project-id')
+      if (rawId) {
+        e.preventDefault()
+        const id = Number(rawId)
+        const index = projects.findIndex((p) => p.id === id)
+        if (index !== -1) {
+          openProject(index, trigger)
         }
       }
-    };
-
-    // Popstate history support (e.g. Back/Forward)
-    const handlePopState = (e: PopStateEvent) => {
-      if (e.state && typeof e.state.projectIndex === 'number') {
-        const index = e.state.projectIndex;
-        if (index >= 0 && index < projects.length) {
-          activeIndex = index;
-          isOpen = true;
-          tick().then(() => {
-            triggerStaggerAnimation();
-          });
-        }
-      } else {
-        // Closed / returned to base page
-        if (isOpen) {
-          isOpen = false;
-          activeIndex = null;
-          prevActiveIndex = null;
-          unlockScroll();
-        }
-      }
-    };
-
-    // Check if initial URL matches a project slug
-    const path = window.location.pathname;
-    const match = path.match(/^\/projects\/([a-zA-Z0-9-]+)\/?$/);
-    if (match && match[1]) {
-      const slug = match[1];
-      const index = projects.findIndex((p) => p.slug === slug);
-      if (index !== -1) {
-        // Find matching trigger card for focus return if present
-        const trigger = document.querySelector(`[data-project-id="${projects[index]?.id}"]`) as HTMLElement | null;
-        openProject(index, trigger);
-      }
     }
+  }
 
-    window.addEventListener('click', handleTriggerClick);
-    window.addEventListener('popstate', handlePopState);
-    window.addEventListener('keydown', handleKeydown);
-
-    return () => {
-      window.removeEventListener('click', handleTriggerClick);
-      window.removeEventListener('popstate', handlePopState);
-      window.removeEventListener('keydown', handleKeydown);
+  // Popstate history support (e.g. Back/Forward)
+  const handlePopState = (e: PopStateEvent) => {
+    if (e.state && typeof e.state.projectIndex === 'number') {
+      const index = e.state.projectIndex
+      if (index >= 0 && index < projects.length) {
+        activeIndex = index
+        isOpen = true
+        tick().then(() => {
+          triggerStaggerAnimation()
+        })
+      }
+    } else {
+      // Closed / returned to base page
       if (isOpen) {
-        unlockScroll();
+        isOpen = false
+        activeIndex = null
+        prevActiveIndex = null
+        unlockScroll()
       }
-    };
-  });
+    }
+  }
+
+  // Check if initial URL matches a project slug
+  const path = window.location.pathname
+  const match = path.match(/^\/projects\/([a-zA-Z0-9-]+)\/?$/)
+  if (match && match[1]) {
+    const slug = match[1]
+    const index = projects.findIndex((p) => p.slug === slug)
+    if (index !== -1) {
+      // Find matching trigger card for focus return if present
+      const trigger = document.querySelector(
+        `[data-project-id="${projects[index]?.id}"]`,
+      ) as HTMLElement | null
+      openProject(index, trigger)
+    }
+  }
+
+  window.addEventListener('click', handleTriggerClick)
+  window.addEventListener('popstate', handlePopState)
+  window.addEventListener('keydown', handleKeydown)
+
+  return () => {
+    window.removeEventListener('click', handleTriggerClick)
+    window.removeEventListener('popstate', handlePopState)
+    window.removeEventListener('keydown', handleKeydown)
+    if (isOpen) {
+      unlockScroll()
+    }
+  }
+})
 </script>
 
 <div
@@ -247,7 +249,7 @@
     <div class="modal-card relative flex w-full flex-col overflow-hidden bg-card shadow-2xl h-[92dvh] max-h-208 max-w-6xl rounded-t-lg md:h-[88dvh] md:rounded-lg">
       <div id="project-modal-content" class="flex-1 overflow-y-auto">
         <article class="flex flex-col gap-0">
-          
+
           <!-- Sticky Header -->
           <div class="sticky top-0 z-10 flex items-center justify-between border-b border-border gap-4 px-6 py-4 md:px-10 bg-card/85 backdrop-blur">
             <div class="flex items-center gap-3 min-w-0">
@@ -310,7 +312,7 @@
 
           <!-- Main Grid -->
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
-            
+
             <!-- LEFT Content: visual + title details -->
             <div class="relative flex flex-col bg-card lg:col-span-7 border-b border-border lg:border-b-0 lg:border-r">
               <div class="modal-reveal relative aspect-video w-full overflow-hidden bg-muted">

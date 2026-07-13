@@ -1,15 +1,14 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/layout/Header.astro';
-import Contact from '../../components/sections/Contact.astro';
-import Footer from '../../components/layout/Footer.astro';
-import ScrollToTop from '../../components/layout/ScrollToTop.astro';
-import Icon from '../../components/layout/Icon.astro';
+import Footer from '../../components/layout/Footer.astro'
+import Header from '../../components/layout/Header.astro'
+import Icon from '../../components/layout/Icon.astro'
+import ScrollToTop from '../../components/layout/ScrollToTop.astro'
+import Contact from '../../components/sections/Contact.astro'
+import { sectionHref, services } from '../../data/site'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import { createSiteGraph } from '../../lib/seo/structured-data'
 
-import { services, sectionHref } from '../../data/site';
-import { createSiteGraph } from '../../lib/seo/structured-data';
-
-const jsonLd = createSiteGraph();
+const jsonLd = createSiteGraph()
 ---
 <BaseLayout
   title="SEO Services | Umais Ali"
