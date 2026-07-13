@@ -587,9 +587,25 @@ html {
 }
 
 /* ── Mobile menu open state ──────────────────── */
-/* Entrance/exit is driven by Motion in src/scripts/page.ts (opacity + y +
-   scale, staggered nav links). This just keeps the sheet non-interactive
-   and out of the tab order while it is closed and mid-close-animation. */
+/* Entrance/exit is driven by Motion in src/scripts/page.ts (opacity fade on
+   the sheet + staggered nav-link reveal). `display` itself is toggled via
+   inline style directly on the element by src/scripts/page.ts (immediately
+   on open, deferred until the close animation finishes), not Tailwind's
+   `hidden`/`flex` utility classes, since combining those two on one element
+   trips the editor's "applies the same CSS properties" conflict diagnostic.
+   The `!important` at `md:` guarantees the sheet can never show on desktop
+   regardless of what inline style JS has set (inline styles otherwise beat
+   plain stylesheet rules, but not `!important` ones). Also keeps the sheet
+   non-interactive and out of the tab order while it is closed and
+   mid-close-animation. */
+#mobile-menu {
+  display: none;
+}
+@media (min-width: 768px) {
+  #mobile-menu {
+    display: none !important;
+  }
+}
 #mobile-menu:not(.is-open) {
   pointer-events: none;
 }

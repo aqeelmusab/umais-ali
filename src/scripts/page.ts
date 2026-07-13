@@ -178,33 +178,32 @@ export function initPageInteractions(): void {
     lockScroll()
 
     if (prefersReducedMotion()) {
-      menu.classList.remove('hidden')
+      menu.style.display = 'flex'
       menu.style.removeProperty('opacity')
       menu.style.removeProperty('transform')
       resetMenuStaggerItems()
     } else {
       // Set the pre-animation state before revealing the sheet so nothing
-      // flashes fully open for a frame before Motion takes over.
+      // flashes fully open for a frame before Motion takes over. The sheet
+      // itself only ever fades (no scale/translate): this is a full-bleed
+      // `inset-0`-style overlay, so scaling or shifting it revealed a sliver
+      // of the real page at the edges mid-transition. All of the actual
+      // motion lives in the staggered nav-link reveal below instead.
       menu.style.opacity = '0'
-      menu.style.transform = 'translateY(-1rem) scale(0.97)'
       for (const el of menuStaggerItems) {
         el.style.opacity = '0'
-        el.style.transform = 'translateY(0.9rem)'
+        el.style.transform = 'translateY(1.1rem)'
       }
 
-      menu.classList.remove('hidden')
+      menu.style.display = 'flex'
 
-      menuAnimation = animate(
-        menu,
-        { opacity: [0, 1], y: ['-1rem', '0rem'], scale: [0.97, 1] },
-        { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
-      )
+      menuAnimation = animate(menu, { opacity: [0, 1] }, { duration: 0.3, ease: 'easeOut' })
       animate(
         menuStaggerItems,
-        { opacity: [0, 1], y: ['0.9rem', '0rem'] },
+        { opacity: [0, 1], y: ['1.1rem', '0rem'] },
         {
-          duration: 0.5,
-          delay: stagger(0.045, { startDelay: 0.1 }),
+          duration: 0.55,
+          delay: stagger(0.05, { startDelay: 0.12 }),
           ease: [0.16, 1, 0.3, 1],
         },
       )
@@ -237,7 +236,7 @@ export function initPageInteractions(): void {
     unlockScroll()
 
     const finishClose = () => {
-      menu.classList.add('hidden')
+      menu.style.display = 'none'
       menu.style.removeProperty('opacity')
       menu.style.removeProperty('transform')
       resetMenuStaggerItems()
@@ -248,11 +247,7 @@ export function initPageInteractions(): void {
       return
     }
 
-    menuAnimation = animate(
-      menu,
-      { opacity: [1, 0], y: ['0rem', '-0.6rem'], scale: [1, 0.97] },
-      { duration: 0.28, ease: [0.4, 0, 1, 1] },
-    )
+    menuAnimation = animate(menu, { opacity: [1, 0] }, { duration: 0.22, ease: 'easeIn' })
     menuAnimation.finished.then(finishClose).catch(finishClose)
   }
 

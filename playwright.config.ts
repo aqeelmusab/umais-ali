@@ -33,8 +33,18 @@ export default defineConfig({
   ],
 
   /* Run your local dev/preview server before starting the tests */
+  /* Astro 7's `astro dev` daemonizes: the invoking process prints "Dev
+     server running..." then exits 0 immediately, while the real server
+     keeps serving in a detached background process. Playwright's webServer
+     runner treats the `command` process exiting as "the server died" and
+     fails with "Process from config.webServer exited early" even though
+     the server is actually fine. Chaining `&& sleep infinity` keeps this
+     wrapper process alive (Playwright kills it after the run; the CI
+     runner/VM is torn down right after anyway, so the orphaned daemon
+     doesn't linger) so Playwright's liveness check passes once the real
+     daemon starts responding on the URL below. */
   webServer: {
-    command: 'pnpm run dev --port 4321',
+    command: 'pnpm exec astro dev --port 4321 && sleep infinity',
     url: 'http://localhost:4321',
     reuseExistingServer: true,
     stdout: 'pipe',

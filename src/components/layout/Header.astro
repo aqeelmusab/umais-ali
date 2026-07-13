@@ -14,7 +14,7 @@ import Logo from './Logo.astro'
     ))}
   </nav>
 
-  <div class="flex items-center gap-1.5">
+  <div class="-mr-1 flex items-center gap-1.5 md:mr-0">
     <button id="theme-toggle" class="theme-toggle relative inline-flex items-center justify-center rounded-full text-ink-muted transition-colors h-10 w-10 hover:text-ink hover:bg-ink/5" type="button" aria-label="Switch to dark theme">
       <span class="theme-toggle-icon icon-sun absolute inset-0 inline-flex items-center justify-center">
         <Icon name="sun" class="h-4 w-4" />
@@ -45,8 +45,19 @@ import Logo from './Logo.astro'
 {/* No duplicate logo/close row: the real header above stays fixed at
     z-50 (higher than this sheet's z-40) while the sheet is open, so the
     same hamburger button (now morphed into an X) remains visible and
-    keeps controlling the menu. `pt-24` clears the floating header pill. */}
-<div id="mobile-menu" class="fixed inset-0 z-40 flex flex-col bg-surface pt-24 md:hidden" aria-hidden="true" inert>
+    keeps controlling the menu. `pt-24` clears the floating header pill.
+    `h-dvh` (not `inset-0`, which sizes against the large/initial
+    viewport) tracks the browser's dynamic viewport so the sheet never
+    extends taller than what's actually visible when the mobile address
+    bar is showing, and `overflow-y-auto` lets content scroll internally
+    instead of being clipped/unreachable on short viewports.
+    Display (closed by default, `flex` once `.is-open`, always closed at
+    `md:`) is handled entirely by the plain CSS in global.css rather than
+    Tailwind's `hidden`/`flex` utilities together, since those two target
+    the same `display` property and trip the editor's "applies the same
+    CSS properties" conflict diagnostic even though the cascade order is
+    correct; see the `#mobile-menu` rules in global.css. */}
+<div id="mobile-menu" class="fixed inset-x-0 top-0 z-40 flex-col overflow-y-auto bg-surface pt-24 h-dvh" aria-hidden="true" inert>
   <nav class="flex flex-1 flex-col justify-center gap-1 px-8" aria-label="Mobile navigation">
     {navLinks.map((link, idx) => (
       <a class="group flex items-baseline border-b border-line text-ink gap-4 py-5" href={link.href} data-close-menu>
@@ -56,7 +67,7 @@ import Logo from './Logo.astro'
     ))}
   </nav>
 
-  <div class="flex items-center justify-between border-t border-line gap-4 px-8 py-6" data-menu-footer>
+  <div class="flex shrink-0 items-center justify-between border-t border-line gap-4 px-8 py-6 pb-[max(1.5rem,env(safe-area-inset-bottom))]" data-menu-footer>
     <a class="font-mono lowercase text-ink-muted text-xs tracking-[0.18em]" href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
     <a class="inline-flex items-center rounded-full bg-ink font-medium text-surface gap-2 h-11 px-5 text-sm" href={homeSectionHref('contact')} data-close-menu>
       Let's talk
