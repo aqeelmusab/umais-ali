@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
 /* Tell Tailwind v4 where to scan for class names. */
-@source "../views/**/*.pug";
+@source "../**/*.astro";
+@source "../**/*.svelte";
+@source "../**/*.ts";
 @source "../../public/js/**/*.js";
 
 /* ─────────────────────────────────────────────────

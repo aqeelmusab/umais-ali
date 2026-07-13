@@ -20,7 +20,7 @@ export function isValidEmail(email: string): boolean {
   const labels = domain.split('.')
   if (labels.length < 2) return false
   const tld = labels[labels.length - 1]
-  if (tld.length < 2) return false
+  if (!tld || tld.length < 2) return false
   for (const label of labels) {
     if (!label || label.length > 63) return false
     if (label.startsWith('-') || label.endsWith('-')) return false

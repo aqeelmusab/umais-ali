@@ -78,11 +78,11 @@ test('GET / includes Vercel Analytics and Speed Insights scripts when enabled', 
 
 test('GET /projects/:id returns the modal fragment for a real project', async () => {
   await withServer(async (base) => {
-    const id = projects[0].id
+    const id = projects[0]!.id
     const res = await fetch(`${base}/projects/${id}`)
     assert.equal(res.status, 200)
     const html = await res.text()
-    assert.ok(html.includes(projects[0].title), 'fragment should include project title')
+    assert.ok(html.includes(projects[0]!.title), 'fragment should include project title')
   })
 })
 
@@ -106,7 +106,7 @@ test('GET /services renders the service index', async () => {
     assert.equal(res.status, 200)
     const html = await res.text()
     assert.match(html, /SEO services for teams/i)
-    assert.ok(html.includes(`/services/${services[0].slug}`), 'index should link to service pages')
+    assert.ok(html.includes(`/services/${services[0]!.slug}`), 'index should link to service pages')
   })
 })
 
