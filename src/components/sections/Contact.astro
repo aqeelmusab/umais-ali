@@ -299,7 +299,7 @@ const { values = {}, errors = {} } = Astro.props as Props
           }
 
           form.querySelectorAll('.text-destructive').forEach(el => el.remove());
-          
+
           let alertMsg = 'Request failed. Please reload and try again.';
           if (res.status === 429 && data.errors?.message) {
             alertMsg = data.errors.message;
