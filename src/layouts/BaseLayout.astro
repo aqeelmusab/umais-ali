@@ -1,18 +1,18 @@
 ---
 export interface Props {
-  title?: string;
-  description?: string;
-  canonicalPath?: string;
-  canonicalUrl?: string;
-  socialImage?: string;
-  socialImageAlt?: string;
-  robots?: string;
-  googlebot?: string;
-  jsonLd?: unknown;
+  title?: string
+  description?: string
+  canonicalPath?: string
+  canonicalUrl?: string
+  socialImage?: string
+  socialImageAlt?: string
+  robots?: string
+  googlebot?: string
+  jsonLd?: unknown
 }
 
-import '../styles/global.css';
-import { SITE_URL, SITE_NAME, SITE_TITLE, SITE_DESCRIPTION } from '../data/site';
+import '../styles/global.css'
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from '../data/site'
 
 const {
   title,
@@ -24,17 +24,21 @@ const {
   robots,
   googlebot,
   jsonLd,
-} = Astro.props as Props;
+} = Astro.props as Props
 
-const pageTitle = title || SITE_TITLE;
-const pageDescription = description || SITE_DESCRIPTION;
-const pageUrl = canonicalUrl || `${SITE_URL}${canonicalPath || '/'}`;
-const pageImage = socialImage || `${SITE_URL}/og-image.png`;
-const pageImageAlt = socialImageAlt || `${SITE_NAME} - SEO that actually moves the needle`;
-const robotsContent = robots || 'index, follow';
-const googlebotContent = googlebot || (robotsContent.includes('noindex') ? robotsContent : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1');
+const pageTitle = title || SITE_TITLE
+const pageDescription = description || SITE_DESCRIPTION
+const pageUrl = canonicalUrl || `${SITE_URL}${canonicalPath || '/'}`
+const pageImage = socialImage || `${SITE_URL}/og-image.png`
+const pageImageAlt = socialImageAlt || `${SITE_NAME} - SEO that actually moves the needle`
+const robotsContent = robots || 'index, follow'
+const googlebotContent =
+  googlebot ||
+  (robotsContent.includes('noindex')
+    ? robotsContent
+    : 'index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1')
 
-const enableVercelInsights = import.meta.env.PROD;
+const enableVercelInsights = import.meta.env.PROD
 ---
 <!DOCTYPE html>
 <html lang="en" class="bg-background">

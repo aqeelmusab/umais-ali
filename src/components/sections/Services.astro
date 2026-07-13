@@ -1,0 +1,50 @@
+---
+import { services } from '../../data/site'
+import Icon from '../layout/Icon.astro'
+---
+<section id="services" class="relative px-6 py-24 md:px-12 md:py-32 lg:px-20">
+  <div class="mx-auto max-w-6xl">
+    <div class="grid grid-cols-1 border-b border-border gap-10 pb-12 lg:grid-cols-12 lg:gap-12">
+      <div class="flex flex-col lg:col-span-5">
+        <span class="eyebrow">How we'd work</span>
+        <h2 class="font-serif text-foreground mt-6 text-4xl md:text-5xl tracking-tight leading-[1.05]">
+          Six things
+          <br />
+          <span class="serif-italic text-muted-foreground">I'm good at.</span>
+        </h2>
+      </div>
+      <div class="flex items-end lg:col-span-7">
+        <p class="text-muted-foreground text-base md:text-lg leading-relaxed">
+          Most engagements start with one of these and grow from there.
+          If you need something that is not on the list, ask. I will tell you honestly
+          whether it is something I should be the one doing.
+        </p>
+      </div>
+    </div>
+
+    <ul class="grid grid-cols-1 bg-border gap-px mt-px md:grid-cols-2 lg:grid-cols-3">
+      {services.map((service) => (
+        <li class="bg-background">
+          <a class="group flex h-full flex-col transition-colors duration-300 gap-6 p-8 lg:p-10 hover:bg-card" href={`/services/${service.slug}`} aria-label={`View ${service.title} service`}>
+            <div class="flex items-start justify-between">
+              <span class="font-mono text-muted-foreground text-xs tracking-[0.18em]">{service.number}</span>
+              <span class="inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-all duration-300 border border-transparent group-hover:border-border group-hover:text-foreground group-hover:-rotate-12">
+                <Icon name="arrow-up-right" class="h-3.5 w-3.5" />
+              </span>
+            </div>
+            <h3 class="font-serif text-foreground text-2xl tracking-[-0.02em] leading-tight-">{service.title}</h3>
+            <p class="text-muted-foreground leading-relaxed text-sm">{service.summary}</p>
+            <ul class="flex flex-col border-t border-border mt-auto gap-2 pt-4">
+              {service.deliverables.map((item) => (
+                <li class="flex items-center text-muted-foreground gap-2 text-xs">
+                  <span class="bg-primary h-px w-3 opacity-70"></span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

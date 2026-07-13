@@ -1,0 +1,41 @@
+---
+import Footer from '../components/layout/Footer.astro'
+import Header from '../components/layout/Header.astro'
+import ScrollToTop from '../components/layout/ScrollToTop.astro'
+import About from '../components/sections/About.astro'
+import Contact from '../components/sections/Contact.astro'
+import Faq from '../components/sections/Faq.astro'
+import Hero from '../components/sections/Hero.astro'
+import Marquee from '../components/sections/Marquee.astro'
+import SelectedWork from '../components/sections/SelectedWork.astro'
+import Services from '../components/sections/Services.astro'
+import Testimonials from '../components/sections/Testimonials.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
+
+import { createSiteGraph } from '../lib/seo/structured-data'
+
+const jsonLd = createSiteGraph()
+---
+<BaseLayout jsonLd={jsonLd}>
+  <Header />
+  <main>
+    <Hero />
+    <Marquee />
+    <SelectedWork />
+    <Services />
+    <About />
+    <Testimonials />
+    <Faq />
+    <Contact />
+  </main>
+  <Footer />
+  <ScrollToTop />
+
+  <script>
+    import { initPageInteractions } from '../scripts/page';
+    import { initAnimations } from '../scripts/animations';
+
+    initPageInteractions();
+    initAnimations();
+  </script>
+</BaseLayout>
