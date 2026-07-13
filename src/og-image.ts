@@ -24,10 +24,10 @@ const FONT_DIR = path.join(ROOT, 'public', 'fonts')
 
 // Match the dark-theme tokens declared in `src/styles/global.css` (`:root[data-theme="dark"]`).
 const COLORS = {
-  background: '#0b0d11',
-  foreground: '#f1f4f8',
-  muted: 'rgba(241, 244, 248, 0.55)',
-  accent: '#00bbcb', // vivid cyan/teal (~--primary in dark theme)
+  background: '#000000',
+  foreground: '#f8f5ee',
+  muted: 'rgba(248, 245, 238, 0.55)',
+  accent: '#f2a700', // shiny gold (~--brand in dark theme)
 } as const
 
 const WIDTH = 1200

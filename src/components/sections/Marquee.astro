@@ -3,7 +3,7 @@ import { marquee } from '../../data/site'
 
 const groups = [false, true]
 ---
-<section class="marquee relative overflow-hidden border-y border-border py-7 md:py-9 bg-card/30" aria-label="What I work on">
+<section class="marquee relative overflow-hidden border-y border-line py-7 md:py-9 bg-surface-raised/30" aria-label="What I work on">
   {/* Edge fade masks */}
   <div class="pointer-events-none absolute inset-y-0 z-10 marquee__fade marquee__fade--left left-0 w-20 md:w-32" aria-hidden="true"></div>
   <div class="pointer-events-none absolute inset-y-0 z-10 marquee__fade marquee__fade--right right-0 w-20 md:w-32" aria-hidden="true"></div>
@@ -15,8 +15,8 @@ const groups = [false, true]
       <ul class="marquee__group flex shrink-0 items-center gap-10 md:gap-14 pr-10 md:pr-14" aria-hidden={ariaHidden ? "true" : "false"}>
         {marquee.map((item, idx) => (
           <li class="flex shrink-0 items-center gap-10 md:gap-14">
-            <span class="font-serif text-foreground whitespace-nowrap text-2xl md:text-4xl tracking-[-0.015em]">{item}</span>
-            <span class="shrink-0 text-primary" aria-hidden="true" class:list={[{ 'opacity-50': idx % 2 === 0, 'opacity-30': idx % 2 !== 0 }]}>
+            <span class="font-serif text-ink whitespace-nowrap text-2xl md:text-4xl tracking-[-0.015em]">{item}</span>
+            <span class="shrink-0 text-brand" aria-hidden="true" class:list={[{ 'opacity-50': idx % 2 === 0, 'opacity-30': idx % 2 !== 0 }]}>
               {idx % 3 === 0 && '✦'}
               {idx % 3 === 1 && '◆'}
               {idx % 3 !== 0 && idx % 3 !== 1 && '●'}

@@ -20,23 +20,23 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
     <div class="relative mx-auto flex max-w-3xl flex-col items-start gap-8 text-left">
       <span class="eyebrow">Error 404</span>
-      <h1 class="font-serif text-foreground text-6xl md:text-8xl tracking-[-0.03em] leading-[0.95]">
+      <h1 class="font-serif text-ink text-6xl md:text-8xl tracking-[-0.03em] leading-[0.95]">
         That page
         <br />
-        <span class="serif-italic text-muted-foreground">took a wrong turn.</span>
+        <span class="serif-italic text-spotlight-soft">took a wrong turn.</span>
       </h1>
-      <p class="text-muted-foreground max-w-xl text-base md:text-lg leading-relaxed">
+      <p class="text-ink-muted max-w-xl text-base md:text-lg leading-relaxed">
         Either the link is old, the page moved, or I broke something while
         shipping. Either way, here is the way back.
       </p>
       <div class="flex flex-wrap gap-3 mt-2">
-        <a class="group inline-flex items-center rounded-full bg-foreground font-medium text-background transition-all duration-300 gap-3 h-12 px-6 text-sm hover:bg-foreground/90 active:scale-[0.98]" href="/">
+        <a class="group inline-flex items-center rounded-full bg-ink font-medium text-surface transition-all duration-300 gap-3 h-12 px-6 text-sm hover:bg-ink/90 active:scale-[0.98]" href="/">
           <span>Back home</span>
           <span class="inline-flex transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
             <Icon name="arrow-up-right" class="h-3.5 w-3.5" />
           </span>
         </a>
-        <a class="inline-flex items-center rounded-full border border-border text-foreground transition-colors gap-2 h-12 px-6 text-sm hover:border-foreground/40 hover:bg-card" href={homeSectionHref('contact')}>
+        <a class="inline-flex items-center rounded-full border border-line text-ink transition-colors gap-2 h-12 px-6 text-sm hover:border-ink/40 hover:bg-surface-raised" href={homeSectionHref('contact')}>
           <span>Tell me what broke</span>
         </a>
       </div>

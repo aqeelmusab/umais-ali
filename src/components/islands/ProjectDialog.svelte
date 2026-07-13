@@ -244,7 +244,7 @@ onMount(() => {
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
   <div
-    class="modal-backdrop absolute inset-0 bg-background/40 backdrop-blur-sm"
+    class="modal-backdrop absolute inset-0 bg-surface/40 backdrop-blur-sm"
     aria-hidden="true"
     on:click={closeProject}
     data-modal-close
@@ -252,18 +252,18 @@ onMount(() => {
 
   <!-- Dialog Card -->
   {#if isOpen && activeProject}
-    <div class="modal-card relative flex w-full flex-col overflow-hidden bg-card shadow-2xl h-[92dvh] max-h-208 max-w-6xl rounded-t-lg md:h-[88dvh] md:rounded-lg">
+    <div class="modal-card relative flex w-full flex-col overflow-hidden bg-surface-raised shadow-2xl h-[92dvh] max-h-208 max-w-6xl rounded-t-lg md:h-[88dvh] md:rounded-lg">
       <div id="project-modal-content" class="flex-1 overflow-y-auto">
         <article class="flex flex-col gap-0">
 
           <!-- Sticky Header -->
-          <div class="sticky top-0 z-10 flex items-center justify-between border-b border-border gap-4 px-6 py-4 md:px-10 bg-card/85 backdrop-blur">
+          <div class="sticky top-0 z-10 flex items-center justify-between border-b border-line gap-4 px-6 py-4 md:px-10 bg-surface-raised/85 backdrop-blur">
             <div class="flex items-center gap-3 min-w-0">
-              <span class="font-mono text-muted-foreground shrink-0 text-[0.7rem] tracking-[0.18em]">
+              <span class="font-mono text-ink-muted shrink-0 text-[0.7rem] tracking-[0.18em]">
                 0{activeProject.id}
               </span>
-              <span class="h-px flex-1 bg-border max-w-8"></span>
-              <span class="font-mono uppercase text-foreground truncate text-[0.7rem] tracking-[0.22em]">
+              <span class="h-px flex-1 bg-line max-w-8"></span>
+              <span class="font-mono uppercase text-ink truncate text-[0.7rem] tracking-[0.22em]">
                 {activeProject.category}
               </span>
             </div>
@@ -274,7 +274,7 @@ onMount(() => {
                 type="button"
                 on:click={goPrev}
                 disabled={activeIndex === 0}
-                class="hover:text-foreground hover:border-foreground/40 inline-flex items-center justify-center rounded-full border border-border text-muted-foreground transition-all duration-300 h-9 w-9 disabled:opacity-35 disabled:cursor-not-allowed"
+                class="hover:text-ink hover:border-ink/40 inline-flex items-center justify-center rounded-full border border-line text-ink-muted transition-all duration-300 h-9 w-9 disabled:opacity-35 disabled:cursor-not-allowed"
                 aria-label="Previous Project"
               >
                 <!-- Arrow left icon inline -->
@@ -289,7 +289,7 @@ onMount(() => {
                 type="button"
                 on:click={goNext}
                 disabled={activeIndex === projects.length - 1}
-                class="hover:text-foreground hover:border-foreground/40 inline-flex items-center justify-center rounded-full border border-border text-muted-foreground transition-all duration-300 h-9 w-9 disabled:opacity-35 disabled:cursor-not-allowed"
+                class="hover:text-ink hover:border-ink/40 inline-flex items-center justify-center rounded-full border border-line text-ink-muted transition-all duration-300 h-9 w-9 disabled:opacity-35 disabled:cursor-not-allowed"
                 aria-label="Next Project"
               >
                 <!-- Arrow right icon inline -->
@@ -304,7 +304,7 @@ onMount(() => {
                 type="button"
                 on:click={closeProject}
                 data-modal-close
-                class="group inline-flex items-center justify-center rounded-full border border-border text-muted-foreground transition-all duration-300 h-9 w-9 hover:text-foreground hover:border-foreground/40 hover:rotate-90"
+                class="group inline-flex items-center justify-center rounded-full border border-line text-ink-muted transition-all duration-300 h-9 w-9 hover:text-ink hover:border-ink/40 hover:rotate-90"
                 aria-label="Close Case Study"
               >
                 <!-- X icon inline -->
@@ -320,21 +320,21 @@ onMount(() => {
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
 
             <!-- LEFT Content: visual + title details -->
-            <div class="relative flex flex-col bg-card lg:col-span-7 border-b border-border lg:border-b-0 lg:border-r">
-              <div class="modal-reveal relative aspect-video w-full overflow-hidden bg-muted">
+            <div class="relative flex flex-col bg-surface-raised lg:col-span-7 border-b border-line lg:border-b-0 lg:border-r">
+              <div class="modal-reveal relative aspect-video w-full overflow-hidden bg-surface-muted">
                 <img class="h-full w-full object-cover" src={activeProject.image} alt={activeProject.title} />
-                <div class="absolute inset-0 bg-linear-to-t from-background/80 via-transparent to-transparent animate-fade-in" aria-hidden="true"></div>
+                <div class="absolute inset-0 bg-linear-to-t from-surface/80 via-transparent to-transparent animate-fade-in" aria-hidden="true"></div>
               </div>
               <div class="modal-reveal flex flex-col gap-4 p-6 md:p-10">
-                <h2 id="project-modal-title" class="font-serif text-foreground text-3xl md:text-5xl tracking-tight leading-[1.05]">
+                <h2 id="project-modal-title" class="font-serif text-ink text-3xl md:text-5xl tracking-tight leading-[1.05]">
                   {activeProject.title}.
-                  <span class="serif-italic text-muted-foreground">{activeProject.description}</span>
+                  <span class="serif-italic text-ink-muted">{activeProject.description}</span>
                 </h2>
                 {#if activeProject.result}
-                  <div class="inline-flex items-center self-start rounded-full border border-primary font-mono uppercase text-primary gap-2 bg-primary/8 px-3 py-1.5 text-[0.7rem] tracking-[0.22em]">
+                  <div class="inline-flex items-center self-start rounded-full border border-brand font-mono uppercase text-brand gap-2 bg-brand/8 px-3 py-1.5 text-[0.7rem] tracking-[0.22em]">
                     <span class="relative inline-flex h-1.5 w-1.5">
-                      <span class="absolute inline-flex animate-pulse-soft rounded-full bg-primary h-full w-full"></span>
-                      <span class="relative inline-flex rounded-full bg-primary h-1.5 w-1.5"></span>
+                      <span class="absolute inline-flex animate-pulse-soft rounded-full bg-brand h-full w-full"></span>
+                      <span class="relative inline-flex rounded-full bg-brand h-1.5 w-1.5"></span>
                     </span>
                     <span>{activeProject.result}</span>
                   </div>
@@ -345,47 +345,47 @@ onMount(() => {
             <!-- RIGHT Content: narrative + specifications sidebar -->
             <div class="flex flex-col lg:col-span-5">
               <!-- Narrative -->
-              <div class="modal-reveal flex flex-col border-b border-border gap-4 p-6 md:p-10">
+              <div class="modal-reveal flex flex-col border-b border-line gap-4 p-6 md:p-10">
                 <span class="eyebrow">The story</span>
-                <p class="text-muted-foreground text-base leading-relaxed">{activeProject.longDescription}</p>
+                <p class="text-ink-muted text-base leading-relaxed">{activeProject.longDescription}</p>
               </div>
 
               <!-- Meta specs sheet -->
-              <dl class="modal-reveal grid grid-cols-2 bg-border gap-px">
-                <div class="flex flex-col bg-background gap-1 p-6 md:p-8">
-                  <dt class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Client</dt>
-                  <dd class="font-serif text-foreground mt-1 text-lg tracking-[-0.01em]">{activeProject.client}</dd>
+              <dl class="modal-reveal grid grid-cols-2 bg-line gap-px">
+                <div class="flex flex-col bg-surface gap-1 p-6 md:p-8">
+                  <dt class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Client</dt>
+                  <dd class="font-serif text-ink mt-1 text-lg tracking-[-0.01em]">{activeProject.client}</dd>
                 </div>
-                <div class="flex flex-col bg-background gap-1 p-6 md:p-8">
-                  <dt class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Year</dt>
-                  <dd class="font-serif text-foreground mt-1 text-lg tracking-[-0.01em]">{activeProject.year}</dd>
+                <div class="flex flex-col bg-surface gap-1 p-6 md:p-8">
+                  <dt class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Year</dt>
+                  <dd class="font-serif text-ink mt-1 text-lg tracking-[-0.01em]">{activeProject.year}</dd>
                 </div>
-                <div class="flex flex-col bg-background gap-1 p-6 md:p-8">
-                  <dt class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">My role</dt>
-                  <dd class="font-serif text-foreground mt-1 text-lg tracking-[-0.01em]">{activeProject.role}</dd>
+                <div class="flex flex-col bg-surface gap-1 p-6 md:p-8">
+                  <dt class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">My role</dt>
+                  <dd class="font-serif text-ink mt-1 text-lg tracking-[-0.01em]">{activeProject.role}</dd>
                 </div>
-                <div class="flex flex-col bg-background gap-1 p-6 md:p-8">
-                  <dt class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Focus</dt>
-                  <dd class="font-serif text-foreground mt-1 text-lg tracking-[-0.01em]">{activeProject.category}</dd>
+                <div class="flex flex-col bg-surface gap-1 p-6 md:p-8">
+                  <dt class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Focus</dt>
+                  <dd class="font-serif text-ink mt-1 text-lg tracking-[-0.01em]">{activeProject.category}</dd>
                 </div>
               </dl>
 
               <!-- Tags list -->
-              <div class="modal-reveal flex flex-col border-t border-border gap-3 p-6 md:p-10">
+              <div class="modal-reveal flex flex-col border-t border-line gap-3 p-6 md:p-10">
                 <span class="eyebrow">What it took</span>
                 <ul class="flex flex-wrap gap-2">
                   {#each activeProject.tags as tag}
-                    <li class="inline-flex items-center rounded-full border border-border font-mono text-muted-foreground bg-card/40 px-3 py-1 text-[0.7rem]">{tag}</li>
+                    <li class="inline-flex items-center rounded-full border border-line font-mono text-ink-muted bg-surface-raised/40 px-3 py-1 text-[0.7rem]">{tag}</li>
                   {/each}
                 </ul>
               </div>
 
               <!-- CTA -->
-              <div class="modal-reveal mt-auto border-t border-border p-6 md:p-10">
+              <div class="modal-reveal mt-auto border-t border-line p-6 md:p-10">
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <!-- svelte-ignore a11y-no-static-element-interactions -->
                 <a
-                  class="group inline-flex items-center rounded-full bg-foreground font-medium text-background transition-all duration-300 gap-3 h-12 px-6 text-sm hover:bg-foreground/90 active:scale-[0.98]"
+                  class="group inline-flex items-center rounded-full bg-ink font-medium text-surface transition-all duration-300 gap-3 h-12 px-6 text-sm hover:bg-ink/90 active:scale-[0.98]"
                   href="/#contact"
                   on:click={closeProject}
                 >

@@ -16,12 +16,12 @@ const { values = {}, errors = {} } = Astro.props as Props
       {/* LEFT: invitation */}
       <div class="flex flex-col lg:col-span-5">
         <span class="eyebrow">Get in touch</span>
-        <h2 class="font-serif text-foreground mt-6 text-4xl md:text-5xl tracking-tight leading-[1.05]">
+        <h2 class="font-serif text-ink mt-6 text-4xl md:text-5xl tracking-tight leading-[1.05]">
           Got something
           <br />
-          <span class="serif-italic text-muted-foreground">worth shipping?</span>
+          <span class="serif-italic text-spotlight-soft">worth shipping?</span>
         </h2>
-        <p class="text-muted-foreground mt-8 max-w-md text-base md:text-lg leading-relaxed">
+        <p class="text-ink-muted mt-8 max-w-md text-base md:text-lg leading-relaxed">
           Tell me a bit about your team, what you are stuck on,
           and where you would like to be in twelve months. Most replies go out
           within a day. Shorter notes are very welcome.
@@ -29,8 +29,8 @@ const { values = {}, errors = {} } = Astro.props as Props
 
         <div class="flex flex-col mt-12 gap-8">
           <div class="flex flex-col gap-2">
-            <span class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Email</span>
-            <a class="group inline-flex items-center font-serif text-foreground transition-colors gap-2 text-xl hover:text-primary" href={`mailto:${CONTACT_EMAIL}`}>
+            <span class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Email</span>
+            <a class="group inline-flex items-center font-serif text-ink transition-colors gap-2 text-xl hover:text-brand" href={`mailto:${CONTACT_EMAIL}`}>
               <span>{CONTACT_EMAIL}</span>
               <span class="inline-flex transition-transform duration-300 translate-y-px group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
                 <Icon name="arrow-up-right" class="h-4 w-4" />
@@ -39,11 +39,11 @@ const { values = {}, errors = {} } = Astro.props as Props
           </div>
 
           <div class="flex flex-col gap-2">
-            <span class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Around the web</span>
+            <span class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Around the web</span>
             <ul class="flex flex-wrap gap-x-4 gap-y-2">
               {socialLinks.map((link) => (
                 <li>
-                  <a class="group inline-flex items-center text-muted-foreground transition-colors gap-1 text-sm hover:text-foreground" href={link.href} target="_blank" rel="noopener noreferrer">
+                  <a class="group inline-flex items-center text-ink-muted transition-colors gap-1 text-sm hover:text-ink" href={link.href} target="_blank" rel="noopener noreferrer">
                     <span>{link.label}</span>
                     <span class="inline-flex transition-opacity duration-300 opacity-0 group-hover:opacity-100">
                       <Icon name="arrow-up-right" class="h-3.5 w-3.5" />
@@ -54,19 +54,19 @@ const { values = {}, errors = {} } = Astro.props as Props
             </ul>
           </div>
 
-          <div class="flex items-center border-t border-border gap-3 pt-8 mt-2">
+          <div class="flex items-center border-t border-line gap-3 pt-8 mt-2">
             <span class="relative inline-flex h-2 w-2">
-              <span class="absolute inline-flex animate-pulse-soft rounded-full bg-primary h-full w-full"></span>
-              <span class="relative inline-flex rounded-full bg-primary h-2 w-2"></span>
+              <span class="absolute inline-flex animate-pulse-soft rounded-full bg-brand h-full w-full"></span>
+              <span class="relative inline-flex rounded-full bg-brand h-2 w-2"></span>
             </span>
-            <span class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Currently taking work for July onwards</span>
+            <span class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Currently taking work for July onwards</span>
           </div>
         </div>
       </div>
 
       {/* RIGHT: form on a quiet card */}
       <div class="flex flex-col lg:col-span-7">
-        <div class="rounded-lg border border-border bg-card/40 p-6 md:p-10">
+        <div class="rounded-lg border border-line bg-surface-raised/40 p-6 md:p-10">
           <div id="contact-form-wrap" aria-live="polite" aria-atomic="false">
             <form
               id="contact-form"
@@ -78,7 +78,7 @@ const { values = {}, errors = {} } = Astro.props as Props
               <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 {/* Name field */}
                 <label class="block" for="cf-name">
-                  <span class="block font-mono uppercase text-muted-foreground mb-2 text-[0.65rem] tracking-[0.22em]">Name</span>
+                  <span class="block font-mono uppercase text-ink-muted mb-2 text-[0.65rem] tracking-[0.22em]">Name</span>
                   <input
                     id="cf-name"
                     name="name"
@@ -90,18 +90,18 @@ const { values = {}, errors = {} } = Astro.props as Props
                     aria-invalid={errors.name ? "true" : "false"}
                     aria-describedby={errors.name ? "cf-name-err" : undefined}
                     class:list={[
-                      "w-full rounded-xl bg-background/60 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors focus:bg-background",
-                      errors.name ? "border-destructive focus:border-destructive" : "border-border focus:border-foreground/40"
+                      "w-full rounded-xl bg-surface/60 border px-4 py-3 text-sm text-ink placeholder:text-ink-muted/50 outline-none transition-colors focus:bg-surface",
+                      errors.name ? "border-danger focus:border-danger" : "border-line focus:border-ink/40"
                     ]}
                   />
                   {errors.name && (
-                    <p class="text-destructive mt-2 text-xs" id="cf-name-err">{errors.name}</p>
+                    <p class="text-danger mt-2 text-xs" id="cf-name-err">{errors.name}</p>
                   )}
                 </label>
 
                 {/* Email field */}
                 <label class="block" for="cf-email">
-                  <span class="block font-mono uppercase text-muted-foreground mb-2 text-[0.65rem] tracking-[0.22em]">Email</span>
+                  <span class="block font-mono uppercase text-ink-muted mb-2 text-[0.65rem] tracking-[0.22em]">Email</span>
                   <input
                     id="cf-email"
                     name="email"
@@ -113,19 +113,19 @@ const { values = {}, errors = {} } = Astro.props as Props
                     aria-invalid={errors.email ? "true" : "false"}
                     aria-describedby={errors.email ? "cf-email-err" : undefined}
                     class:list={[
-                      "w-full rounded-xl bg-background/60 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors focus:bg-background",
-                      errors.email ? "border-destructive focus:border-destructive" : "border-border focus:border-foreground/40"
+                      "w-full rounded-xl bg-surface/60 border px-4 py-3 text-sm text-ink placeholder:text-ink-muted/50 outline-none transition-colors focus:bg-surface",
+                      errors.email ? "border-danger focus:border-danger" : "border-line focus:border-ink/40"
                     ]}
                   />
                   {errors.email && (
-                    <p class="text-destructive mt-2 text-xs" id="cf-email-err">{errors.email}</p>
+                    <p class="text-danger mt-2 text-xs" id="cf-email-err">{errors.email}</p>
                   )}
                 </label>
               </div>
 
               {/* Message field */}
               <label class="block" for="cf-message">
-                <span class="block font-mono uppercase text-muted-foreground mb-2 text-[0.65rem] tracking-[0.22em]">What is the project?</span>
+                <span class="block font-mono uppercase text-ink-muted mb-2 text-[0.65rem] tracking-[0.22em]">What is the project?</span>
                 <textarea
                   id="cf-message"
                   name="message"
@@ -136,12 +136,12 @@ const { values = {}, errors = {} } = Astro.props as Props
                   aria-invalid={errors.message ? "true" : "false"}
                   aria-describedby={errors.message ? "cf-message-err" : undefined}
                   class:list={[
-                    "w-full rounded-xl bg-background/60 border px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/50 outline-none transition-colors focus:bg-background resize-y min-h-40",
-                    errors.message ? "border-destructive focus:border-destructive" : "border-border focus:border-foreground/40"
+                    "w-full rounded-xl bg-surface/60 border px-4 py-3 text-sm text-ink placeholder:text-ink-muted/50 outline-none transition-colors focus:bg-surface resize-y min-h-40",
+                    errors.message ? "border-danger focus:border-danger" : "border-line focus:border-ink/40"
                   ]}
                 >{values.message || ""}</textarea>
                 {errors.message && (
-                  <p class="text-destructive mt-2 text-xs" id="cf-message-err">{errors.message}</p>
+                  <p class="text-danger mt-2 text-xs" id="cf-message-err">{errors.message}</p>
                 )}
               </label>
 
@@ -154,7 +154,7 @@ const { values = {}, errors = {} } = Astro.props as Props
               <div class="flex flex-wrap items-center gap-4 pt-2">
                 <button
                   type="submit"
-                  class="hover-glow group inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background transition-all duration-300 gap-3 h-12 px-7 text-sm hover:bg-foreground/90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-wait"
+                  class="hover-glow group inline-flex items-center justify-center rounded-full bg-ink font-medium text-surface transition-all duration-300 gap-3 h-12 px-7 text-sm hover:bg-ink/90 active:scale-[0.98] disabled:opacity-60 disabled:cursor-wait"
                 >
                   <span class="indicator-hide inline-flex items-center gap-2">
                     Send it over
@@ -170,7 +170,7 @@ const { values = {}, errors = {} } = Astro.props as Props
                     Sending
                   </span>
                 </button>
-                <p class="text-muted-foreground text-xs font-sans">No newsletters, no follow up sequence. Just a real reply from me.</p>
+                <p class="text-ink-muted text-xs font-sans">No newsletters, no follow up sequence. Just a real reply from me.</p>
               </div>
             </form>
           </div>
@@ -230,18 +230,18 @@ const { values = {}, errors = {} } = Astro.props as Props
           const cleanName = escapeHtml(data.name || 'there');
           wrap.innerHTML = `
             <div class="flex flex-col items-start gap-6 py-4 animate-fade-in">
-              <span class="inline-flex items-center justify-center rounded-full border border-primary h-12 w-12 bg-primary/10 text-primary">
+              <span class="inline-flex items-center justify-center rounded-full border border-brand h-12 w-12 bg-brand/10 text-brand">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </span>
-              <h3 class="font-serif text-foreground text-3xl md:text-4xl tracking-[-0.02em] leading-tight">
-                Got it. <span class="serif-italic text-muted-foreground">Talk soon.</span>
+              <h3 class="font-serif text-ink text-3xl md:text-4xl tracking-[-0.02em] leading-tight">
+                Got it. <span class="serif-italic text-spotlight-soft">Talk soon.</span>
               </h3>
-              <p class="text-muted-foreground max-w-md text-base leading-relaxed font-sans">
+              <p class="text-ink-muted max-w-md text-base leading-relaxed font-sans">
                 Thanks for the note, ${cleanName}. I read every message myself, so the reply will come from me, not a template. Usually within a day, sometimes faster.
               </p>
-              <button id="send-another-btn" class="inline-flex items-center text-foreground transition-colors gap-2 text-sm font-medium hover:text-primary mt-2" type="button">
+              <button id="send-another-btn" class="inline-flex items-center text-ink transition-colors gap-2 text-sm font-medium hover:text-brand mt-2" type="button">
                 <span>Send another</span>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5" aria-hidden="true">
                   <line x1="7" y1="17" x2="17" y2="7" />
@@ -259,12 +259,12 @@ const { values = {}, errors = {} } = Astro.props as Props
           }
 
           // Clear old errors
-          form.querySelectorAll('.text-destructive').forEach(el => el.remove());
+          form.querySelectorAll('.text-danger').forEach(el => el.remove());
           form.querySelectorAll('input, textarea').forEach(el => {
             el.setAttribute('aria-invalid', 'false');
             el.removeAttribute('aria-describedby');
-            el.classList.remove('border-destructive');
-            el.classList.add('border-border', 'focus:border-foreground/40');
+            el.classList.remove('border-danger');
+            el.classList.add('border-line', 'focus:border-ink/40');
           });
 
           if (data.errors) {
@@ -275,12 +275,12 @@ const { values = {}, errors = {} } = Astro.props as Props
               if (field) {
                 field.setAttribute('aria-invalid', 'true');
                 field.setAttribute('aria-describedby', `cf-${key}-err`);
-                field.classList.add('border-destructive');
-                field.classList.remove('border-border', 'focus:border-foreground/40');
+                field.classList.add('border-danger');
+                field.classList.remove('border-line', 'focus:border-ink/40');
                 firstInvalidField ??= field;
 
                 const errEl = document.createElement('p');
-                errEl.className = 'text-destructive mt-2 text-xs font-sans';
+                errEl.className = 'text-danger mt-2 text-xs font-sans';
                 errEl.id = `cf-${key}-err`;
                 errEl.textContent = msg as string;
                 field.parentNode?.appendChild(errEl);
@@ -295,7 +295,7 @@ const { values = {}, errors = {} } = Astro.props as Props
             btn.classList.remove('is-loading');
           }
 
-          form.querySelectorAll('.text-destructive').forEach(el => el.remove());
+          form.querySelectorAll('.text-danger').forEach(el => el.remove());
 
           let alertMsg = 'Request failed. Please reload and try again.';
           if (res.status === 429 && data.errors?.message) {
@@ -305,7 +305,7 @@ const { values = {}, errors = {} } = Astro.props as Props
           }
 
           const errEl = document.createElement('p');
-          errEl.className = 'text-destructive mt-4 text-xs font-sans text-center border border-destructive/20 bg-destructive/5 rounded-lg py-3 px-4';
+          errEl.className = 'text-danger mt-4 text-xs font-sans text-center border border-danger/20 bg-danger/5 rounded-lg py-3 px-4';
           errEl.textContent = alertMsg;
 
           // Append general error above the button or at the bottom of the form
@@ -316,21 +316,21 @@ const { values = {}, errors = {} } = Astro.props as Props
       } catch (err) {
         wrap.innerHTML = `
           <div class="flex flex-col items-start gap-6 py-4 animate-fade-in">
-            <span class="inline-flex items-center justify-center rounded-full border border-border h-12 w-12 bg-muted/15 text-foreground">
+            <span class="inline-flex items-center justify-center rounded-full border border-line h-12 w-12 bg-surface-muted/15 text-ink">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true">
                 <rect x="2" y="4" width="20" height="16" rx="2" />
                 <path d="m22 7-10 5L2 7" />
               </svg>
             </span>
-            <h3 class="font-serif text-foreground text-3xl md:text-4xl tracking-[-0.02em] leading-tight">
+            <h3 class="font-serif text-ink text-3xl md:text-4xl tracking-[-0.02em] leading-tight">
               Could not send that through the form.
               <br />
-              <span class="serif-italic text-muted-foreground">Email me directly.</span>
+              <span class="serif-italic text-spotlight-soft">Email me directly.</span>
             </h3>
-            <p class="text-muted-foreground max-w-md text-base leading-relaxed font-sans">
-              Something went wrong on my side, so your message was not delivered. If you still want to connect, send a note to <a class="font-medium text-foreground underline underline-offset-4 transition-colors hover:text-primary" href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a> (I read that inbox myself).
+            <p class="text-ink-muted max-w-md text-base leading-relaxed font-sans">
+              Something went wrong on my side, so your message was not delivered. If you still want to connect, send a note to <a class="font-medium text-ink underline underline-offset-4 transition-colors hover:text-brand" href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a> (I read that inbox myself).
             </p>
-            <button id="retry-btn" class="inline-flex items-center text-foreground transition-colors gap-2 text-sm font-medium hover:text-primary mt-2" type="button">
+            <button id="retry-btn" class="inline-flex items-center text-ink transition-colors gap-2 text-sm font-medium hover:text-brand mt-2" type="button">
               <span>Try the form again</span>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-3.5 w-3.5" aria-hidden="true">
                 <line x1="7" y1="17" x2="17" y2="7" />

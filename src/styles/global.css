@@ -108,29 +108,24 @@
    Default = light. `:root[data-theme="dark"]` overrides.
    ───────────────────────────────────────────────── */
 :root {
-  /* Warm-paper light */
-  --background: oklch(0.985 0.006 85);
-  --foreground: oklch(0.18 0.012 70);
-  --card: oklch(0.998 0.003 85);
-  --card-foreground: oklch(0.18 0.012 70);
-  --popover: oklch(0.998 0.003 85);
-  --popover-foreground: oklch(0.18 0.012 70);
-  --primary: oklch(0.55 0.14 70);
-  --primary-foreground: oklch(0.985 0.006 85);
-  --secondary: oklch(0.945 0.006 80);
-  --secondary-foreground: oklch(0.22 0.012 70);
-  --muted: oklch(0.93 0.006 80);
-  --muted-foreground: oklch(0.46 0.01 75);
-  --accent: oklch(0.55 0.1 200);
-  --accent-foreground: oklch(0.985 0.006 85);
-  --destructive: oklch(0.55 0.22 25);
-  --destructive-foreground: oklch(0.985 0.006 85);
-  --border: oklch(0.88 0.006 80);
-  --input: oklch(0.92 0.006 80);
-  --ring: oklch(0.55 0.14 70);
+  /* Warm-paper light. Custom, purpose-named design tokens (not the
+     shadcn/ui default variable set) so the palette is self-documenting:
+     `--surface*` = backgrounds, `--ink*` = text, `--brand*` = the one CTA
+     accent, `--line`/`--hairline` = dividers, `--danger` = error state. */
+  --surface: oklch(0.985 0.006 85);
+  --ink: oklch(0.18 0.012 70);
+  --surface-raised: oklch(0.998 0.003 85);
+  --brand: oklch(0.55 0.14 70);
+  --brand-soft: oklch(0.55 0.14 70);
+  --brand-ink: oklch(0.985 0.006 85);
+  --surface-muted: oklch(0.93 0.006 80);
+  --ink-muted: oklch(0.46 0.01 75);
+  --highlight: oklch(0.55 0.1 200);
+  --danger: oklch(0.55 0.22 25);
+  --line: oklch(0.88 0.006 80);
+  --focus-ring: oklch(0.55 0.14 70);
   --radius: 0.5rem;
 
-  --surface-strong: oklch(0.96 0.006 80);
   --hairline: oklch(0.18 0.012 70 / 0.1);
   --grain-opacity: 0.04;
   --hero-grid-color: oklch(0.18 0.012 70 / 0.16);
@@ -138,46 +133,38 @@
 }
 
 :root[data-theme="dark"] {
-  /* True-ink dark: deliberately NOT a value-shifted clone of the warm-paper
-     light theme. The light theme is "paper" (warm, near-white); dark is
-     "ink" (a near-neutral, slightly cool charcoal/navy-black, hue ~260,
-     almost no chroma) so the two read as distinct, purpose-designed themes
-     rather than one being a dimmed copy of the other. `--primary` is a
-     vivid cool teal/cyan (hue ~205), the same family as `--accent`, so the
-     whole dark palette reads as one deliberate "ink and cyan" scheme rather
-     than the gold-on-ink pairing the light theme's warm amber would suggest.
-     `--accent` stays a softer, lighter sky-blue so it's still visibly
-     distinct from `--primary` when both appear together. All neutrals
-     (foreground/muted-foreground/border/hairline) are hue ~260 too, matching
-     the background/primary family, rather than the light theme's warm
-     hue ~80-85 carried over verbatim: mixing warm off-white text with a cool
-     cyan accent read as a clashing, "off" pairing even though the raw
-     luminance contrast ratios were fine. */
-  --background: oklch(0.16 0.008 260);
-  --foreground: oklch(0.965 0.006 260);
-  --card: oklch(0.22 0.008 260);
-  --card-foreground: oklch(0.965 0.006 260);
-  --popover: oklch(0.235 0.008 260);
-  --popover-foreground: oklch(0.965 0.006 260);
-  --primary: oklch(0.72 0.13 205);
-  --primary-foreground: oklch(0.16 0.008 260);
-  --secondary: oklch(0.25 0.008 260);
-  --secondary-foreground: oklch(0.92 0.006 260);
-  --muted: oklch(0.27 0.008 260);
-  --muted-foreground: oklch(0.68 0.014 240);
-  --accent: oklch(0.78 0.08 235);
-  --accent-foreground: oklch(0.16 0.008 260);
-  --destructive: oklch(0.64 0.21 25);
-  --destructive-foreground: oklch(0.97 0.01 85);
-  --border: oklch(0.965 0.006 260 / 0.14);
-  --input: oklch(0.965 0.006 260 / 0.18);
-  --ring: oklch(0.72 0.13 205);
+  /* Black + gold: an OLED-optimized near-pure-black canvas (`--surface` is
+     literal oklch(0 0 0), i.e. #000000) paired with a vivid, "shiny" warm
+     gold `--brand` in the SAME hue family as the light theme's amber
+     (~hue 70-78), so dark mode reads as this project's identity rendered in
+     black-and-gold rather than an unrelated cool palette. `--highlight` is
+     a deeper bronze/copper gold (not a different hue family) so gradients
+     that mix `--brand`/`--highlight` (see `.hover-glow`) sweep through
+     shades of gold for a metallic/shiny effect instead of two clashing
+     accent colors. Elevated surfaces (`--surface-raised`/`--surface-muted`)
+     stay warm near-blacks, not true black, so cards remain visible against
+     the OLED-black page background. */
+  --surface: oklch(0 0 0);
+  --ink: oklch(0.97 0.01 85);
+  --surface-raised: oklch(0.18 0.016 70);
+  --brand: oklch(0.78 0.17 78);
+  /* Paler/softer than `--brand` on purpose: section-heading accents (see
+     `.text-spotlight-soft`) read as too intense/attention-grabbing at the
+     hero's full brightness when repeated on every section, so they use this
+     lighter champagne gold instead while the hero keeps the richer one. */
+  --brand-soft: oklch(0.85 0.13 80);
+  --brand-ink: oklch(0 0 0);
+  --surface-muted: oklch(0.24 0.016 70);
+  --ink-muted: oklch(0.62 0.02 80);
+  --highlight: oklch(0.58 0.15 60);
+  --danger: oklch(0.64 0.21 25);
+  --line: oklch(0.97 0.01 85 / 0.14);
+  --focus-ring: oklch(0.78 0.17 78);
 
-  --surface-strong: oklch(0.29 0.008 260);
-  --hairline: oklch(0.965 0.006 260 / 0.16);
-  --grain-opacity: 0.05;
-  --hero-grid-color: oklch(0.965 0.006 260 / 0.3);
-  --shadow-elev: 0 24px 60px -28px oklch(0.02 0.005 260 / 0.75);
+  --hairline: oklch(0.97 0.01 85 / 0.14);
+  --grain-opacity: 0.06;
+  --hero-grid-color: oklch(0.97 0.01 85 / 0.28);
+  --shadow-elev: 0 24px 60px -28px oklch(0 0 0 / 0.85);
 }
 
 @theme inline {
@@ -187,25 +174,18 @@
   --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-surface: var(--surface);
+  --color-ink: var(--ink);
+  --color-surface-raised: var(--surface-raised);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-ink: var(--brand-ink);
+  --color-surface-muted: var(--surface-muted);
+  --color-ink-muted: var(--ink-muted);
+  --color-highlight: var(--highlight);
+  --color-danger: var(--danger);
+  --color-line: var(--line);
+  --color-focus-ring: var(--focus-ring);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -215,7 +195,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-line outline-focus-ring/50;
   }
   html {
     scroll-behavior: auto;
@@ -226,7 +206,7 @@
     text-rendering: optimizeLegibility;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-surface text-ink;
     font-family: var(--font-sans);
     font-feature-settings: "cv11", "ss01", "ss03";
     letter-spacing: -0.005em;
@@ -286,7 +266,7 @@ body::before {
 }
 
 ::selection {
-  background: oklch(from var(--primary) l c h / 0.28);
+  background: oklch(from var(--brand) l c h / 0.28);
   color: inherit;
 }
 
@@ -362,13 +342,13 @@ body::before {
    Surfaces
    ───────────────────────────────────────────────── */
 .glass {
-  background: oklch(from var(--background) l c h / 0.6);
+  background: oklch(from var(--surface) l c h / 0.6);
   backdrop-filter: blur(24px) saturate(1.4);
   -webkit-backdrop-filter: blur(24px) saturate(1.4);
   border: 1px solid var(--hairline);
 }
 :root[data-theme="dark"] .glass {
-  background: oklch(from var(--foreground) l c h / 0.04);
+  background: oklch(from var(--ink) l c h / 0.04);
 }
 
 /* Editorial italic: single accent. Use sparingly. */
@@ -378,19 +358,14 @@ body::before {
   font-weight: 400;
   letter-spacing: -0.015em;
 }
-.serif-italic.text-primary {
+.serif-italic.text-brand {
   /* italic primary reads warmer when the underlying italic strokes are thinner. */
-  color: var(--primary);
+  color: var(--brand);
 }
 
 /* Restrained "spotlight" gradient: saved for ONE word per section */
 .text-spotlight {
-  background: linear-gradient(
-    100deg,
-    var(--foreground) 0%,
-    var(--primary) 60%,
-    var(--foreground) 110%
-  );
+  background: linear-gradient(100deg, var(--ink) 0%, var(--brand) 60%, var(--ink) 110%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -399,6 +374,21 @@ body::before {
      covers its full bounding box once, so on narrow viewports (where this
      text wraps to 2-3 lines) the gradient looks stretched/discontinuous
      across the line breaks instead of repeating per line. */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* Same treatment as `.text-spotlight`, but using the lighter `--brand-soft`
+   gold so section-heading accents (repeated many times per page) read as
+   quieter/secondary next to the one full-intensity `.text-spotlight` hero
+   headline per page. Identical to `.text-spotlight` in the light theme,
+   where `--brand-soft` equals `--brand`. */
+.text-spotlight-soft {
+  background: linear-gradient(100deg, var(--ink) 0%, var(--brand-soft) 60%, var(--ink) 110%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
@@ -414,8 +404,8 @@ body::before {
   border-radius: inherit;
   background: linear-gradient(
     135deg,
-    oklch(from var(--primary) l c h / 0.22),
-    oklch(from var(--accent) l c h / 0.1)
+    oklch(from var(--brand) l c h / 0.22),
+    oklch(from var(--highlight) l c h / 0.1)
   );
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -433,14 +423,14 @@ body::before {
     90deg,
     transparent,
     var(--hairline) 18%,
-    oklch(from var(--primary) l c h / 0.35) 50%,
+    oklch(from var(--brand) l c h / 0.35) 50%,
     var(--hairline) 82%,
     transparent
   );
 }
 
 .hero-wash {
-  background: radial-gradient(circle, oklch(from var(--primary) l c h / 0.14), transparent 60%);
+  background: radial-gradient(circle, oklch(from var(--brand) l c h / 0.14), transparent 60%);
   filter: blur(80px);
 }
 
@@ -454,15 +444,15 @@ body::before {
 }
 
 .marquee__fade--left {
-  background: linear-gradient(to right, var(--background), transparent);
+  background: linear-gradient(to right, var(--surface), transparent);
 }
 
 .marquee__fade--right {
-  background: linear-gradient(to left, var(--background), transparent);
+  background: linear-gradient(to left, var(--surface), transparent);
 }
 
 .modal-backdrop {
-  background: oklch(from var(--background) l c h / 0.78);
+  background: oklch(from var(--surface) l c h / 0.78);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
 }
@@ -470,9 +460,9 @@ body::before {
 .project-vignette {
   background: linear-gradient(
     to top,
-    oklch(from var(--background) l c h / 0.94) 0%,
-    oklch(from var(--background) l c h / 0.55) 38%,
-    oklch(from var(--background) l c h / 0.1) 65%,
+    oklch(from var(--surface) l c h / 0.94) 0%,
+    oklch(from var(--surface) l c h / 0.55) 38%,
+    oklch(from var(--surface) l c h / 0.1) 65%,
     transparent 100%
   );
 }
@@ -487,7 +477,7 @@ body::before {
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--primary);
+  color: var(--brand);
 }
 .eyebrow::before {
   content: "";
@@ -528,15 +518,15 @@ button.is-loading .indicator {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: oklch(from var(--foreground) l c h / 0.18);
+  background: oklch(from var(--ink) l c h / 0.18);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: oklch(from var(--foreground) l c h / 0.28);
+  background: oklch(from var(--ink) l c h / 0.28);
 }
 html {
   scrollbar-width: thin;
-  scrollbar-color: oklch(from var(--foreground) l c h / 0.18) transparent;
+  scrollbar-color: oklch(from var(--ink) l c h / 0.18) transparent;
 }
 
 /* ── Reveal-on-scroll ─────────────────────────── */
@@ -586,12 +576,12 @@ html {
 }
 
 #site-nav.is-scrolled::before {
-  background: oklch(from var(--card) l c h / 0.85);
+  background: oklch(from var(--surface-raised) l c h / 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--hairline);
   box-shadow:
-    0 1px 0 0 oklch(from var(--foreground) l c h / 0.04) inset,
+    0 1px 0 0 oklch(from var(--ink) l c h / 0.04) inset,
     var(--shadow-elev);
 }
 
@@ -679,7 +669,7 @@ html {
      add a `clip-path` reveal to this element for the same reason. */
   overflow: clip;
   border-radius: var(--radius);
-  background: var(--card);
+  background: var(--surface-raised);
   border: 0;
   box-shadow: none;
   isolation: isolate;
@@ -703,31 +693,31 @@ details > p {
 .bento-card .border {
   border-color: transparent;
 }
-.bento-card .bg-background\/40 {
-  background: oklch(from var(--background) l c h / 0.32);
+.bento-card .bg-surface\/40 {
+  background: oklch(from var(--surface) l c h / 0.32);
 }
-.bento-card .bg-primary\/8 {
-  background: oklch(from var(--primary) l c h / 0.1);
+.bento-card .bg-brand\/8 {
+  background: oklch(from var(--brand) l c h / 0.1);
 }
-#project-modal .border-border,
-#project-modal .border-primary {
-  border-color: oklch(from var(--foreground) l c h / 0.045);
+#project-modal .border-line,
+#project-modal .border-brand {
+  border-color: oklch(from var(--ink) l c h / 0.045);
 }
-#project-modal .bg-border {
-  background: oklch(from var(--foreground) l c h / 0.045);
+#project-modal .bg-line {
+  background: oklch(from var(--ink) l c h / 0.045);
 }
-:root[data-theme="dark"] #project-modal .border-border,
-:root[data-theme="dark"] #project-modal .border-primary {
+:root[data-theme="dark"] #project-modal .border-line,
+:root[data-theme="dark"] #project-modal .border-brand {
   border-color: transparent !important;
 }
-:root[data-theme="dark"] #project-modal .bg-border {
+:root[data-theme="dark"] #project-modal .bg-line {
   background: transparent !important;
 }
-:root[data-theme="dark"] #project-modal dl.bg-border {
+:root[data-theme="dark"] #project-modal dl.bg-line {
   gap: 0;
 }
-:root[data-theme="dark"] #project-modal dl.bg-border > * {
-  background: var(--card);
+:root[data-theme="dark"] #project-modal dl.bg-line > * {
+  background: var(--surface-raised);
 }
 .bento-card .bento-image {
   transition:
@@ -744,6 +734,14 @@ details > p {
 .marquee__track {
   animation: marquee 40s linear infinite;
   will-change: transform;
+  /* `backface-visibility: hidden` (paired with the `translate3d` in the
+     keyframes below) keeps this on a single, stable GPU compositing layer
+     for the whole 40s loop. Without it, some Chromium/WebKit builds
+     re-rasterize the layer's text on every animation iteration restart
+     (100% -> 0%), which reads as the serif marquee text briefly
+     flickering/blinking once per loop. */
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 /* Scoped to real hover-capable pointers: on touch devices `:hover` sticks
    after a tap (no pointer to "leave" with), which permanently freezes the

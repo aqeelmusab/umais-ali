@@ -12,28 +12,28 @@ import Icon from '../layout/Icon.astro'
   <div class="relative mx-auto max-w-6xl">
     {/* Status pill + meta rail */}
     <div class="flex flex-wrap items-center justify-between animate-fade-up gap-4">
-      <span class="inline-flex items-center rounded-full border border-border font-mono text-muted-foreground gap-2.5 bg-card/60 pl-2 pr-3.5 py-1.5 text-xs backdrop-blur">
+      <span class="inline-flex items-center rounded-full border border-line font-mono text-ink-muted gap-2.5 bg-surface-raised/60 pl-2 pr-3.5 py-1.5 text-xs backdrop-blur">
         <span class="relative inline-flex h-2 w-2">
-          <span class="absolute inline-flex animate-pulse-soft rounded-full bg-primary h-full w-full"></span>
-          <span class="relative inline-flex rounded-full bg-primary h-2 w-2"></span>
+          <span class="absolute inline-flex animate-pulse-soft rounded-full bg-brand h-full w-full"></span>
+          <span class="relative inline-flex rounded-full bg-brand h-2 w-2"></span>
         </span>
         Booking one project for July
       </span>
-      <span class="hidden font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em] sm:inline-flex items-center gap-2">
-        <span class="h-px w-6 bg-border"></span>
+      <span class="hidden font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em] sm:inline-flex items-center gap-2">
+        <span class="h-px w-6 bg-line"></span>
         Lahore · Remote worldwide
       </span>
     </div>
 
     {/* Editorial display headline */}
-    <h1 class="font-serif text-foreground animate-fade-up stagger-1 mt-10 text-[clamp(2.75rem,7.6vw,6rem)] leading-[0.94] tracking-tight">
+    <h1 class="font-serif text-ink animate-fade-up stagger-1 mt-10 text-[clamp(2.75rem,7.6vw,6rem)] leading-[0.94] tracking-tight">
       SEO that actually
       <br />
       <span class="serif-italic text-spotlight">moves the needle.</span>
     </h1>
 
     {/* Subhead */}
-    <p class="text-muted-foreground animate-fade-up stagger-2 mt-8 max-w-xl text-base md:text-lg leading-relaxed">
+    <p class="text-ink-muted animate-fade-up stagger-2 mt-8 max-w-xl text-base md:text-lg leading-relaxed">
       I'm Umais. I help teams turn search into a real growth channel,
       not a slide deck full of vanity metrics. Audits, content systems,
       link work, and migrations that hold up after the launch party.
@@ -41,31 +41,31 @@ import Icon from '../layout/Icon.astro'
 
     {/* CTAs + keyboard hint */}
     <div class="flex flex-wrap items-center animate-fade-up stagger-3 mt-10 gap-4">
-      <a class="hover-glow group inline-flex items-center rounded-full bg-foreground font-medium text-background transition-all duration-300 gap-2 h-12 pl-6 pr-5 text-sm hover:bg-foreground/90 active:scale-[0.98]" href={homeSectionHref('contact')}>
+      <a class="hover-glow group inline-flex items-center rounded-full bg-ink font-medium text-surface transition-all duration-300 gap-2 h-12 pl-6 pr-5 text-sm hover:bg-ink/90 active:scale-[0.98]" href={homeSectionHref('contact')}>
         Start a project
         <span class="inline-flex transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
           <Icon name="arrow-up-right" class="h-4 w-4" />
         </span>
       </a>
-      <a class="group inline-flex items-center rounded-full border border-border font-medium text-foreground transition-colors duration-300 gap-2 h-12 px-6 text-sm hover:border-foreground/40 hover:bg-foreground/3" href={homeSectionHref('work')}>
+      <a class="group inline-flex items-center rounded-full border border-line font-medium text-ink transition-colors duration-300 gap-2 h-12 px-6 text-sm hover:border-ink/40 hover:bg-ink/3" href={homeSectionHref('work')}>
         See the work
         <span class="inline-flex transition-transform duration-300 group-hover:translate-y-0.5">
           <Icon name="arrow-down" class="h-4 w-4" />
         </span>
       </a>
 
-      <span class="hidden items-center font-mono text-muted-foreground gap-2 text-[0.7rem] sm:inline-flex ml-2">
-        <kbd class="inline-flex items-center justify-center rounded border border-border bg-card h-6 px-1.5 text-[0.65rem]">/</kbd>
+      <span class="hidden items-center font-mono text-ink-muted gap-2 text-[0.7rem] sm:inline-flex ml-2">
+        <kbd class="inline-flex items-center justify-center rounded border border-line bg-surface-raised h-6 px-1.5 text-[0.65rem]">/</kbd>
         <span>jump to work</span>
       </span>
     </div>
 
     {/* Stat rail */}
-    <div class="grid grid-cols-1 border-t border-border animate-fade-up stagger-4 mt-20 gap-8 pt-10 sm:grid-cols-3">
+    <div class="grid grid-cols-1 border-t border-line animate-fade-up stagger-4 mt-20 gap-8 pt-10 sm:grid-cols-3">
       {heroStats.map((stat, idx) => (
         <div class="flex flex-col gap-2">
-          <span class="font-mono uppercase text-muted-foreground text-xs tracking-[0.18em]">0{idx + 1} &nbsp;/&nbsp; {stat.label}</span>
-          <span class="num-display text-foreground text-5xl md:text-6xl">{stat.value}</span>
+          <span class="font-mono uppercase text-ink-muted text-xs tracking-[0.18em]">0{idx + 1} &nbsp;/&nbsp; {stat.label}</span>
+          <span class="num-display text-ink text-5xl md:text-6xl">{stat.value}</span>
         </div>
       ))}
     </div>

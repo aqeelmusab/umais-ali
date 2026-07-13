@@ -38,33 +38,33 @@ const jsonLd = createProjectGraph(project)
 
     <div class="relative mx-auto max-w-6xl">
       {/* Breadcrumb / Category Row */}
-      <nav class="flex items-center font-mono uppercase text-muted-foreground gap-2 text-[0.65rem] tracking-[0.22em] mb-8" aria-label="Breadcrumb">
-        <a class="transition-colors hover:text-foreground" href="/">Home</a>
+      <nav class="flex items-center font-mono uppercase text-ink-muted gap-2 text-[0.65rem] tracking-[0.22em] mb-8" aria-label="Breadcrumb">
+        <a class="transition-colors hover:text-ink" href="/">Home</a>
         <span>/</span>
-        <span class="text-primary">0{project.id} · {project.year}</span>
+        <span class="text-brand">0{project.id} · {project.year}</span>
       </nav>
 
       {/* Main Grid Block */}
-      <div class="rounded-xl border border-border bg-card/40 overflow-hidden shadow-xl">
+      <div class="rounded-xl border border-line bg-surface-raised/40 overflow-hidden shadow-xl">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
 
           {/* LEFT: visual + title details */}
-          <div class="relative flex flex-col bg-card lg:col-span-7 border-b border-border lg:border-b-0 lg:border-r">
-            <div class="relative aspect-video w-full overflow-hidden bg-muted">
+          <div class="relative flex flex-col bg-surface-raised lg:col-span-7 border-b border-line lg:border-b-0 lg:border-r">
+            <div class="relative aspect-video w-full overflow-hidden bg-surface-muted">
               <img class="h-full w-full object-cover animate-fade-in" src={project.image} alt={project.title} />
-              <div class="absolute inset-0 bg-linear-to-t from-background/80 via-transparent to-transparent" aria-hidden="true"></div>
+              <div class="absolute inset-0 bg-linear-to-t from-surface/80 via-transparent to-transparent" aria-hidden="true"></div>
             </div>
             <div class="flex flex-col gap-4 p-6 md:p-10">
-              <h1 class="font-serif text-foreground text-3xl md:text-5xl tracking-[-0.02em] leading-[1.05]">
+              <h1 class="font-serif text-ink text-3xl md:text-5xl tracking-[-0.02em] leading-[1.05]">
                 {project.title}.
                 <br />
-                <span class="serif-italic text-muted-foreground">{project.description}</span>
+                <span class="serif-italic text-ink-muted">{project.description}</span>
               </h1>
               {project.result && (
-                <div class="inline-flex items-center self-start rounded-full border border-primary font-mono uppercase text-primary gap-2 bg-primary/8 px-3 py-1.5 text-[0.7rem] tracking-[0.22em]">
+                <div class="inline-flex items-center self-start rounded-full border border-brand font-mono uppercase text-brand gap-2 bg-brand/8 px-3 py-1.5 text-[0.7rem] tracking-[0.22em]">
                   <span class="relative inline-flex h-1.5 w-1.5">
-                    <span class="absolute inline-flex animate-pulse-soft rounded-full bg-primary h-full w-full"></span>
-                    <span class="relative inline-flex rounded-full bg-primary h-1.5 w-1.5"></span>
+                    <span class="absolute inline-flex animate-pulse-soft rounded-full bg-brand h-full w-full"></span>
+                    <span class="relative inline-flex rounded-full bg-brand h-1.5 w-1.5"></span>
                   </span>
                   <span>{project.result}</span>
                 </div>
@@ -75,67 +75,67 @@ const jsonLd = createProjectGraph(project)
           {/* RIGHT: narrative + specifications sidebar */}
           <div class="flex flex-col lg:col-span-5">
             {/* Narrative */}
-            <div class="flex flex-col border-b border-border gap-4 p-6 md:p-10">
+            <div class="flex flex-col border-b border-line gap-4 p-6 md:p-10">
               <span class="eyebrow">The story</span>
-              <p class="text-muted-foreground text-base leading-relaxed">{project.longDescription}</p>
+              <p class="text-ink-muted text-base leading-relaxed">{project.longDescription}</p>
             </div>
 
             {/* Meta specs sheet */}
-            <dl class="grid grid-cols-2 bg-border gap-px">
-              <div class="flex flex-col bg-background gap-1 p-6 md:p-8">
-                <dt class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Client</dt>
-                <dd class="font-serif text-foreground mt-1 text-lg tracking-[-0.01em]">{project.client}</dd>
+            <dl class="grid grid-cols-2 bg-line gap-px">
+              <div class="flex flex-col bg-surface gap-1 p-6 md:p-8">
+                <dt class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Client</dt>
+                <dd class="font-serif text-ink mt-1 text-lg tracking-[-0.01em]">{project.client}</dd>
               </div>
-              <div class="flex flex-col bg-background gap-1 p-6 md:p-8">
-                <dt class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Year</dt>
-                <dd class="font-serif text-foreground mt-1 text-lg tracking-[-0.01em]">{project.year}</dd>
+              <div class="flex flex-col bg-surface gap-1 p-6 md:p-8">
+                <dt class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Year</dt>
+                <dd class="font-serif text-ink mt-1 text-lg tracking-[-0.01em]">{project.year}</dd>
               </div>
-              <div class="flex flex-col bg-background gap-1 p-6 md:p-8">
-                <dt class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">My role</dt>
-                <dd class="font-serif text-foreground mt-1 text-lg tracking-[-0.01em]">{project.role}</dd>
+              <div class="flex flex-col bg-surface gap-1 p-6 md:p-8">
+                <dt class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">My role</dt>
+                <dd class="font-serif text-ink mt-1 text-lg tracking-[-0.01em]">{project.role}</dd>
               </div>
-              <div class="flex flex-col bg-background gap-1 p-6 md:p-8">
-                <dt class="font-mono uppercase text-muted-foreground text-[0.65rem] tracking-[0.22em]">Focus</dt>
-                <dd class="font-serif text-foreground mt-1 text-lg tracking-[-0.01em]">{project.category}</dd>
+              <div class="flex flex-col bg-surface gap-1 p-6 md:p-8">
+                <dt class="font-mono uppercase text-ink-muted text-[0.65rem] tracking-[0.22em]">Focus</dt>
+                <dd class="font-serif text-ink mt-1 text-lg tracking-[-0.01em]">{project.category}</dd>
               </div>
             </dl>
 
             {/* Tags list */}
-            <div class="flex flex-col border-t border-border gap-3 p-6 md:p-10">
+            <div class="flex flex-col border-t border-line gap-3 p-6 md:p-10">
               <span class="eyebrow">What it took</span>
               <ul class="flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
-                  <li class="inline-flex items-center rounded-full border border-border font-mono text-muted-foreground bg-card/40 px-3 py-1 text-[0.7rem]">{tag}</li>
+                  <li class="inline-flex items-center rounded-full border border-line font-mono text-ink-muted bg-surface-raised/40 px-3 py-1 text-[0.7rem]">{tag}</li>
                 ))}
               </ul>
             </div>
 
             {/* Links and Footer Navigation */}
-            <div class="mt-auto border-t border-border p-6 md:p-10 flex flex-col gap-6">
+            <div class="mt-auto border-t border-line p-6 md:p-10 flex flex-col gap-6">
               <div class="flex items-center justify-between gap-4">
                 {prevProject ? (
-                  <a href={`/projects/${prevProject.slug}`} class="font-mono text-muted-foreground hover:text-foreground text-xs uppercase tracking-[0.18em] flex items-center gap-2 transition-colors">
+                  <a href={`/projects/${prevProject.slug}`} class="font-mono text-ink-muted hover:text-ink text-xs uppercase tracking-[0.18em] flex items-center gap-2 transition-colors">
                     <Icon name="arrow-left" class="h-4 w-4" /> Prev Case
                   </a>
                 ) : (
-                  <span class="opacity-25 font-mono text-muted-foreground text-xs uppercase tracking-[0.18em] flex items-center gap-2 cursor-not-allowed">
+                  <span class="opacity-25 font-mono text-ink-muted text-xs uppercase tracking-[0.18em] flex items-center gap-2 cursor-not-allowed">
                     <Icon name="arrow-left" class="h-4 w-4" /> Boundary
                   </span>
                 )}
 
                 {nextProject ? (
-                  <a href={`/projects/${nextProject.slug}`} class="font-mono text-muted-foreground hover:text-foreground text-xs uppercase tracking-[0.18em] flex items-center gap-2 transition-colors">
+                  <a href={`/projects/${nextProject.slug}`} class="font-mono text-ink-muted hover:text-ink text-xs uppercase tracking-[0.18em] flex items-center gap-2 transition-colors">
                     Next Case <Icon name="arrow-right" class="h-4 w-4" />
                   </a>
                 ) : (
-                  <span class="opacity-25 font-mono text-muted-foreground text-xs uppercase tracking-[0.18em] flex items-center gap-2 cursor-not-allowed">
+                  <span class="opacity-25 font-mono text-ink-muted text-xs uppercase tracking-[0.18em] flex items-center gap-2 cursor-not-allowed">
                     Boundary <Icon name="arrow-right" class="h-4 w-4" />
                   </span>
                 )}
               </div>
 
-              <div class="border-t border-border/80 pt-6 flex justify-center">
-                <a class="group inline-flex items-center rounded-full bg-foreground font-medium text-background transition-all duration-300 gap-3 h-12 px-6 text-sm hover:bg-foreground/90 active:scale-[0.98]" href="/#contact">
+              <div class="border-t border-line/80 pt-6 flex justify-center">
+                <a class="group inline-flex items-center rounded-full bg-ink font-medium text-surface transition-all duration-300 gap-3 h-12 px-6 text-sm hover:bg-ink/90 active:scale-[0.98]" href="/#contact">
                   <span>Start something like this</span>
                   <Icon name="arrow-up-right" class="h-3.5 w-3.5" />
                 </a>

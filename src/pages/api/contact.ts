@@ -87,30 +87,30 @@ function escapeHtml(s: string): string {
 // site uses. Keeping the rules inline guarantees they always render correctly,
 // with no dependency on any generated or vendored asset existing on disk.
 const FALLBACK_STYLES = `
-  :root { --background: #fdfcfa; --foreground: #211f1a; --card: #ffffff; --muted-foreground: #6b6659; --border: #e6e2d8; --primary: #a8791f; --destructive: #b3311f; }
+  :root { --surface: #fdfcfa; --ink: #211f1a; --surface-raised: #ffffff; --ink-muted: #6b6659; --line: #e6e2d8; --brand: #a8791f; --danger: #b3311f; }
   @media (prefers-color-scheme: dark) {
-    :root { --background: #221f19; --foreground: #fbf8f1; --card: #29261f; --muted-foreground: #a9a397; --border: #3b372c; --primary: #ecc878; --destructive: #e5766a; }
+    :root { --surface: #221f19; --ink: #fbf8f1; --surface-raised: #29261f; --ink-muted: #a9a397; --line: #3b372c; --brand: #ecc878; --danger: #e5766a; }
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; }
-  body { background: var(--background); color: var(--foreground); font-family: "Geist", ui-sans-serif, system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+  body { background: var(--surface); color: var(--ink); font-family: "Geist", ui-sans-serif, system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
   .font-serif { font-family: "Instrument Serif", ui-serif, Georgia, serif; }
   .serif-italic { font-style: italic; }
   header { display: flex; align-items: center; justify-content: space-between; max-width: 72rem; width: 100%; margin: 0 auto; padding: 2.5rem 1.5rem; }
   header a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
-  .logo-mark { display: inline-flex; align-items: center; justify-content: center; height: 2rem; width: 2rem; border-radius: 0.5rem; border: 1px solid var(--border); background: var(--card); }
-  header nav a, header > a:last-child { font-size: 0.875rem; font-weight: 500; color: var(--muted-foreground); }
-  header nav a:hover, header > a:last-child:hover { color: var(--foreground); }
+  .logo-mark { display: inline-flex; align-items: center; justify-content: center; height: 2rem; width: 2rem; border-radius: 0.5rem; border: 1px solid var(--line); background: var(--surface-raised); }
+  header nav a, header > a:last-child { font-size: 0.875rem; font-weight: 500; color: var(--ink-muted); }
+  header nav a:hover, header > a:last-child:hover { color: var(--ink); }
   main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 5rem 1.5rem; }
-  main .card { max-width: 36rem; width: 100%; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--card); padding: 2rem; box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.15); }
-  main h2 { font-size: 1.875rem; margin: 0 0 1rem; color: var(--foreground); }
-  main p { color: var(--muted-foreground); font-size: 0.875rem; line-height: 1.6; margin: 0 0 1.5rem; }
-  main a.button { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--foreground); color: var(--background); height: 2.5rem; padding: 0 1.5rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; }
-  main a.inline-link { color: var(--foreground); font-weight: 500; text-decoration: underline; }
-  main a.inline-link:hover { color: var(--primary); }
-  main ul { color: var(--destructive); font-size: 0.875rem; padding-left: 1.25rem; margin: 0 0 1.5rem; }
+  main .card { max-width: 36rem; width: 100%; border: 1px solid var(--line); border-radius: 0.75rem; background: var(--surface-raised); padding: 2rem; box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.15); }
+  main h2 { font-size: 1.875rem; margin: 0 0 1rem; color: var(--ink); }
+  main p { color: var(--ink-muted); font-size: 0.875rem; line-height: 1.6; margin: 0 0 1.5rem; }
+  main a.button { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--ink); color: var(--surface); height: 2.5rem; padding: 0 1.5rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; }
+  main a.inline-link { color: var(--ink); font-weight: 500; text-decoration: underline; }
+  main a.inline-link:hover { color: var(--brand); }
+  main ul { color: var(--danger); font-size: 0.875rem; padding-left: 1.25rem; margin: 0 0 1.5rem; }
   main ul li + li { margin-top: 0.5rem; }
-  footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; font-size: 0.75rem; color: var(--muted-foreground); }
+  footer { border-top: 1px solid var(--line); padding: 2rem 1.5rem; text-align: center; font-size: 0.75rem; color: var(--ink-muted); }
 `
 
 function renderHtmlPage(title: string, contentHtml: string): Response {
