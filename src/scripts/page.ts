@@ -182,40 +182,36 @@ export function initPageInteractions(): void {
       menu.style.display = 'flex'
       menu.style.removeProperty('opacity')
       menu.style.removeProperty('transform')
-      menu.style.removeProperty('filter')
       resetMenuStaggerItems()
     } else {
       // Set the pre-animation state before revealing the sheet so nothing
       // flashes fully open for a frame before Motion takes over. The sheet
-      // itself only ever fades + blurs-in (no scale/translate): this is a
-      // full-bleed `inset-0`-style overlay, so scaling or shifting it
-      // revealed a sliver of the real page at the edges mid-transition. A
-      // blur filter doesn't affect box geometry, so it's safe here and
-      // matches the same "blur-focus" reveal used by the project card
-      // entrance animation in src/scripts/animations.ts. The staggered
-      // nav-link/footer reveal below reuses that same recipe (opacity + y
-      // + blur, same easing curve) so the two read as one consistent
-      // motion language across the site.
+      // itself only ever fades (no scale/translate/blur): it's a full-bleed
+      // `inset-0` overlay, so scaling or shifting it revealed a sliver of
+      // the real page at the edges mid-transition, and a `filter: blur()`
+      // spanning the entire viewport turned out to be expensive enough on
+      // real mobile GPUs to visibly jank (even though it looked smooth in
+      // desktop devtools emulation). The staggered nav-link/footer reveal
+      // below keeps the full opacity + y + blur recipe from the project
+      // card entrance animation (src/scripts/animations.ts) though, since
+      // blurring these small text rows one at a time is cheap regardless
+      // of device - it's only blurring the entire viewport at once that
+      // was expensive.
       menu.style.opacity = '0'
-      menu.style.filter = 'blur(10px)'
       for (const el of menuStaggerItems) {
         el.style.opacity = '0'
         el.style.transform = 'translateY(1.75rem)'
-        el.style.filter = 'blur(10px)'
+        el.style.filter = 'blur(8px)'
       }
 
       menu.style.display = 'flex'
 
-      menuAnimation = animate(
-        menu,
-        { opacity: [0, 1], filter: ['blur(10px)', 'blur(0px)'] },
-        { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
-      )
+      menuAnimation = animate(menu, { opacity: [0, 1] }, { duration: 0.35, ease: 'easeOut' })
       animate(
         menuStaggerItems,
-        { opacity: [0, 1], y: ['1.75rem', '0rem'], filter: ['blur(10px)', 'blur(0px)'] },
+        { opacity: [0, 1], y: ['1.75rem', '0rem'], filter: ['blur(8px)', 'blur(0px)'] },
         {
-          duration: 0.7,
+          duration: 0.6,
           delay: stagger(0.06, { startDelay: 0.12 }),
           ease: [0.16, 1, 0.3, 1],
         },
@@ -252,7 +248,6 @@ export function initPageInteractions(): void {
       menu.style.display = 'none'
       menu.style.removeProperty('opacity')
       menu.style.removeProperty('transform')
-      menu.style.removeProperty('filter')
       resetMenuStaggerItems()
     }
 
@@ -261,22 +256,18 @@ export function initPageInteractions(): void {
       return
     }
 
-    menuAnimation = animate(
-      menu,
-      { opacity: [1, 0], filter: ['blur(0px)', 'blur(8px)'] },
-      { duration: 0.25, ease: 'easeIn' },
-    )
+    menuAnimation = animate(menu, { opacity: [1, 0] }, { duration: 0.22, ease: 'easeIn' })
     menuAnimation.finished.then(finishClose).catch(finishClose)
   }
 
   if (menuToggle) {
     menuToggle.addEventListener('click', () => {
-      // Cheap, one-shot, transform-only press feedback (the bars-to-X morph
-      // itself is CSS, driven by the `aria-expanded` attribute this click
-      // toggles via open/closeMenu below).
-      if (!prefersReducedMotion()) {
-        animate(menuToggle, { scale: [1, 0.85, 1] }, { duration: 0.35, ease: [0.16, 1, 0.3, 1] })
-      }
+      // The bars-to-X morph is pure CSS, driven by the `aria-expanded`
+      // attribute toggled below. A Motion press-bounce used to run
+      // alongside it here, but the two competing transform animations
+      // (WAAPI on the button + CSS transition on its child bars) visibly
+      // fought each other on real mobile devices, so the morph is left to
+      // run on its own.
       if (menu?.classList.contains('is-open')) {
         closeMenu()
       } else {
