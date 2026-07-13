@@ -81,37 +81,67 @@ function escapeHtml(s: string): string {
 }
 
 // Standard HTML pages served as no-JS fallback responses
+// Minimal, self-contained styling for this endpoint's no-JS/no-fetch fallback
+// pages. These pages are hand-rolled HTML (not run through Astro/Tailwind), so
+// they cannot rely on the hashed, build-generated stylesheet the rest of the
+// site uses. Keeping the rules inline guarantees they always render correctly,
+// with no dependency on any generated or vendored asset existing on disk.
+const FALLBACK_STYLES = `
+  :root { --background: #fdfcfa; --foreground: #211f1a; --card: #ffffff; --muted-foreground: #6b6659; --border: #e6e2d8; --primary: #a8791f; --destructive: #b3311f; }
+  @media (prefers-color-scheme: dark) {
+    :root { --background: #221f19; --foreground: #fbf8f1; --card: #29261f; --muted-foreground: #a9a397; --border: #3b372c; --primary: #ecc878; --destructive: #e5766a; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--background); color: var(--foreground); font-family: "Geist", ui-sans-serif, system-ui, sans-serif; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+  .font-serif { font-family: "Instrument Serif", ui-serif, Georgia, serif; }
+  .serif-italic { font-style: italic; }
+  header { display: flex; align-items: center; justify-content: space-between; max-width: 72rem; width: 100%; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  header a { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; }
+  .logo-mark { display: inline-flex; align-items: center; justify-content: center; height: 2rem; width: 2rem; border-radius: 0.5rem; border: 1px solid var(--border); background: var(--card); }
+  header nav a, header > a:last-child { font-size: 0.875rem; font-weight: 500; color: var(--muted-foreground); }
+  header nav a:hover, header > a:last-child:hover { color: var(--foreground); }
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 5rem 1.5rem; }
+  main .card { max-width: 36rem; width: 100%; border: 1px solid var(--border); border-radius: 0.75rem; background: var(--card); padding: 2rem; box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.15); }
+  main h2 { font-size: 1.875rem; margin: 0 0 1rem; color: var(--foreground); }
+  main p { color: var(--muted-foreground); font-size: 0.875rem; line-height: 1.6; margin: 0 0 1.5rem; }
+  main a.button { display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; background: var(--foreground); color: var(--background); height: 2.5rem; padding: 0 1.5rem; font-size: 0.875rem; font-weight: 500; text-decoration: none; }
+  main a.inline-link { color: var(--foreground); font-weight: 500; text-decoration: underline; }
+  main a.inline-link:hover { color: var(--primary); }
+  main ul { color: var(--destructive); font-size: 0.875rem; padding-left: 1.25rem; margin: 0 0 1.5rem; }
+  main ul li + li { margin-top: 0.5rem; }
+  footer { border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; font-size: 0.75rem; color: var(--muted-foreground); }
+`
+
 function renderHtmlPage(title: string, contentHtml: string): Response {
   const html = `<!DOCTYPE html>
-<html lang="en" class="bg-background">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>${title} | Umais Ali</title>
-    <link rel="stylesheet" href="/css/main.css" />
+    <style>${FALLBACK_STYLES}</style>
     <link rel="preload" href="/fonts/geist-latin.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/instrument-serif-latin.woff2" as="font" type="font/woff2" crossorigin />
   </head>
-  <body class="font-sans antialiased overflow-x-hidden min-h-screen flex flex-col justify-between" tabindex="-1">
-    <header id="site-nav" class="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-6 py-10" aria-label="Primary">
-      <a class="group inline-flex items-center gap-2" href="/" aria-label="Umais Ali, home">
-        <span class="relative inline-flex items-center justify-center overflow-hidden rounded-md border border-border bg-card transition-colors h-8 w-8">
-          <span class="font-serif leading-none text-foreground text-base">UA</span>
+  <body tabindex="-1">
+    <header id="site-nav" aria-label="Primary">
+      <a href="/" aria-label="Umais Ali, home">
+        <span class="logo-mark">
+          <span class="font-serif">UA</span>
         </span>
-        <span class="flex flex-col leading-none">
-          <span class="font-serif text-foreground text-[0.95rem]">Umais Ali</span>
-        </span>
+        <span class="font-serif">Umais Ali</span>
       </a>
-      <a href="/" class="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">Back home</a>
+      <a href="/">Back home</a>
     </header>
 
-    <main class="flex-1 flex items-center justify-center px-6 py-20">
-      <div class="max-w-xl w-full border border-border rounded-xl bg-card/40 p-8 md:p-12 shadow-md">
+    <main>
+      <div class="card">
         ${contentHtml}
       </div>
     </main>
 
-    <footer class="border-t border-border py-8 text-center text-xs text-muted-foreground">
+    <footer>
       <p>&copy; ${new Date().getFullYear()} Umais Ali. All rights reserved.</p>
     </footer>
   </body>
@@ -160,9 +190,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
     return renderHtmlPage(
       'Rate Limit Exceeded',
-      `<h2 class="font-serif text-3xl text-foreground mb-4">Please slow down.</h2>
-       <p class="text-muted-foreground text-sm leading-relaxed mb-6">You've sent too many messages recently. Please wait a bit before trying again.</p>
-       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
+      `<h2 class="font-serif">Please slow down.</h2>
+       <p>You've sent too many messages recently. Please wait a bit before trying again.</p>
+       <a href="/" class="button">Back home</a>`,
     )
   }
 
@@ -201,9 +231,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
     return renderHtmlPage(
       'Message Sent Successfully',
-      `<h2 class="font-serif text-3xl text-foreground mb-4">Message sent...</h2>
-       <p class="text-muted-foreground text-sm leading-relaxed mb-6">Thanks for reaching out, ${safeFakeName}! I'll inspect your details and follow up soon.</p>
-       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
+      `<h2 class="font-serif">Message sent...</h2>
+       <p>Thanks for reaching out, ${safeFakeName}! I'll inspect your details and follow up soon.</p>
+       <a href="/" class="button">Back home</a>`,
     )
   }
 
@@ -223,13 +253,13 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     // fallback rendering with retry instructions
     return renderHtmlPage(
       'Validation Error',
-      `<h2 class="font-serif text-3xl text-foreground mb-4">Please correct the entries.</h2>
-       <ul class="text-destructive text-sm list-disc pl-5 space-y-2 mb-6">
+      `<h2 class="font-serif">Please correct the entries.</h2>
+       <ul>
          ${result.errors.name ? `<li>${result.errors.name}</li>` : ''}
          ${result.errors.email ? `<li>${result.errors.email}</li>` : ''}
          ${result.errors.message ? `<li>${result.errors.message}</li>` : ''}
        </ul>
-       <a href="/#contact" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Try again</a>`,
+       <a href="/#contact" class="button">Try again</a>`,
     )
   }
 
@@ -261,9 +291,9 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
     return renderHtmlPage(
       'Message Received',
-      `<h2 class="font-serif text-3xl text-foreground mb-4">Got it. <span class="serif-italic text-muted-foreground">Talk soon.</span></h2>
-       <p class="text-muted-foreground text-sm leading-relaxed mb-6">Thanks for the note, ${safeName}. I read every message myself, so the reply will come from me. Usually within a day.</p>
-       <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
+      `<h2 class="font-serif">Got it. <span class="serif-italic">Talk soon.</span></h2>
+       <p>Thanks for the note, ${safeName}. I read every message myself, so the reply will come from me. Usually within a day.</p>
+       <a href="/" class="button">Back home</a>`,
     )
   }
 
@@ -281,8 +311,8 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
 
   return renderHtmlPage(
     'Delivery Failure',
-    `<h2 class="font-serif text-3xl text-foreground mb-4">Could not send via form.</h2>
-     <p class="text-muted-foreground text-sm leading-relaxed mb-6">Something went wrong on our side. Please connect by emailing me directly at <a class="font-medium text-foreground underline hover:text-primary transition-colors" href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>
-     <a href="/" class="inline-flex items-center justify-center rounded-full bg-foreground font-medium text-background h-10 px-6 text-sm hover:bg-foreground/90 transition-colors">Back home</a>`,
+    `<h2 class="font-serif">Could not send via form.</h2>
+     <p>Something went wrong on our side. Please connect by emailing me directly at <a class="inline-link" href="mailto:${CONTACT_EMAIL}">${CONTACT_EMAIL}</a>.</p>
+     <a href="/" class="button">Back home</a>`,
   )
 }

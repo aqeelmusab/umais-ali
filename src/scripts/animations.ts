@@ -12,8 +12,10 @@ export function initAnimations(): () => void {
     const reveals = document.querySelectorAll('.reveal') as NodeListOf<HTMLElement>
     for (const el of reveals) {
       el.style.opacity = '1'
+      el.style.pointerEvents = 'auto'
       cleanups.push(() => {
         el.style.opacity = ''
+        el.style.pointerEvents = ''
       })
     }
     return () => {
@@ -29,20 +31,31 @@ export function initAnimations(): () => void {
       el.style.opacity = '0'
     }
 
+    // Index each card up front so cards that enter the viewport together
+    // (e.g. two side-by-side in the same row) cascade in with a slight
+    // stagger instead of popping in simultaneously, which read as flat/cheap.
+    const revealOrder = new Map<Element, number>()
+    reveals.forEach((el, idx) => {
+      revealOrder.set(el, idx)
+    })
+
     const stopInView = inView(
       '.reveal',
       (element) => {
         const hEl = element as HTMLElement
+        hEl.style.pointerEvents = 'auto'
+        const idx = revealOrder.get(hEl) ?? 0
         const animation = animate(
           hEl,
           {
             opacity: [0, 1],
-            y: [32, 0],
-            scale: [0.97, 1],
+            y: [40, 0],
+            scale: [0.95, 1],
           },
           {
-            duration: 0.8,
-            ease: [0.16, 1, 0.3, 1],
+            duration: 0.9,
+            delay: Math.min(idx, 4) * 0.09,
+            ease: [0.22, 1, 0.36, 1],
           },
         )
         return () => {
@@ -59,6 +72,7 @@ export function initAnimations(): () => void {
       stopInView()
       for (const el of reveals) {
         el.style.opacity = ''
+        el.style.pointerEvents = ''
       }
     })
   }

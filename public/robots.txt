@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://umaisali.com/sitemap.xml
+Sitemap: https://umaisali.com/sitemap-index.xml

@@ -20,18 +20,8 @@ function parseIntVal(name: string, value: string | undefined, fallback: number):
   return n
 }
 
-function parseBool(value: string | undefined, fallback: boolean): boolean {
-  if (value === undefined || value === '') return fallback
-  return /^(1|true|yes|on)$/i.test(value)
-}
-
 export const env = {
   NODE_ENV: parseStr(process.env.NODE_ENV, 'development'),
-  PORT: parseIntVal('PORT', process.env.PORT, 3000),
-
-  // Vercel forwards client IP metadata through proxy headers.
-  // Set to "1" or a number of hops so rate limiting sees the real client IP.
-  TRUST_PROXY: parseStr(process.env.TRUST_PROXY, '1'),
 
   // Resend
   RESEND_API_KEY: parseStr(process.env.RESEND_API_KEY),
@@ -51,24 +41,4 @@ export const env = {
     10 * 60 * 1000,
   ), // 10 min
   CONTACT_RATE_MAX: parseIntVal('CONTACT_RATE_MAX', process.env.CONTACT_RATE_MAX, 5),
-
-  // Optional: turn off helmet HSTS locally over http.
-  ENABLE_HSTS: parseBool(process.env.ENABLE_HSTS, true),
 } as const
-
-export const isProduction = env.NODE_ENV === 'production'
-export const isTest = env.NODE_ENV === 'test'
-
-export function assertProductionEnv(): void {
-  if (!isProduction) return
-  const missing: string[] = []
-  if (!env.RESEND_API_KEY) missing.push('RESEND_API_KEY')
-  if (!env.CONTACT_TO) missing.push('CONTACT_TO')
-  if (!env.CONTACT_FROM || env.CONTACT_FROM.includes('onboarding@resend.dev'))
-    missing.push('CONTACT_FROM')
-  if (missing.length > 0) {
-    throw new Error(
-      `[env] Missing required production env vars: ${missing.join(', ')}. Application cannot start without critical integrations.`,
-    )
-  }
-}

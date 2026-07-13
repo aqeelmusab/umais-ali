@@ -92,8 +92,6 @@ nbproject/
 # Agent instruction / memory files
 AGENTS.md
 agents.md
-MIGRATION-PLAN.md
-migration-plan.md
 CLAUDE.md
 claude.md
 GEMINI.md

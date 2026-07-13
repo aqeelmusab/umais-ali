@@ -1,5 +1,7 @@
 // Lightweight page interactions. Focus stays on performance, simplicity, and progressive enhancement.
 
+import { animate, stagger } from 'motion'
+
 function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
 }
@@ -146,16 +148,66 @@ export function initPageInteractions(): void {
   const menu = document.getElementById('mobile-menu') as HTMLElement | null
   const menuOpen = document.getElementById('mobile-menu-open') as HTMLElement | null
   const menuClose = document.getElementById('mobile-menu-close') as HTMLElement | null
+  const menuNavLinks = menu ? (Array.from(menu.querySelectorAll('nav a')) as HTMLElement[]) : []
+  const menuFooter = menu?.querySelector('[data-menu-footer]') as HTMLElement | null
+  const menuStaggerItems = [...menuNavLinks, ...(menuFooter ? [menuFooter] : [])]
+
+  // Keep track of the in-flight sheet animation so a rapid open/close toggle
+  // (e.g. double-tapping the trigger) cancels the previous run instead of
+  // fighting it.
+  let menuAnimation: ReturnType<typeof animate> | null = null
+
+  function resetMenuStaggerItems() {
+    for (const el of menuStaggerItems) {
+      el.style.removeProperty('opacity')
+      el.style.removeProperty('transform')
+    }
+  }
 
   function openMenu() {
     if (!menu) return
     if (menu.classList.contains('is-open')) return
+    menuAnimation?.stop()
+
     menu.removeAttribute('inert')
-    menu.classList.remove('hidden')
     menu.classList.add('is-open')
     menu.setAttribute('aria-hidden', 'false')
     if (menuOpen) menuOpen.setAttribute('aria-expanded', 'true')
     lockScroll()
+
+    if (prefersReducedMotion()) {
+      menu.classList.remove('hidden')
+      menu.style.removeProperty('opacity')
+      menu.style.removeProperty('transform')
+      resetMenuStaggerItems()
+    } else {
+      // Set the pre-animation state before revealing the sheet so nothing
+      // flashes fully open for a frame before Motion takes over.
+      menu.style.opacity = '0'
+      menu.style.transform = 'translateY(-1rem) scale(0.97)'
+      for (const el of menuStaggerItems) {
+        el.style.opacity = '0'
+        el.style.transform = 'translateY(0.9rem)'
+      }
+
+      menu.classList.remove('hidden')
+
+      menuAnimation = animate(
+        menu,
+        { opacity: [0, 1], y: ['-1rem', '0rem'], scale: [0.97, 1] },
+        { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+      )
+      animate(
+        menuStaggerItems,
+        { opacity: [0, 1], y: ['0.9rem', '0rem'] },
+        {
+          duration: 0.5,
+          delay: stagger(0.045, { startDelay: 0.1 }),
+          ease: [0.16, 1, 0.3, 1],
+        },
+      )
+    }
+
     requestAnimationFrame(() => {
       if (menuClose) menuClose.focus({ preventScroll: true })
     })
@@ -167,12 +219,32 @@ export function initPageInteractions(): void {
     if (menu.contains(document.activeElement) && menuOpen) {
       menuOpen.focus({ preventScroll: true })
     }
+    menuAnimation?.stop()
+
     menu.classList.remove('is-open')
-    menu.classList.add('hidden')
     menu.setAttribute('aria-hidden', 'true')
     menu.setAttribute('inert', '')
     if (menuOpen) menuOpen.setAttribute('aria-expanded', 'false')
     unlockScroll()
+
+    const finishClose = () => {
+      menu.classList.add('hidden')
+      menu.style.removeProperty('opacity')
+      menu.style.removeProperty('transform')
+      resetMenuStaggerItems()
+    }
+
+    if (prefersReducedMotion()) {
+      finishClose()
+      return
+    }
+
+    menuAnimation = animate(
+      menu,
+      { opacity: [1, 0], y: ['0rem', '-0.6rem'], scale: [1, 0.97] },
+      { duration: 0.28, ease: [0.4, 0, 1, 1] },
+    )
+    menuAnimation.finished.then(finishClose).catch(finishClose)
   }
 
   if (menuOpen) menuOpen.addEventListener('click', openMenu)

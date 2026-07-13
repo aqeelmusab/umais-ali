@@ -141,26 +141,26 @@
   /* Warm-ink dark */
   --background: oklch(0.135 0.012 70);
   --foreground: oklch(0.965 0.012 85);
-  --card: oklch(0.165 0.011 70);
+  --card: oklch(0.195 0.011 70);
   --card-foreground: oklch(0.965 0.012 85);
-  --popover: oklch(0.165 0.011 70);
+  --popover: oklch(0.205 0.011 70);
   --popover-foreground: oklch(0.965 0.012 85);
   --primary: oklch(0.86 0.13 80);
   --primary-foreground: oklch(0.135 0.012 70);
-  --secondary: oklch(0.195 0.01 70);
+  --secondary: oklch(0.225 0.01 70);
   --secondary-foreground: oklch(0.92 0.01 85);
-  --muted: oklch(0.21 0.009 70);
-  --muted-foreground: oklch(0.64 0.012 75);
+  --muted: oklch(0.24 0.009 70);
+  --muted-foreground: oklch(0.68 0.012 75);
   --accent: oklch(0.78 0.09 200);
   --accent-foreground: oklch(0.135 0.012 70);
   --destructive: oklch(0.62 0.22 25);
   --destructive-foreground: oklch(0.97 0.01 85);
-  --border: oklch(0.965 0.012 85 / 0.06);
-  --input: oklch(0.965 0.012 85 / 0.08);
+  --border: oklch(0.965 0.012 85 / 0.14);
+  --input: oklch(0.965 0.012 85 / 0.18);
   --ring: oklch(0.86 0.13 80);
 
-  --surface-strong: oklch(0.18 0.01 70);
-  --hairline: oklch(0.965 0.012 85 / 0.1);
+  --surface-strong: oklch(0.24 0.01 70);
+  --hairline: oklch(0.965 0.012 85 / 0.16);
   --grain-opacity: 0.035;
   --hero-grid-color: oklch(0.965 0.012 85 / 0.3);
   --shadow-elev: 0 24px 60px -28px oklch(0.04 0.01 70 / 0.65);
@@ -236,6 +236,16 @@
     font-feature-settings: "zero", "ss01";
     letter-spacing: -0.01em;
   }
+  /* Tailwind v4 Preflight no longer sets cursor: pointer on buttons (matches
+     the browser default of cursor: default), which reads as broken/dead on a
+     button-heavy UI like this one. Restore the pointer for anything acting as
+     a button, but not for disabled controls. */
+  button:not(:disabled),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]) {
+    cursor: pointer;
+  }
 }
 
 :where(section[id], footer[id]) {
@@ -296,58 +306,12 @@ body::before {
     opacity: 0.4;
   }
 }
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  33% {
-    transform: translateY(-12px) rotate(1deg);
-  }
-  66% {
-    transform: translateY(6px) rotate(-1deg);
-  }
-}
-@keyframes float-reverse {
-  0%,
-  100% {
-    transform: translateY(0) rotate(0deg);
-  }
-  33% {
-    transform: translateY(8px) rotate(-1deg);
-  }
-  66% {
-    transform: translateY(-14px) rotate(1deg);
-  }
-}
 @keyframes marquee {
   0% {
     transform: translate3d(0, 0, 0);
   }
   100% {
     transform: translate3d(-50%, 0, 0);
-  }
-}
-@keyframes glow-pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-    filter: blur(60px);
-  }
-  50% {
-    opacity: 0.7;
-    filter: blur(80px);
-  }
-}
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
-  }
-  50% {
-    transform: translateY(-25%);
-    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
   }
 }
 
@@ -359,22 +323,6 @@ body::before {
 }
 .animate-pulse-soft {
   animation: pulse-soft 2.5s ease-in-out infinite;
-}
-.animate-float {
-  animation: float 8s ease-in-out infinite;
-}
-.animate-float-reverse {
-  animation: float-reverse 10s ease-in-out infinite;
-}
-.animate-marquee {
-  animation: marquee 36s linear infinite;
-  will-change: transform;
-}
-.animate-glow-pulse {
-  animation: glow-pulse 5s ease-in-out infinite;
-}
-.animate-bounce {
-  animation: bounce 1s infinite;
 }
 
 .stagger-1 {
@@ -433,6 +381,12 @@ body::before {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  /* Without this, a gradient painted across a multi-line inline element only
+     covers its full bounding box once, so on narrow viewports (where this
+     text wraps to 2-3 lines) the gradient looks stretched/discontinuous
+     across the line breaks instead of repeating per line. */
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 
 /* ── Glow-on-hover shell ──────────────────────── */
@@ -537,15 +491,18 @@ body::before {
   line-height: 1;
 }
 
-/* ── HTMX indicator (loading swap on contact form) ─ */
-.htmx-indicator {
+/* ── Contact form submit button loading state ─── */
+/* CSS-driven default (rather than inline style) so the sending indicator is
+   always hidden on first paint regardless of JS timing; .is-loading (toggled
+   by src/components/sections/Contact.astro) swaps which span is shown. */
+.indicator {
   display: none;
 }
-.htmx-request .htmx-indicator {
+button.is-loading .indicator-hide {
+  display: none;
+}
+button.is-loading .indicator {
   display: inline-flex;
-}
-.htmx-request .htmx-indicator-hide {
-  display: none;
 }
 
 /* ── Scrollbar ────────────────────────────────── */
@@ -569,20 +526,38 @@ html {
 }
 
 /* ── Reveal-on-scroll ─────────────────────────── */
+/* Entrance is driven entirely by Motion (src/scripts/animations.ts), which
+   animates opacity/y/scale directly; this just establishes the hidden,
+   non-interactive default so nothing flashes visible or is clickable before
+   the reveal fires. */
 .reveal {
   opacity: 0;
-}
-.reveal.in-view {
-  animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  pointer-events: none;
 }
 
-/* ── Project modal content stagger (GSAP-driven, see animations.js) ── */
+/* ── Project modal content stagger (Motion-driven, see src/components/islands/ProjectDialog.svelte) ── */
 .modal-reveal {
   opacity: 0;
+  pointer-events: none;
 }
 
 /* ── Header scroll state ─────────────────────── */
-.site-nav {
+/* The glass background/blur/border/shadow live on a ::before layer behind the
+   header's content rather than directly on `.site-nav`. `backdrop-filter:
+   blur()` combined with `border-radius` on the same box (with no `overflow`
+   set) is a known combination that renders with rough/jagged pill corners in
+   Chromium and Safari, since the blur is sampled before the rounded boundary
+   is cleanly applied. Giving the blurred layer its own `overflow: hidden`
+   fixes that without clipping the header's real children (nav links, buttons,
+   focus rings) the way setting `overflow: hidden` on `.site-nav` itself would. */
+
+.site-nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: inherit;
   background: transparent;
   border: 1px solid transparent;
   box-shadow: none;
@@ -596,7 +571,7 @@ html {
     -webkit-backdrop-filter 0.28s ease;
 }
 
-#site-nav.is-scrolled {
+#site-nav.is-scrolled::before {
   background: oklch(from var(--card) l c h / 0.85);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
@@ -607,36 +582,11 @@ html {
 }
 
 /* ── Mobile menu open state ──────────────────── */
-#mobile-menu {
-  opacity: 0;
+/* Entrance/exit is driven by Motion in src/scripts/page.ts (opacity + y +
+   scale, staggered nav links). This just keeps the sheet non-interactive
+   and out of the tab order while it is closed and mid-close-animation. */
+#mobile-menu:not(.is-open) {
   pointer-events: none;
-  transform: translateY(-0.75rem);
-  transition:
-    opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-}
-#mobile-menu > * {
-  opacity: 0;
-  transform: translateY(0.75rem);
-  transition:
-    opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
-}
-#mobile-menu.is-open {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateY(0);
-}
-#mobile-menu.is-open > * {
-  opacity: 1;
-  transform: translateY(0);
-}
-#mobile-menu.is-open > :nth-child(2) {
-  transition-delay: 0.04s;
-}
-#mobile-menu.is-open > :nth-child(3) {
-  transition-delay: 0.08s;
 }
 
 /* ── Project modal open state ────────────────── */
@@ -707,15 +657,25 @@ html {
 /* ── Bento card hover-lift ───────────────────── */
 .bento-card {
   position: relative;
+  /* `overflow: clip` + `border-radius` alone is the correct/standard way to
+     round and clip this box. Layering a second, redundant `clip-path` mask
+     (as this used to) on top of that made Chromium rasterize two slightly
+     different anti-aliased boundaries for the same corner, which is what
+     produced the rough/stair-stepped edges instead of a clean curve,
+     especially while the magnetic-tilt transform is animating. */
   overflow: clip;
   border-radius: var(--radius);
   background: var(--card);
   border: 0;
   box-shadow: none;
-  background-clip: padding-box;
-  clip-path: inset(0 round var(--radius));
   isolation: isolate;
-  transform: translateZ(0);
+  /* GPU layer promotion via `will-change` rather than a static
+     `transform: translateZ(0)`: the magnetic-tilt effect in
+     src/scripts/animations.ts drives `transform` directly via inline style
+     on hover-capable devices, which would otherwise silently replace (and
+     lose) a transform-based promotion hint the moment the pointer moves,
+     causing a visible pop as the compositing layer is created/destroyed. */
+  will-change: transform;
   transition:
     box-shadow 0.4s ease,
     filter 0.4s ease;
@@ -773,26 +733,18 @@ details > p {
   animation: marquee 40s linear infinite;
   will-change: transform;
 }
-.marquee:hover .marquee__track {
-  animation-play-state: paused;
+/* Scoped to real hover-capable pointers: on touch devices `:hover` sticks
+   after a tap (no pointer to "leave" with), which permanently freezes the
+   marquee until the user taps elsewhere. */
+@media (hover: hover) and (pointer: fine) {
+  .marquee:hover .marquee__track {
+    animation-play-state: paused;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
   .marquee__track {
     animation: none;
   }
-}
-
-/* ── HTMX swap fade for contact form ─────────── */
-.htmx-swapping {
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-.htmx-settling {
-  opacity: 0;
-}
-.htmx-settling.htmx-added {
-  opacity: 1;
-  transition: opacity 0.3s ease;
 }
 
 @media (prefers-reduced-motion: reduce) {

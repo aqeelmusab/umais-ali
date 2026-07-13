@@ -67,7 +67,7 @@ const { values = {}, errors = {} } = Astro.props as Props
       {/* RIGHT: form on a quiet card */}
       <div class="flex flex-col lg:col-span-7">
         <div class="rounded-lg border border-border bg-card/40 p-6 md:p-10">
-          <div id="contact-form-wrap">
+          <div id="contact-form-wrap" aria-live="polite" aria-atomic="false">
             <form
               id="contact-form"
               class="flex flex-col gap-5"
@@ -162,7 +162,7 @@ const { values = {}, errors = {} } = Astro.props as Props
                       <Icon name="arrow-up-right" class="h-3.5 w-3.5" />
                     </span>
                   </span>
-                  <span class="indicator inline-flex items-center gap-2" style="display: none;">
+                  <span class="indicator inline-flex items-center gap-2">
                     <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                       <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
                       <path d="M22 12a10 10 0 0 1-10 10" stroke-linecap="round"></path>
@@ -204,13 +204,9 @@ const { values = {}, errors = {} } = Astro.props as Props
       e.preventDefault();
 
       const btn = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
-      if (btn) btn.disabled = true;
-
-      const hideEl = form.querySelector('.indicator-hide') as HTMLElement | null;
-      const showEl = form.querySelector('.indicator') as HTMLElement | null;
-      if (hideEl && showEl) {
-        hideEl.style.display = 'none';
-        showEl.style.display = 'inline-flex';
+      if (btn) {
+        btn.disabled = true;
+        btn.classList.add('is-loading');
       }
 
       try {
@@ -233,7 +229,7 @@ const { values = {}, errors = {} } = Astro.props as Props
           const data = await res.json();
           const cleanName = escapeHtml(data.name || 'there');
           wrap.innerHTML = `
-            <div class="flex flex-col items-start gap-6 py-4 animate-fade">
+            <div class="flex flex-col items-start gap-6 py-4 animate-fade-in">
               <span class="inline-flex items-center justify-center rounded-full border border-primary h-12 w-12 bg-primary/10 text-primary">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true">
                   <polyline points="20 6 9 17 4 12" />
@@ -257,10 +253,9 @@ const { values = {}, errors = {} } = Astro.props as Props
         } else if (res.status === 422) {
           const data = await res.json();
 
-          if (btn) btn.disabled = false;
-          if (hideEl && showEl) {
-            hideEl.style.display = 'inline-flex';
-            showEl.style.display = 'none';
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('is-loading');
           }
 
           // Clear old errors
@@ -273,6 +268,7 @@ const { values = {}, errors = {} } = Astro.props as Props
           });
 
           if (data.errors) {
+            let firstInvalidField: HTMLElement | null = null;
             for (const [key, msg] of Object.entries(data.errors)) {
               if (!msg) continue;
               const field = form.querySelector(`[name="${key}"]`) as HTMLInputElement | HTMLTextAreaElement | null;
@@ -281,6 +277,7 @@ const { values = {}, errors = {} } = Astro.props as Props
                 field.setAttribute('aria-describedby', `cf-${key}-err`);
                 field.classList.add('border-destructive');
                 field.classList.remove('border-border', 'focus:border-foreground/40');
+                firstInvalidField ??= field;
 
                 const errEl = document.createElement('p');
                 errEl.className = 'text-destructive mt-2 text-xs font-sans';
@@ -289,13 +286,13 @@ const { values = {}, errors = {} } = Astro.props as Props
                 field.parentNode?.appendChild(errEl);
               }
             }
+            firstInvalidField?.focus();
           }
         } else if (res.status === 403 || res.status === 429) {
           const data = await res.json();
-          if (btn) btn.disabled = false;
-          if (hideEl && showEl) {
-            hideEl.style.display = 'inline-flex';
-            showEl.style.display = 'none';
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('is-loading');
           }
 
           form.querySelectorAll('.text-destructive').forEach(el => el.remove());
@@ -318,7 +315,7 @@ const { values = {}, errors = {} } = Astro.props as Props
         }
       } catch (err) {
         wrap.innerHTML = `
-          <div class="flex flex-col items-start gap-6 py-4 animate-fade">
+          <div class="flex flex-col items-start gap-6 py-4 animate-fade-in">
             <span class="inline-flex items-center justify-center rounded-full border border-border h-12 w-12 bg-muted/15 text-foreground">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true">
                 <rect x="2" y="4" width="20" height="16" rx="2" />

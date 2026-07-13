@@ -6,14 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "**",
-      "!public/js/htmx-*.min.js",
-      "!public/js/gsap-*.min.js",
-      "!public/favicons",
-      "!**/*.astro",
-      "!**/*.svelte"
-    ]
+    "includes": ["**", "!public/favicons", "!**/*.astro", "!**/*.svelte"]
   },
   "assist": {
     "actions": {

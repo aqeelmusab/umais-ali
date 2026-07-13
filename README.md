@@ -85,13 +85,6 @@ CONTACT_TO=
 CONTACT_TEMPLATE_ID=
 ```
 
-Recommended on Vercel:
-
-```env
-TRUST_PROXY=1
-ENABLE_HSTS=true
-```
-
 Optional:
 
 ```env
@@ -104,7 +97,6 @@ Local defaults:
 
 ```env
 NODE_ENV=development
-PORT=3000
 ```
 
 Vercel sets `NODE_ENV` for you.
@@ -180,4 +172,4 @@ After editing data or stylesheet classes, run `pnpm run verify` to test.
   * Stateless CSRF check on `Origin` and `Referer`.
   * Server-side validation.
 * User-supplied email content is escaped before going into the inline HTML fallback. Header values are stripped of CR/LF and length-capped.
-* Tests stub the mail sender so nothing goes to Resend by accident.
+* `sendContactEmail` no-ops (returns `skipped`) when `RESEND_API_KEY`/`CONTACT_TO` are unset, which is what keeps CI from sending real email. There is no mock in `tests/server.test.ts`: if your local `.env` has real Resend credentials, running `pnpm test`/`pnpm run verify` will send a real email on every run.
