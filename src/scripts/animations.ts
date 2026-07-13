@@ -1,4 +1,4 @@
-import { animate, inView, motionValue, springValue, styleEffect } from 'motion'
+import { animate } from 'motion'
 
 function prefersReducedMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -39,104 +39,48 @@ export function initAnimations(): () => void {
       revealOrder.set(el, idx)
     })
 
-    const stopInView = inView(
-      '.reveal',
-      (element) => {
-        const hEl = element as HTMLElement
-        hEl.style.pointerEvents = 'auto'
-        const idx = revealOrder.get(hEl) ?? 0
-        const animation = animate(
-          hEl,
-          {
-            opacity: [0, 1],
-            y: [40, 0],
-            scale: [0.95, 1],
-          },
-          {
-            duration: 0.9,
-            delay: Math.min(idx, 4) * 0.09,
-            ease: [0.22, 1, 0.36, 1],
-          },
-        )
-        return () => {
-          animation.cancel()
+    // A plain, single-shot IntersectionObserver (rather than Motion's
+    // `inView`, which re-fires every time an element re-enters the
+    // viewport) so each card plays its entrance exactly once and never
+    // re-animates on scroll-back-up-then-down.
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue
+          const hEl = entry.target as HTMLElement
+          observer.unobserve(hEl)
+          hEl.style.pointerEvents = 'auto'
+          const idx = revealOrder.get(hEl) ?? 0
+          const animation = animate(
+            hEl,
+            {
+              opacity: [0, 1],
+              y: [64, 0],
+              filter: ['blur(14px)', 'blur(0px)'],
+            },
+            {
+              duration: 1.1,
+              delay: Math.min(idx, 4) * 0.1,
+              ease: [0.16, 1, 0.3, 1],
+            },
+          )
+          cleanups.push(() => animation.cancel())
         }
       },
       {
-        amount: 0.15,
-        margin: '0px 0px -8% 0px',
+        threshold: 0.15,
+        rootMargin: '0px 0px -8% 0px',
       },
     )
+    for (const el of reveals) observer.observe(el)
 
     cleanups.push(() => {
-      stopInView()
+      observer.disconnect()
       for (const el of reveals) {
         el.style.opacity = ''
         el.style.pointerEvents = ''
       }
     })
-  }
-
-  // ─── Bento Card Magnetic Tilt ────────────────────────────────────────
-  const isHoverFine = window.matchMedia('(hover: hover) and (pointer: fine)').matches
-  if (isHoverFine) {
-    const cards = document.querySelectorAll('.bento-card') as NodeListOf<HTMLElement>
-    const MAX_TILT = 7
-
-    for (const card of cards) {
-      card.style.perspective = '900px'
-      card.style.transformOrigin = 'center'
-
-      const targetRotateX = motionValue(0)
-      const targetRotateY = motionValue(0)
-      const targetScale = motionValue(1)
-
-      const rotateX = springValue(targetRotateX, { stiffness: 220, damping: 24 })
-      const rotateY = springValue(targetRotateY, { stiffness: 220, damping: 24 })
-      const scale = springValue(targetScale, { stiffness: 220, damping: 24 })
-
-      const cancelStyle = styleEffect(card, {
-        rotateX,
-        rotateY,
-        scale,
-      })
-
-      const handlePointerMove = (e: PointerEvent) => {
-        const rect = card.getBoundingClientRect()
-        const px = (e.clientX - rect.left) / rect.width - 0.5
-        const py = (e.clientY - rect.top) / rect.height - 0.5
-
-        targetRotateX.set(-py * MAX_TILT * 2)
-        targetRotateY.set(px * MAX_TILT * 2)
-        targetScale.set(1.015)
-      }
-
-      const handlePointerLeave = () => {
-        targetRotateX.set(0)
-        targetRotateY.set(0)
-        targetScale.set(1)
-      }
-
-      card.addEventListener('pointermove', handlePointerMove)
-      card.addEventListener('pointerleave', handlePointerLeave)
-      card.addEventListener('pointercancel', handlePointerLeave)
-
-      cleanups.push(() => {
-        card.removeEventListener('pointermove', handlePointerMove)
-        card.removeEventListener('pointerleave', handlePointerLeave)
-        card.removeEventListener('pointercancel', handlePointerLeave)
-        cancelStyle()
-        // Nullify values
-        targetRotateX.destroy()
-        targetRotateY.destroy()
-        targetScale.destroy()
-        rotateX.destroy()
-        rotateY.destroy()
-        scale.destroy()
-        card.style.removeProperty('perspective')
-        card.style.removeProperty('transform-origin')
-      })
-    }
   }
 
   // ─── Hero statistic count-up ──────────────────────────────────────────

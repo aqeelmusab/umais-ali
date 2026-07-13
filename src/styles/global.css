@@ -661,8 +661,8 @@ html {
      round and clip this box. Layering a second, redundant `clip-path` mask
      (as this used to) on top of that made Chromium rasterize two slightly
      different anti-aliased boundaries for the same corner, which is what
-     produced the rough/stair-stepped edges instead of a clean curve,
-     especially while the magnetic-tilt transform is animating. */
+     produced the rough/stair-stepped edges instead of a clean curve. Do not
+     add a `clip-path` reveal to this element for the same reason. */
   overflow: clip;
   border-radius: var(--radius);
   background: var(--card);
@@ -670,11 +670,9 @@ html {
   box-shadow: none;
   isolation: isolate;
   /* GPU layer promotion via `will-change` rather than a static
-     `transform: translateZ(0)`: the magnetic-tilt effect in
-     src/scripts/animations.ts drives `transform` directly via inline style
-     on hover-capable devices, which would otherwise silently replace (and
-     lose) a transform-based promotion hint the moment the pointer moves,
-     causing a visible pop as the compositing layer is created/destroyed. */
+     `transform: translateZ(0)`: the one-time viewport-entrance animation in
+     src/scripts/animations.ts drives `transform`/`filter` directly via
+     inline style, so this avoids a layer being created/destroyed mid-reveal. */
   will-change: transform;
   transition:
     box-shadow 0.4s ease,
