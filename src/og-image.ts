@@ -22,12 +22,12 @@ import { SITE_NAME, SITE_URL } from './data/site'
 const ROOT = process.cwd()
 const FONT_DIR = path.join(ROOT, 'public', 'fonts')
 
-// Match the dark-theme tokens declared in `src/styles/main.css` (`:root[data-theme="dark"]`).
+// Match the dark-theme tokens declared in `src/styles/global.css` (`:root[data-theme="dark"]`).
 const COLORS = {
-  background: '#15130f',
-  foreground: '#fbf8f1',
-  muted: 'rgba(251, 248, 241, 0.55)',
-  accent: '#ecc878', // warm gold (~--primary in dark theme)
+  background: '#0b0d11',
+  foreground: '#f1f4f8',
+  muted: 'rgba(241, 244, 248, 0.55)',
+  accent: '#00bbcb', // vivid cyan/teal (~--primary in dark theme)
 } as const
 
 const WIDTH = 1200

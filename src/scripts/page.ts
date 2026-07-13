@@ -318,9 +318,6 @@ export function initPageInteractions(): void {
   // ─── Theme toggle mechanics ───
   const themeBtn = document.getElementById('theme-toggle')
   if (themeBtn) {
-    const prefersLightMq = window.matchMedia('(prefers-color-scheme: light)')
-    const resolveSystemTheme = () => (prefersLightMq.matches ? 'light' : 'dark')
-
     const setLabel = () => {
       const t = document.documentElement.getAttribute('data-theme') || 'light'
       themeBtn.setAttribute(
@@ -329,24 +326,6 @@ export function initPageInteractions(): void {
       )
       themeBtn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false')
     }
-
-    function readStoredTheme() {
-      try {
-        return localStorage.getItem('theme')
-      } catch {
-        return null
-      }
-    }
-
-    function isExplicitStored(value: string | null) {
-      return value === 'light' || value === 'dark'
-    }
-
-    prefersLightMq.addEventListener('change', () => {
-      if (isExplicitStored(readStoredTheme())) return
-      document.documentElement.setAttribute('data-theme', resolveSystemTheme())
-      setLabel()
-    })
 
     themeBtn.addEventListener('click', () => {
       const current = document.documentElement.getAttribute('data-theme') || 'light'

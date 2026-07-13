@@ -138,32 +138,46 @@
 }
 
 :root[data-theme="dark"] {
-  /* Warm-ink dark */
-  --background: oklch(0.135 0.012 70);
-  --foreground: oklch(0.965 0.012 85);
-  --card: oklch(0.195 0.011 70);
-  --card-foreground: oklch(0.965 0.012 85);
-  --popover: oklch(0.205 0.011 70);
-  --popover-foreground: oklch(0.965 0.012 85);
-  --primary: oklch(0.86 0.13 80);
-  --primary-foreground: oklch(0.135 0.012 70);
-  --secondary: oklch(0.225 0.01 70);
-  --secondary-foreground: oklch(0.92 0.01 85);
-  --muted: oklch(0.24 0.009 70);
-  --muted-foreground: oklch(0.68 0.012 75);
-  --accent: oklch(0.78 0.09 200);
-  --accent-foreground: oklch(0.135 0.012 70);
-  --destructive: oklch(0.62 0.22 25);
+  /* True-ink dark: deliberately NOT a value-shifted clone of the warm-paper
+     light theme. The light theme is "paper" (warm, near-white); dark is
+     "ink" (a near-neutral, slightly cool charcoal/navy-black, hue ~260,
+     almost no chroma) so the two read as distinct, purpose-designed themes
+     rather than one being a dimmed copy of the other. `--primary` is a
+     vivid cool teal/cyan (hue ~205), the same family as `--accent`, so the
+     whole dark palette reads as one deliberate "ink and cyan" scheme rather
+     than the gold-on-ink pairing the light theme's warm amber would suggest.
+     `--accent` stays a softer, lighter sky-blue so it's still visibly
+     distinct from `--primary` when both appear together. All neutrals
+     (foreground/muted-foreground/border/hairline) are hue ~260 too, matching
+     the background/primary family, rather than the light theme's warm
+     hue ~80-85 carried over verbatim: mixing warm off-white text with a cool
+     cyan accent read as a clashing, "off" pairing even though the raw
+     luminance contrast ratios were fine. */
+  --background: oklch(0.16 0.008 260);
+  --foreground: oklch(0.965 0.006 260);
+  --card: oklch(0.22 0.008 260);
+  --card-foreground: oklch(0.965 0.006 260);
+  --popover: oklch(0.235 0.008 260);
+  --popover-foreground: oklch(0.965 0.006 260);
+  --primary: oklch(0.72 0.13 205);
+  --primary-foreground: oklch(0.16 0.008 260);
+  --secondary: oklch(0.25 0.008 260);
+  --secondary-foreground: oklch(0.92 0.006 260);
+  --muted: oklch(0.27 0.008 260);
+  --muted-foreground: oklch(0.68 0.014 240);
+  --accent: oklch(0.78 0.08 235);
+  --accent-foreground: oklch(0.16 0.008 260);
+  --destructive: oklch(0.64 0.21 25);
   --destructive-foreground: oklch(0.97 0.01 85);
-  --border: oklch(0.965 0.012 85 / 0.14);
-  --input: oklch(0.965 0.012 85 / 0.18);
-  --ring: oklch(0.86 0.13 80);
+  --border: oklch(0.965 0.006 260 / 0.14);
+  --input: oklch(0.965 0.006 260 / 0.18);
+  --ring: oklch(0.72 0.13 205);
 
-  --surface-strong: oklch(0.24 0.01 70);
-  --hairline: oklch(0.965 0.012 85 / 0.16);
-  --grain-opacity: 0.035;
-  --hero-grid-color: oklch(0.965 0.012 85 / 0.3);
-  --shadow-elev: 0 24px 60px -28px oklch(0.04 0.01 70 / 0.65);
+  --surface-strong: oklch(0.29 0.008 260);
+  --hairline: oklch(0.965 0.006 260 / 0.16);
+  --grain-opacity: 0.05;
+  --hero-grid-color: oklch(0.965 0.006 260 / 0.3);
+  --shadow-elev: 0 24px 60px -28px oklch(0.02 0.005 260 / 0.75);
 }
 
 @theme inline {
