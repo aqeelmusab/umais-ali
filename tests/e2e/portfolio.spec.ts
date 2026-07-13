@@ -33,22 +33,21 @@ test.describe('Umais Ali Portfolio - Core E2E Flows', () => {
     // Set mobile viewport height/width
     await page.setViewportSize({ width: 375, height: 812 })
 
-    const menuOpen = page.locator('#mobile-menu-open')
-    const menuClose = page.locator('#mobile-menu-close')
+    const menuToggle = page.locator('#mobile-menu-toggle')
     const mobileMenu = page.locator('#mobile-menu')
 
-    await expect(menuOpen).toBeVisible()
+    await expect(menuToggle).toBeVisible()
     await expect(mobileMenu).toBeHidden()
 
     // Trigger open
-    await menuOpen.click()
+    await menuToggle.click()
     await expect(mobileMenu).toBeVisible()
-    await expect(menuOpen).toHaveAttribute('aria-expanded', 'true')
+    await expect(menuToggle).toHaveAttribute('aria-expanded', 'true')
 
-    // Trigger close
-    await menuClose.click()
+    // Trigger close (same button, now morphed into a close control)
+    await menuToggle.click()
     await expect(mobileMenu).toBeHidden()
-    await expect(menuOpen).toHaveAttribute('aria-expanded', 'false')
+    await expect(menuToggle).toHaveAttribute('aria-expanded', 'false')
   })
 
   test('should open project dialog after client hydration and trigger previous/next pagination', async ({

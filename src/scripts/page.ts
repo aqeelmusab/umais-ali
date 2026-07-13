@@ -146,8 +146,7 @@ export function initPageInteractions(): void {
 
   // ─── Mobile Menu ───
   const menu = document.getElementById('mobile-menu') as HTMLElement | null
-  const menuOpen = document.getElementById('mobile-menu-open') as HTMLElement | null
-  const menuClose = document.getElementById('mobile-menu-close') as HTMLElement | null
+  const menuToggle = document.getElementById('mobile-menu-toggle') as HTMLElement | null
   const menuNavLinks = menu ? (Array.from(menu.querySelectorAll('nav a')) as HTMLElement[]) : []
   const menuFooter = menu?.querySelector('[data-menu-footer]') as HTMLElement | null
   const menuStaggerItems = [...menuNavLinks, ...(menuFooter ? [menuFooter] : [])]
@@ -172,7 +171,10 @@ export function initPageInteractions(): void {
     menu.removeAttribute('inert')
     menu.classList.add('is-open')
     menu.setAttribute('aria-hidden', 'false')
-    if (menuOpen) menuOpen.setAttribute('aria-expanded', 'true')
+    if (menuToggle) {
+      menuToggle.setAttribute('aria-expanded', 'true')
+      menuToggle.setAttribute('aria-label', 'Close menu')
+    }
     lockScroll()
 
     if (prefersReducedMotion()) {
@@ -208,23 +210,30 @@ export function initPageInteractions(): void {
       )
     }
 
+    // Focus moves into the sheet's own nav links (not the external toggle
+    // button, which sits outside `menu` in the DOM) so the Tab-trap below,
+    // which only cycles through `menu`'s focusables, works correctly from
+    // the very first keypress.
     requestAnimationFrame(() => {
-      if (menuClose) menuClose.focus({ preventScroll: true })
+      menuNavLinks[0]?.focus({ preventScroll: true })
     })
   }
 
   function closeMenu() {
     if (!menu) return
     if (!menu.classList.contains('is-open')) return
-    if (menu.contains(document.activeElement) && menuOpen) {
-      menuOpen.focus({ preventScroll: true })
+    if (menu.contains(document.activeElement) && menuToggle) {
+      menuToggle.focus({ preventScroll: true })
     }
     menuAnimation?.stop()
 
     menu.classList.remove('is-open')
     menu.setAttribute('aria-hidden', 'true')
     menu.setAttribute('inert', '')
-    if (menuOpen) menuOpen.setAttribute('aria-expanded', 'false')
+    if (menuToggle) {
+      menuToggle.setAttribute('aria-expanded', 'false')
+      menuToggle.setAttribute('aria-label', 'Open menu')
+    }
     unlockScroll()
 
     const finishClose = () => {
@@ -247,8 +256,21 @@ export function initPageInteractions(): void {
     menuAnimation.finished.then(finishClose).catch(finishClose)
   }
 
-  if (menuOpen) menuOpen.addEventListener('click', openMenu)
-  if (menuClose) menuClose.addEventListener('click', closeMenu)
+  if (menuToggle) {
+    menuToggle.addEventListener('click', () => {
+      // Cheap, one-shot, transform-only press feedback (the bars-to-X morph
+      // itself is CSS, driven by the `aria-expanded` attribute this click
+      // toggles via open/closeMenu below).
+      if (!prefersReducedMotion()) {
+        animate(menuToggle, { scale: [1, 0.85, 1] }, { duration: 0.35, ease: [0.16, 1, 0.3, 1] })
+      }
+      if (menu?.classList.contains('is-open')) {
+        closeMenu()
+      } else {
+        openMenu()
+      }
+    })
+  }
   if (menu) {
     const closeLinks = menu.querySelectorAll('[data-close-menu]')
     for (const el of closeLinks) {
@@ -335,6 +357,19 @@ export function initPageInteractions(): void {
         localStorage.setItem('theme', next)
       } catch {}
       setLabel()
+
+      // The sun/moon crossfade morph itself is pure CSS (transform/opacity
+      // transitions keyed off `data-theme`, see global.css), so it costs
+      // nothing here. This adds a single, cheap, one-shot spring "squish"
+      // on top for tactile click feedback; transform-only, GPU-composited,
+      // and only ever runs in response to a real click.
+      if (!prefersReducedMotion()) {
+        animate(
+          themeBtn,
+          { scale: [1, 0.82, 1.08, 1] },
+          { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+        )
+      }
     })
     setLabel()
   }

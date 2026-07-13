@@ -582,6 +582,7 @@ html {
   border: 1px solid var(--hairline);
   box-shadow:
     0 1px 0 0 oklch(from var(--ink) l c h / 0.04) inset,
+    0 0 0 1px oklch(from var(--brand) l c h / 0.05),
     var(--shadow-elev);
 }
 
@@ -647,15 +648,91 @@ html {
   pointer-events: auto;
 }
 
-/* ── Theme toggle ────────────────────────────── */
+/* ── Theme toggle: animated sun/moon morph ───── */
+/* Both icons sit stacked via `position: absolute` (see Header.astro) so
+   they can cross-fade with a rotate+scale transform instead of an instant
+   `display:none` swap. Transform/opacity only, so this is GPU-composited
+   and costs nothing until the user actually toggles the theme. */
+.theme-toggle-icon {
+  transition:
+    opacity 0.4s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
 .theme-toggle .icon-moon {
-  display: none;
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+  pointer-events: none;
+}
+.theme-toggle .icon-sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
 }
 :root[data-theme="dark"] .theme-toggle .icon-moon {
-  display: block;
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
 }
 :root[data-theme="dark"] .theme-toggle .icon-sun {
-  display: none;
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+  pointer-events: none;
+}
+
+/* ── Animated hamburger / close morph ────────── */
+/* Pure CSS, driven off the `aria-expanded` attribute the click handler in
+   src/scripts/page.ts already toggles for accessibility, so the morph
+   itself needs no extra JS/motion work and is transform/opacity only. */
+.hamburger-bars {
+  position: relative;
+  display: inline-flex;
+  width: 16px;
+  height: 12px;
+}
+.hamburger-bar {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  border-radius: 999px;
+  background: currentColor;
+  transition:
+    transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.25s ease;
+}
+.hamburger-bar:nth-child(1) {
+  top: 0;
+}
+.hamburger-bar:nth-child(2) {
+  top: 5px;
+}
+.hamburger-bar:nth-child(3) {
+  top: 10px;
+}
+.hamburger[aria-expanded="true"] .hamburger-bar:nth-child(1) {
+  transform: translateY(5px) rotate(45deg);
+}
+.hamburger[aria-expanded="true"] .hamburger-bar:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+.hamburger[aria-expanded="true"] .hamburger-bar:nth-child(3) {
+  transform: translateY(-5px) rotate(-45deg);
+}
+
+/* ── Desktop nav link: gold underline sweep on hover ─── */
+.nav-link::after {
+  content: "";
+  position: absolute;
+  right: 1rem;
+  left: 1rem;
+  bottom: 0.3rem;
+  height: 1.5px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-link:hover::after {
+  transform: scaleX(1);
 }
 
 /* ── Bento card hover-lift ───────────────────── */

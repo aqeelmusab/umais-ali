@@ -3,24 +3,24 @@ import { CONTACT_EMAIL, homeSectionHref, navLinks } from '../../data/site'
 import Icon from './Icon.astro'
 import Logo from './Logo.astro'
 ---
-<header id="site-nav" class="site-nav fixed z-40 mx-auto flex items-center justify-between rounded-full top-4 left-4 right-4 h-14 max-w-6xl px-3 md:top-6 md:left-8 md:right-8 md:px-4" aria-label="Primary">
+<header id="site-nav" class="site-nav fixed z-50 mx-auto flex items-center justify-between rounded-full top-4 left-4 right-4 h-14 max-w-6xl px-3 md:top-6 md:left-8 md:right-8 md:px-4" aria-label="Primary">
   <Logo />
 
   <nav class="hidden items-center gap-1 md:flex" aria-label="Primary navigation">
     {navLinks.map((link) => (
-      <a class="relative rounded-full font-medium text-ink-muted transition-colors duration-300 px-4 py-2 text-sm hover:text-ink hover:bg-ink/4" href={link.href}>
+      <a class="nav-link relative rounded-full font-medium text-ink-muted transition-colors duration-300 px-4 py-2 text-sm hover:text-ink" href={link.href}>
         {link.label}
       </a>
     ))}
   </nav>
 
   <div class="flex items-center gap-1.5">
-    <button id="theme-toggle" class="theme-toggle inline-flex items-center justify-center rounded-full text-ink-muted transition-colors h-10 w-10 hover:text-ink hover:bg-ink/5" type="button" aria-label="Toggle colour theme">
-      <span class="icon-moon inline-flex">
-        <Icon name="moon" class="h-4 w-4" />
-      </span>
-      <span class="icon-sun inline-flex">
+    <button id="theme-toggle" class="theme-toggle relative inline-flex items-center justify-center rounded-full text-ink-muted transition-colors h-10 w-10 hover:text-ink hover:bg-ink/5" type="button" aria-label="Switch to dark theme">
+      <span class="theme-toggle-icon icon-sun absolute inset-0 inline-flex items-center justify-center">
         <Icon name="sun" class="h-4 w-4" />
+      </span>
+      <span class="theme-toggle-icon icon-moon absolute inset-0 inline-flex items-center justify-center">
+        <Icon name="moon" class="h-4 w-4" />
       </span>
     </button>
 
@@ -31,21 +31,22 @@ import Logo from './Logo.astro'
       </span>
     </a>
 
-    <button id="mobile-menu-open" class="inline-flex items-center justify-center rounded-full text-ink transition-colors h-10 w-10 md:hidden hover:bg-ink/5" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
-      <Icon name="menu" class="h-5 w-5" />
+    <button id="mobile-menu-toggle" class="hamburger inline-flex items-center justify-center rounded-full text-ink transition-colors h-10 w-10 md:hidden hover:bg-ink/5" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+      <span class="hamburger-bars" aria-hidden="true">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </span>
     </button>
   </div>
 </header>
 
 {/* -- Mobile sheet -------------------------------------- */}
-<div id="mobile-menu" class="fixed inset-0 z-50 flex-col bg-surface md:hidden hidden" aria-hidden="true" inert>
-  <div class="flex items-center justify-between h-16 px-6">
-    <Logo />
-    <button id="mobile-menu-close" class="inline-flex items-center justify-center rounded-full text-ink transition-colors h-10 w-10 hover:bg-ink/6" type="button" aria-label="Close menu">
-      <Icon name="x" class="h-5 w-5" />
-    </button>
-  </div>
-
+{/* No duplicate logo/close row: the real header above stays fixed at
+    z-50 (higher than this sheet's z-40) while the sheet is open, so the
+    same hamburger button (now morphed into an X) remains visible and
+    keeps controlling the menu. `pt-24` clears the floating header pill. */}
+<div id="mobile-menu" class="fixed inset-0 z-40 flex flex-col bg-surface pt-24 md:hidden" aria-hidden="true" inert>
   <nav class="flex flex-1 flex-col justify-center gap-1 px-8" aria-label="Mobile navigation">
     {navLinks.map((link, idx) => (
       <a class="group flex items-baseline border-b border-line text-ink gap-4 py-5" href={link.href} data-close-menu>
