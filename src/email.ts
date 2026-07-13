@@ -1,5 +1,5 @@
 import { Resend } from 'resend'
-import type { ContactValues } from './contact'
+import { type ContactValues, escapeHtml } from './contact'
 import { env } from './env'
 
 let client: Resend | null = null
@@ -7,16 +7,6 @@ function getClient(): Resend | null {
   if (!env.RESEND_API_KEY) return null
   if (!client) client = new Resend(env.RESEND_API_KEY)
   return client
-}
-
-// Escape user-supplied text for safe inclusion in HTML email bodies.
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
 }
 
 // Strip CR/LF from header-bound values to defeat header injection.

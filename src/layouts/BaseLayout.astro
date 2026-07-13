@@ -115,6 +115,12 @@ const enableVercelInsights = import.meta.env.PROD
     )}
   </head>
   <body class="font-sans antialiased overflow-x-hidden" tabindex="-1">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-100 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-surface"
+    >
+      Skip to content
+    </a>
     <slot />
 
     {enableVercelInsights && (

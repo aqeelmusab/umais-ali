@@ -7,7 +7,7 @@ import { defineConfig } from 'astro/config'
 export default defineConfig({
   site: 'https://umaisali.com',
   trailingSlash: 'never',
-  adapter: vercel(),
+  adapter: vercel({ imageService: true }),
   integrations: [svelte(), sitemap()],
   vite: {
     plugins: [tailwindcss()],

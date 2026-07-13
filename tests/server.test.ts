@@ -111,6 +111,40 @@ test('POST /api/contact - fails on prefix origin validation (prefix hijack filte
   assert.equal(res.status, 403)
 })
 
+test('POST /api/contact - throttles once the per-IP rate limit is exceeded', async () => {
+  const body = new URLSearchParams({
+    name: 'Rate Limiter',
+    email: 'rate@example.com',
+    message: 'Exercising the per-IP rate limiter on the contact endpoint.',
+  }).toString()
+  // Isolated IP so this does not interfere with the shared 127.0.0.1 counter.
+  const ip = '203.0.113.7'
+
+  // Stub fetch so the endpoint never reaches the live Resend API even if a real
+  // RESEND_API_KEY is present in a local .env (each allowed request tries to send).
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ id: 'email_stub' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+  try {
+    for (let i = 0; i < 5; i++) {
+      const allowed = await callContactApi(body, {}, ip)
+      assert.equal(allowed.status, 200, `request ${i + 1} should be allowed`)
+    }
+
+    const throttled = await callContactApi(body, {}, ip)
+    assert.equal(throttled.status, 429)
+    const data = await throttled.json()
+    assert.equal(data.ok, false)
+    assert.match(data.errors.message, /too many requests/i)
+  } finally {
+    globalThis.fetch = originalFetch
+  }
+})
+
 test('GET /og-image.png - renders binary PNG successfully', async () => {
   const png = await getOgImage()
   assert.ok(png.byteLength > 1024, 'PNG size should be non-trivial')

@@ -13,13 +13,13 @@ import Services from '../components/sections/Services.astro'
 import Testimonials from '../components/sections/Testimonials.astro'
 import { projects } from '../data/projects'
 import BaseLayout from '../layouts/BaseLayout.astro'
-import { createSiteGraph } from '../lib/seo/structured-data'
+import { createHomeGraph } from '../lib/seo/structured-data'
 
-const jsonLd = createSiteGraph()
+const jsonLd = createHomeGraph()
 ---
 <BaseLayout jsonLd={jsonLd}>
   <Header />
-  <main>
+  <main id="main">
     <Hero />
     <Marquee />
     <SelectedWork />

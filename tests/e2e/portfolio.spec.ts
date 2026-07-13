@@ -17,16 +17,17 @@ test.describe('Umais Ali Portfolio - Core E2E Flows', () => {
     // Default theme check (light or dark depending on system)
     const initialTheme = await html.getAttribute('data-theme')
     expect(initialTheme).toMatch(/light|dark/)
+    const expectedTheme = initialTheme === 'light' ? 'dark' : 'light'
 
-    // Toggle theme
+    // Toggle theme. The swap runs behind a View Transition (a short animation
+    // delay), so use a web-first assertion that retries until it lands rather
+    // than reading the attribute synchronously.
     await themeBtn.click()
-    const toggledTheme = await html.getAttribute('data-theme')
-    expect(toggledTheme).not.toBe(initialTheme)
+    await expect(html).toHaveAttribute('data-theme', expectedTheme)
 
     // Reload page to verify persistence
     await page.reload()
-    const persistedTheme = await html.getAttribute('data-theme')
-    expect(persistedTheme).toBe(toggledTheme)
+    await expect(html).toHaveAttribute('data-theme', expectedTheme)
   })
 
   test('should toggle mobile menu drawer on smaller viewports', async ({ page }) => {

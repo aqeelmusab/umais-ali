@@ -7,12 +7,10 @@ import { lockScroll, unlockScroll } from '../../scripts/page'
 export let projects: Project[] = []
 
 let activeIndex: number | null = null
-let prevActiveIndex: number | null = null
 let isOpen = false
 let returnUrl = '/'
 let triggerElement: HTMLElement | null = null
 let modalContainer: HTMLElement
-let animatePromise: Promise<void> | null = null
 
 $: activeProject = activeIndex !== null ? projects[activeIndex] : null
 
@@ -23,7 +21,6 @@ function prefersReducedMotion(): boolean {
 
 export function openProject(index: number, trigger: HTMLElement | null = null) {
   if (index < 0 || index >= projects.length) return
-  prevActiveIndex = activeIndex
   activeIndex = index
   triggerElement = trigger || triggerElement
 
@@ -49,7 +46,6 @@ export function closeProject() {
   if (!isOpen) return
   isOpen = false
   activeIndex = null
-  prevActiveIndex = null
   unlockScroll()
 
   history.pushState(null, '', returnUrl)
@@ -193,7 +189,6 @@ onMount(() => {
       if (isOpen) {
         isOpen = false
         activeIndex = null
-        prevActiveIndex = null
         unlockScroll()
       }
     }
@@ -322,7 +317,7 @@ onMount(() => {
             <!-- LEFT Content: visual + title details -->
             <div class="relative flex flex-col bg-surface-raised lg:col-span-7 border-b border-line lg:border-b-0 lg:border-r">
               <div class="modal-reveal relative aspect-video w-full overflow-hidden bg-surface-muted">
-                <img class="h-full w-full object-cover" src={activeProject.image} alt={activeProject.title} />
+                <img class="h-full w-full object-cover" src={activeProject.image.src} width={activeProject.image.width} height={activeProject.image.height} alt={activeProject.title} />
                 <div class="absolute inset-0 bg-linear-to-t from-surface/80 via-transparent to-transparent animate-fade-in" aria-hidden="true"></div>
               </div>
               <div class="modal-reveal flex flex-col gap-4 p-6 md:p-10">

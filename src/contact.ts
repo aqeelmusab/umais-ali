@@ -29,6 +29,17 @@ export function isValidEmail(email: string): boolean {
   return true
 }
 
+/** Escape user-supplied text for safe inclusion in HTML (XSS prevention).
+ * Shared between the email body builder and the contact endpoint's fallback pages. */
+export function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+}
+
 export interface ContactBody {
   name?: string
   email?: string
@@ -67,8 +78,8 @@ export function coerceContactValues(body: ContactBody | undefined | null): Conta
   }
 }
 
-export function validateContact(body: ContactBody | undefined | null): ContactResult {
-  const b = body ?? {}
+export function validateContact(body: unknown): ContactResult {
+  const b = (body ?? {}) as ContactBody
   const values = coerceContactValues(b)
   const honeypot = (b.website ?? '').toString().trim().length > 0
 

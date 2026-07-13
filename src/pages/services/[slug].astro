@@ -42,7 +42,7 @@ const jsonLd = createServiceGraph(service)
         <nav class="flex items-center font-mono uppercase text-ink-muted animate-fade-up gap-2 text-[0.65rem] tracking-[0.22em]" aria-label="Breadcrumb">
           <a class="transition-colors hover:text-ink" href="/services">Services</a>
           <span>/</span>
-          <span class="text-brand">{service.number}</span>
+          <span class="text-brand" aria-current="page">{service.number}</span>
         </nav>
 
         <div class="grid grid-cols-1 mt-10 gap-12 lg:grid-cols-12 lg:gap-16">

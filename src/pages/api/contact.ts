@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { validateContact } from '../../contact'
+import { escapeHtml, validateContact } from '../../contact'
 import { CONTACT_EMAIL, SITE_URL } from '../../data/site'
 import { sendContactEmail } from '../../email'
 import { env } from '../../env'
@@ -42,9 +42,7 @@ function verifyCsrf(request: Request): boolean {
   const isProdOrTest = import.meta.env
     ? import.meta.env.PROD
     : env.NODE_ENV === 'production' || env.NODE_ENV === 'test'
-  if (!isProdOrTest) return true // Bypass CSRF check in dev/preview if desired, but we check env.
-  const csrfEnabled = true // Enabled in prod/test
-  if (!csrfEnabled) return true
+  if (!isProdOrTest) return true // Bypass CSRF check in dev/preview; enforced in prod/test.
 
   const origin = request.headers.get('origin')
   const referer = request.headers.get('referer')
@@ -68,16 +66,6 @@ function verifyCsrf(request: Request): boolean {
   }
 
   return true
-}
-
-// Escape user-supplied text for safe inclusion in HTML responses (XSS prevention).
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;')
 }
 
 // Standard HTML pages served as no-JS fallback responses
@@ -207,7 +195,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       const params = new URLSearchParams(text)
       body = Object.fromEntries(params.entries())
     }
-  } catch (_err) {
+  } catch (err) {
+    console.warn('[contact] failed to parse request body', {
+      contentType,
+      error: err instanceof Error ? err.message : String(err),
+    })
     return new Response(JSON.stringify({ ok: false, message: 'Invalid payload.' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },
@@ -215,8 +207,7 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   // 5. Conduct form integrity & validation checks
-  // biome-ignore lint/suspicious/noExplicitAny: library body shape
-  const result = validateContact(body as any)
+  const result = validateContact(body)
 
   // 6. Handle silent accept on honeypots
   if (result.honeypot) {
