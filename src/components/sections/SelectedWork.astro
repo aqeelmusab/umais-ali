@@ -32,13 +32,13 @@ import Icon from '../layout/Icon.astro'
       {projects[0] && (
         <article class="bento-card reveal group md:col-span-7 min-h-88 md:min-h-104">
           <a
-            class="relative flex h-full w-full flex-col overflow-hidden text-left"
+            class="media-frame relative flex h-full w-full flex-col overflow-hidden text-left"
             href={`/projects/${projects[0].slug}`}
             data-project-trigger
             data-project-id={projects[0].id}
             aria-label={`Open ${projects[0].title} case study`}
           >
-            <Image class="bento-image absolute inset-0 h-full w-full object-cover" src={projects[0].image} alt={projects[0].title} widths={[480, 768, 1024]} sizes="(min-width: 768px) 58vw, 100vw" format="webp" quality={70} loading="lazy" decoding="async" />
+            <Image class="bento-image media-img absolute inset-0 h-full w-full object-cover" src={projects[0].image} alt={projects[0].title} widths={[480, 768, 1024]} sizes="(min-width: 768px) 58vw, 100vw" format="webp" quality={70} loading="lazy" decoding="async" />
             <div class="project-vignette pointer-events-none absolute inset-0" aria-hidden="true"></div>
             <div class="relative z-10 flex items-center justify-between p-5 lg:p-7">
               <span class="font-mono uppercase rounded-full text-[0.65rem] tracking-[0.2em] backdrop-blur bg-surface/40 px-2.5 py-1 text-ink/85">
@@ -69,13 +69,13 @@ import Icon from '../layout/Icon.astro'
       {projects[1] && (
         <article class="bento-card reveal group md:col-span-5 min-h-88 md:min-h-104">
           <a
-            class="relative flex h-full w-full flex-col overflow-hidden text-left"
+            class="media-frame relative flex h-full w-full flex-col overflow-hidden text-left"
             href={`/projects/${projects[1].slug}`}
             data-project-trigger
             data-project-id={projects[1].id}
             aria-label={`Open ${projects[1].title} case study`}
           >
-            <Image class="bento-image absolute inset-0 h-full w-full object-cover" src={projects[1].image} alt={projects[1].title} widths={[480, 768, 1024]} sizes="(min-width: 768px) 42vw, 100vw" format="webp" quality={70} loading="lazy" decoding="async" />
+            <Image class="bento-image media-img absolute inset-0 h-full w-full object-cover" src={projects[1].image} alt={projects[1].title} widths={[480, 768, 1024]} sizes="(min-width: 768px) 42vw, 100vw" format="webp" quality={70} loading="lazy" decoding="async" />
             <div class="project-vignette pointer-events-none absolute inset-0" aria-hidden="true"></div>
             <div class="relative z-10 flex items-center justify-between p-5 lg:p-7">
               <span class="font-mono uppercase rounded-full text-[0.65rem] tracking-[0.2em] backdrop-blur bg-surface/40 px-2.5 py-1 text-ink/85">
@@ -106,13 +106,13 @@ import Icon from '../layout/Icon.astro'
       {projects[2] && (
         <article class="bento-card reveal group md:col-span-6 min-h-88 md:min-h-104">
           <a
-            class="relative flex h-full w-full flex-col overflow-hidden text-left"
+            class="media-frame relative flex h-full w-full flex-col overflow-hidden text-left"
             href={`/projects/${projects[2].slug}`}
             data-project-trigger
             data-project-id={projects[2].id}
             aria-label={`Open ${projects[2].title} case study`}
           >
-            <Image class="bento-image absolute inset-0 h-full w-full object-cover" src={projects[2].image} alt={projects[2].title} widths={[480, 768, 1024]} sizes="(min-width: 768px) 50vw, 100vw" format="webp" quality={70} loading="lazy" decoding="async" />
+            <Image class="bento-image media-img absolute inset-0 h-full w-full object-cover" src={projects[2].image} alt={projects[2].title} widths={[480, 768, 1024]} sizes="(min-width: 768px) 50vw, 100vw" format="webp" quality={70} loading="lazy" decoding="async" />
             <div class="project-vignette pointer-events-none absolute inset-0" aria-hidden="true"></div>
             <div class="relative z-10 flex items-center justify-between p-5 lg:p-7">
               <span class="font-mono uppercase rounded-full text-[0.65rem] tracking-[0.2em] backdrop-blur bg-surface/40 px-2.5 py-1 text-ink/85">
@@ -143,13 +143,13 @@ import Icon from '../layout/Icon.astro'
       {projects[3] && (
         <article class="bento-card reveal group md:col-span-6 min-h-88 md:min-h-104">
           <a
-            class="relative flex h-full w-full flex-col overflow-hidden text-left"
+            class="media-frame relative flex h-full w-full flex-col overflow-hidden text-left"
             href={`/projects/${projects[3].slug}`}
             data-project-trigger
             data-project-id={projects[3].id}
             aria-label={`Open ${projects[3].title} case study`}
           >
-            <Image class="bento-image absolute inset-0 h-full w-full object-cover" src={projects[3].image} alt={projects[3].title} widths={[480, 768, 1024]} sizes="(min-width: 768px) 50vw, 100vw" format="webp" quality={70} loading="lazy" decoding="async" />
+            <Image class="bento-image media-img absolute inset-0 h-full w-full object-cover" src={projects[3].image} alt={projects[3].title} widths={[480, 768, 1024]} sizes="(min-width: 768px) 50vw, 100vw" format="webp" quality={70} loading="lazy" decoding="async" />
             <div class="project-vignette pointer-events-none absolute inset-0" aria-hidden="true"></div>
             <div class="relative z-10 flex items-center justify-between p-5 lg:p-7">
               <span class="font-mono uppercase rounded-full text-[0.65rem] tracking-[0.2em] backdrop-blur bg-surface/40 px-2.5 py-1 text-ink/85">
@@ -180,13 +180,13 @@ import Icon from '../layout/Icon.astro'
       {projects[4] && (
         <article class="bento-card reveal group md:col-span-12 min-h-104 md:min-h-136">
           <a
-            class="relative flex h-full w-full flex-col overflow-hidden text-left"
+            class="media-frame relative flex h-full w-full flex-col overflow-hidden text-left"
             href={`/projects/${projects[4].slug}`}
             data-project-trigger
             data-project-id={projects[4].id}
             aria-label={`Open ${projects[4].title} case study`}
           >
-            <Image class="bento-image absolute inset-0 h-full w-full object-cover" src={projects[4].image} alt={projects[4].title} widths={[480, 768, 1024]} sizes="100vw" format="webp" quality={70} loading="lazy" decoding="async" />
+            <Image class="bento-image media-img absolute inset-0 h-full w-full object-cover" src={projects[4].image} alt={projects[4].title} widths={[480, 768, 1024]} sizes="100vw" format="webp" quality={70} loading="lazy" decoding="async" />
             <div class="project-vignette pointer-events-none absolute inset-0" aria-hidden="true"></div>
             <div class="relative z-10 flex items-center justify-between p-5 lg:p-7">
               <span class="font-mono uppercase rounded-full text-[0.65rem] tracking-[0.2em] backdrop-blur bg-surface/40 px-2.5 py-1 text-ink/85">

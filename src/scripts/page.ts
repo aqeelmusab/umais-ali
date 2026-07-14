@@ -122,8 +122,30 @@ export function trapFocus(container: HTMLElement, e: KeyboardEvent): void {
   }
 }
 
+// ─── Image skeleton loaders ──────────────────────────────────────────
+// Fade each project image in once it finishes downloading and dismiss the
+// shimmer placeholder (see `.media-frame`/`.media-img` in global.css). Images
+// already cached by the browser resolve immediately.
+function initImageSkeletons(): void {
+  const images = document.querySelectorAll<HTMLImageElement>('img.media-img')
+  images.forEach((img) => {
+    const frame = img.closest<HTMLElement>('.media-frame')
+    if (!frame) return
+    const markLoaded = () => frame.classList.add('is-loaded')
+    if (img.complete && img.naturalWidth > 0) {
+      markLoaded()
+      return
+    }
+    // `error` also clears the shimmer so a broken image never spins forever.
+    img.addEventListener('load', markLoaded, { once: true })
+    img.addEventListener('error', markLoaded, { once: true })
+  })
+}
+
 // Initialize lightweight page controls when DOM is ready
 export function initPageInteractions(): void {
+  initImageSkeletons()
+
   // ─── Header: glass transition on scroll ───
   const nav = document.getElementById('site-nav')
   if (nav) {

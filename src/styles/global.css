@@ -312,6 +312,53 @@ body::before {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Image skeleton loader: a shimmering placeholder shown while a project image
+   downloads (helpful on slow connections). The `.media-img` starts hidden and
+   fades in once loaded; the shimmer lives on the frame's `::after` and is
+   dismissed by adding `.is-loaded` (see initImageSkeletons in scripts/page.ts
+   for static images and ProjectDialog.svelte for the modal). */
+.media-frame {
+  position: relative;
+}
+.media-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: var(--surface-muted);
+  background-image: linear-gradient(
+    100deg,
+    transparent 25%,
+    color-mix(in oklch, var(--surface-raised) 85%, transparent) 50%,
+    transparent 75%
+  );
+  background-size: 200% 100%;
+  background-repeat: no-repeat;
+  animation: shimmer 1.5s linear infinite;
+  transition: opacity 0.4s ease;
+}
+.media-frame.is-loaded::before {
+  opacity: 0;
+  animation: none;
+}
+.media-img {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.media-frame.is-loaded .media-img {
+  opacity: 1;
+}
+
 .animate-fade-up {
   animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

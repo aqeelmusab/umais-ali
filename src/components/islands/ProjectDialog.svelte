@@ -11,8 +11,25 @@ let isOpen = false
 let returnUrl = '/'
 let triggerElement: HTMLElement | null = null
 let modalContainer: HTMLElement
+let imgEl: HTMLImageElement | null = null
+let imgLoaded = false
 
 $: activeProject = activeIndex !== null ? projects[activeIndex] : null
+
+// Reset the skeleton whenever the active project changes, then immediately
+// reveal it if the browser already has that image cached (no `load` event).
+$: activeIndex, resetImageState()
+
+function resetImageState(): void {
+  imgLoaded = false
+  tick().then(() => {
+    if (imgEl?.complete && imgEl.naturalWidth > 0) imgLoaded = true
+  })
+}
+
+function handleImageLoad(): void {
+  imgLoaded = true
+}
 
 function prefersReducedMotion(): boolean {
   if (typeof window === 'undefined') return false
@@ -316,8 +333,8 @@ onMount(() => {
 
             <!-- LEFT Content: visual + title details -->
             <div class="relative flex flex-col bg-surface-raised lg:col-span-7 border-b border-line lg:border-b-0 lg:border-r">
-              <div class="modal-reveal relative aspect-video w-full overflow-hidden bg-surface-muted">
-                <img class="h-full w-full object-cover" src={activeProject.image.src} width={activeProject.image.width} height={activeProject.image.height} alt={activeProject.title} />
+              <div class="media-frame modal-reveal relative aspect-video w-full overflow-hidden bg-surface-muted" class:is-loaded={imgLoaded}>
+                <img class="media-img relative h-full w-full object-cover" bind:this={imgEl} on:load={handleImageLoad} src={activeProject.image.src} width={activeProject.image.width} height={activeProject.image.height} alt={activeProject.title} />
                 <div class="absolute inset-0 bg-linear-to-t from-surface/80 via-transparent to-transparent animate-fade-in" aria-hidden="true"></div>
               </div>
               <div class="modal-reveal flex flex-col gap-4 p-6 md:p-10">

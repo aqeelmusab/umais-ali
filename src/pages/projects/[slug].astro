@@ -51,8 +51,8 @@ const jsonLd = createProjectGraph(project)
 
           {/* LEFT: visual + title details */}
           <div class="relative flex flex-col bg-surface-raised lg:col-span-7 border-b border-line lg:border-b-0 lg:border-r">
-            <div class="relative aspect-video w-full overflow-hidden bg-surface-muted">
-              <Image class="h-full w-full object-cover animate-fade-in" src={project.image} alt={project.title} widths={[480, 768, 1024]} sizes="(min-width: 1024px) 58vw, 100vw" format="webp" quality={70} loading="eager" fetchpriority="high" decoding="async" />
+            <div class="media-frame relative aspect-video w-full overflow-hidden bg-surface-muted">
+              <Image class="media-img relative h-full w-full object-cover animate-fade-in" src={project.image} alt={project.title} widths={[480, 768, 1024]} sizes="(min-width: 1024px) 58vw, 100vw" format="webp" quality={70} loading="eager" decoding="async" fetchpriority="high" />
               <div class="absolute inset-0 bg-linear-to-t from-surface/80 via-transparent to-transparent" aria-hidden="true"></div>
             </div>
             <div class="flex flex-col gap-4 p-6 md:p-10">
