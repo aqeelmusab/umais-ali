@@ -21,4 +21,5 @@ minimumReleaseAgeExclude:
   - resend@6.17.2
   - tsx@4.23.1
   - '@astrojs/markdown-satteri@0.3.4'
-  - astro@7.0.8
+  - astro@7.0.8 || 7.0.9
+  - '@astrojs/vercel@11.0.3'
