@@ -1,12 +1,5 @@
 import type { Project } from '../../data/projects'
-import {
-  faqs,
-  SITE_DESCRIPTION,
-  SITE_NAME,
-  SITE_TITLE,
-  SITE_URL,
-  socialLinks,
-} from '../../data/site'
+import { faqs, SITE_DESCRIPTION, SITE_NAME, SITE_URL, socialLinks } from '../../data/site'
 
 export interface BreadcrumbItem {
   name: string
@@ -65,7 +58,7 @@ export function createSiteGraph() {
         '@type': 'ProfilePage',
         '@id': `${SITE_URL}/#profilepage`,
         url: SITE_URL,
-        name: SITE_TITLE,
+        name: SITE_NAME,
         isPartOf: { '@id': `${SITE_URL}/#website` },
         about: { '@id': `${SITE_URL}/#person` },
         mainEntity: { '@id': `${SITE_URL}/#person` },
