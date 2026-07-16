@@ -28,7 +28,6 @@ export function createSiteGraph() {
         '@id': `${SITE_URL}/#website`,
         url: SITE_URL,
         name: SITE_NAME,
-        alternateName: ['umaisali.com'],
         description: SITE_DESCRIPTION,
         inLanguage: 'en-US',
       },
