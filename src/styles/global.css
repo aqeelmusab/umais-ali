@@ -130,6 +130,8 @@
   --grain-opacity: 0.04;
   --hero-grid-color: oklch(0.18 0.012 70 / 0.16);
   --shadow-elev: 0 24px 60px -28px oklch(0.18 0.012 70 / 0.18);
+  --visual-viewport-height: 100vh;
+  --visual-viewport-offset-top: 0px;
 }
 
 :root[data-theme="dark"] {
@@ -222,7 +224,12 @@
     overscroll-behavior: none;
   }
   html.is-scroll-locked body {
+    position: fixed;
+    right: 0;
+    left: 0;
+    width: 100%;
     overflow-x: hidden;
+    overflow-y: hidden;
     touch-action: none;
   }
   .font-serif {
@@ -649,7 +656,13 @@ html {
    non-interactive and out of the tab order while it is closed and
    mid-close-animation. */
 #mobile-menu {
+  top: var(--visual-viewport-offset-top);
+  bottom: auto;
   display: none;
+  height: var(--visual-viewport-height);
+  max-height: var(--visual-viewport-height);
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
 }
 @media (min-width: 768px) {
   #mobile-menu {
@@ -714,32 +727,94 @@ html {
   pointer-events: auto;
 }
 
-/* ── Theme toggle: animated sun/moon morph ───── */
+.theme-toggle {
+  color: var(--ink-muted);
+  background: oklch(from var(--surface-raised) l c h / 0.58);
+  box-shadow:
+    0 0 0 1px var(--hairline) inset,
+    0 8px 18px -14px oklch(from var(--ink) l c h / 0.42);
+  overflow: hidden;
+  transition:
+    color 0.28s ease,
+    background-color 0.28s ease,
+    box-shadow 0.28s ease,
+    transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.theme-toggle:hover {
+  color: var(--ink);
+  background: oklch(from var(--surface-raised) l c h / 0.82);
+  box-shadow:
+    0 0 0 1px oklch(from var(--brand) l c h / 0.32) inset,
+    0 12px 24px -18px oklch(from var(--brand) l c h / 0.6);
+}
+.theme-toggle:active {
+  transform: scale(0.94);
+}
+.theme-toggle-orbit,
+.theme-toggle-thumb {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.theme-toggle-orbit {
+  background:
+    radial-gradient(circle at 30% 28%, oklch(from var(--brand) l c h / 0.34), transparent 34%),
+    radial-gradient(circle at 72% 70%, oklch(from var(--highlight) l c h / 0.22), transparent 36%);
+  opacity: 0.45;
+  transform: rotate(0deg) scale(0.92);
+  transition:
+    opacity 0.42s ease,
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.theme-toggle-thumb {
+  inset: 7px;
+  background: oklch(from var(--brand) l c h / 0.14);
+  box-shadow: 0 0 18px -6px oklch(from var(--brand) l c h / 0.72);
+  opacity: 0.72;
+  transform: translateX(-4px) scale(0.78);
+  transition:
+    opacity 0.38s ease,
+    transform 0.58s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.38s ease,
+    box-shadow 0.38s ease;
+}
 /* Both icons sit stacked via `position: absolute` (see Header.astro) so
    they can cross-fade with a rotate+scale transform instead of an instant
    `display:none` swap. Transform/opacity only, so this is GPU-composited
    and costs nothing until the user actually toggles the theme. */
 .theme-toggle-icon {
+  z-index: 1;
   transition:
     opacity 0.4s ease,
-    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.58s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.3s ease;
 }
 .theme-toggle .icon-moon {
   opacity: 0;
-  transform: rotate(-90deg) scale(0.4);
+  transform: translateX(-0.45rem) rotate(-120deg) scale(0.42);
   pointer-events: none;
 }
 .theme-toggle .icon-sun {
   opacity: 1;
-  transform: rotate(0deg) scale(1);
+  transform: translateX(0) rotate(0deg) scale(1);
+}
+:root[data-theme="dark"] .theme-toggle-orbit {
+  opacity: 0.72;
+  transform: rotate(165deg) scale(1.05);
+}
+:root[data-theme="dark"] .theme-toggle-thumb {
+  background: oklch(from var(--brand-soft) l c h / 0.2);
+  box-shadow: 0 0 22px -6px oklch(from var(--brand) l c h / 0.78);
+  transform: translateX(4px) scale(0.82);
 }
 :root[data-theme="dark"] .theme-toggle .icon-moon {
   opacity: 1;
-  transform: rotate(0deg) scale(1);
+  transform: translateX(0) rotate(0deg) scale(1);
 }
 :root[data-theme="dark"] .theme-toggle .icon-sun {
   opacity: 0;
-  transform: rotate(90deg) scale(0.4);
+  transform: translateX(0.45rem) rotate(120deg) scale(0.42);
   pointer-events: none;
 }
 

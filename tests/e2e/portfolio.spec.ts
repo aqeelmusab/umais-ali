@@ -18,12 +18,21 @@ test.describe('Umais Ali Portfolio - Core E2E Flows', () => {
     const initialTheme = await html.getAttribute('data-theme')
     expect(initialTheme).toMatch(/light|dark/)
     const expectedTheme = initialTheme === 'light' ? 'dark' : 'light'
+    const expectedThemeColor = expectedTheme === 'dark' ? '#000000' : '#fbf8f1'
 
     // Toggle theme. The swap runs behind a View Transition (a short animation
     // delay), so use a web-first assertion that retries until it lands rather
     // than reading the attribute synchronously.
     await themeBtn.click()
     await expect(html).toHaveAttribute('data-theme', expectedTheme)
+    await expect(themeBtn).toHaveAttribute(
+      'aria-pressed',
+      expectedTheme === 'dark' ? 'true' : 'false',
+    )
+    await expect(page.locator('meta[name="theme-color"]')).toHaveAttribute(
+      'content',
+      expectedThemeColor,
+    )
 
     // Reload page to verify persistence
     await page.reload()
@@ -33,9 +42,30 @@ test.describe('Umais Ali Portfolio - Core E2E Flows', () => {
   test('should toggle mobile menu drawer on smaller viewports', async ({ page }) => {
     // Set mobile viewport height/width
     await page.setViewportSize({ width: 375, height: 812 })
+    await page.addInitScript(() => {
+      const visualViewport = new EventTarget() as unknown as VisualViewport
+      Object.defineProperties(visualViewport, {
+        height: { value: 700, configurable: true },
+        offsetLeft: { value: 0, configurable: true },
+        offsetTop: { value: 0, configurable: true },
+        pageLeft: { value: 0, configurable: true },
+        pageTop: { value: 0, configurable: true },
+        scale: { value: 1, configurable: true },
+        width: { value: 375, configurable: true },
+      })
+      Object.defineProperty(window, 'visualViewport', {
+        value: visualViewport,
+        configurable: true,
+      })
+    })
+    await page.goto('/')
 
     const menuToggle = page.locator('#mobile-menu-toggle')
     const mobileMenu = page.locator('#mobile-menu')
+
+    await page.evaluate(() => window.scrollTo(0, 420))
+    const scrollBeforeOpen = await page.evaluate(() => window.scrollY)
+    expect(scrollBeforeOpen).toBeGreaterThan(300)
 
     await expect(menuToggle).toBeVisible()
     await expect(mobileMenu).toBeHidden()
@@ -43,12 +73,18 @@ test.describe('Umais Ali Portfolio - Core E2E Flows', () => {
     // Trigger open
     await menuToggle.click()
     await expect(mobileMenu).toBeVisible()
+    await expect(mobileMenu).toHaveCSS('height', '700px')
     await expect(menuToggle).toHaveAttribute('aria-expanded', 'true')
+    await expect(page.locator('body')).toHaveClass(/is-scroll-locked/)
+    await expect(page.locator('body')).toHaveCSS('top', `-${scrollBeforeOpen}px`)
 
     // Trigger close (same button, now morphed into a close control)
     await menuToggle.click()
     await expect(mobileMenu).toBeHidden()
     await expect(menuToggle).toHaveAttribute('aria-expanded', 'false')
+
+    const scrollAfterClose = await page.evaluate(() => window.scrollY)
+    expect(scrollAfterClose).toBe(scrollBeforeOpen)
   })
 
   test('should open project dialog after client hydration and trigger previous/next pagination', async ({

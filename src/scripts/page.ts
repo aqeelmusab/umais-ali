@@ -16,6 +16,7 @@ function clampScroll(value: number): number {
 }
 
 let smoothScrollFrame = 0
+let lockedScrollY = 0
 
 export function smoothScrollTo(top: number, duration = 900): void {
   if (prefersReducedMotion()) {
@@ -47,9 +48,11 @@ let scrollLockCount = 0
 export function lockScroll(): void {
   if (scrollLockCount === 0) {
     const scrollbarGap = window.innerWidth - document.documentElement.clientWidth
+    lockedScrollY = window.scrollY
     if (scrollbarGap > 0) {
       document.body.style.paddingRight = `${scrollbarGap}px`
     }
+    document.body.style.top = `-${lockedScrollY}px`
     document.documentElement.classList.add('is-scroll-locked')
     document.body.classList.add('is-scroll-locked')
   }
@@ -62,7 +65,35 @@ export function unlockScroll(): void {
     document.body.classList.remove('is-scroll-locked')
     document.documentElement.classList.remove('is-scroll-locked')
     document.body.style.removeProperty('padding-right')
+    document.body.style.removeProperty('top')
+    window.scrollTo(0, lockedScrollY)
+    lockedScrollY = 0
   }
+}
+
+function syncThemeMeta(theme: 'light' | 'dark'): void {
+  const meta = document.querySelector('meta[name="theme-color"]')
+  if (meta) meta.setAttribute('content', theme === 'dark' ? '#000000' : '#fbf8f1')
+}
+
+function syncVisualViewportVars(): void {
+  const viewport = window.visualViewport
+  const rootStyle = document.documentElement.style
+  rootStyle.setProperty('--visual-viewport-height', `${viewport?.height ?? window.innerHeight}px`)
+  rootStyle.setProperty('--visual-viewport-offset-top', `${viewport?.offsetTop ?? 0}px`)
+}
+
+function initVisualViewportVars(): void {
+  syncVisualViewportVars()
+
+  const viewport = window.visualViewport
+  if (!viewport) {
+    window.addEventListener('resize', syncVisualViewportVars, { passive: true })
+    return
+  }
+
+  viewport.addEventListener('resize', syncVisualViewportVars, { passive: true })
+  viewport.addEventListener('scroll', syncVisualViewportVars, { passive: true })
 }
 
 // ─── Anchor Target Resolution ─────────────────────────────────────────
@@ -144,6 +175,7 @@ function initImageSkeletons(): void {
 
 // Initialize lightweight page controls when DOM is ready
 export function initPageInteractions(): void {
+  initVisualViewportVars()
   initImageSkeletons()
 
   // ─── Header: glass transition on scroll ───
@@ -372,7 +404,7 @@ export function initPageInteractions(): void {
         'aria-label',
         t === 'light' ? 'Switch to dark theme' : 'Switch to light theme',
       )
-      themeBtn.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false')
+      themeBtn.setAttribute('aria-pressed', t === 'dark' ? 'true' : 'false')
     }
 
     // A bright, multi-ring pulse at the click point - the NameDrop-style
@@ -452,8 +484,7 @@ export function initPageInteractions(): void {
       // Keep the browser chrome (iOS status/toolbar tint, Android address
       // bar) matching the newly-active theme; see public/js/theme-init.js
       // for the equivalent on first load.
-      const meta = document.querySelector('meta[name="theme-color"]')
-      if (meta) meta.setAttribute('content', next === 'dark' ? '#000000' : '#fbf8f1')
+      syncThemeMeta(next)
     }
 
     themeBtn.addEventListener('click', (e) => {

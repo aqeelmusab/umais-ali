@@ -22,11 +22,13 @@ import Logo from './Logo.astro'
   </nav>
 
   <div class="-mr-2 flex items-center gap-1.5 md:mr-0">
-    <button id="theme-toggle" class="theme-toggle relative inline-flex items-center justify-center rounded-full text-ink-muted transition-colors h-10 w-10 hover:text-ink hover:bg-ink/5" type="button" aria-label="Switch to dark theme">
-      <span class="theme-toggle-icon icon-sun absolute inset-0 inline-flex items-center justify-center">
+    <button id="theme-toggle" class="theme-toggle relative isolate inline-flex items-center justify-center rounded-full text-ink-muted transition-colors h-10 w-10 hover:text-ink" type="button" aria-label="Switch to dark theme">
+      <span class="theme-toggle-orbit" aria-hidden="true"></span>
+      <span class="theme-toggle-thumb" aria-hidden="true"></span>
+      <span class="theme-toggle-icon icon-sun absolute inset-0 inline-flex items-center justify-center" aria-hidden="true">
         <Icon name="sun" class="h-4 w-4" />
       </span>
-      <span class="theme-toggle-icon icon-moon absolute inset-0 inline-flex items-center justify-center">
+      <span class="theme-toggle-icon icon-moon absolute inset-0 inline-flex items-center justify-center" aria-hidden="true">
         <Icon name="moon" class="h-4 w-4" />
       </span>
     </button>
