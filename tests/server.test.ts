@@ -38,18 +38,36 @@ async function callContactApi(
   } as any)
 }
 
+function stubResendFetch(): () => void {
+  const originalFetch = globalThis.fetch
+  globalThis.fetch = async (): Promise<Response> =>
+    new Response(JSON.stringify({ id: 'email_stub' }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    })
+
+  return (): void => {
+    globalThis.fetch = originalFetch
+  }
+}
+
 test('POST /api/contact - accepts valid form body', async () => {
   const body = new URLSearchParams({
     name: 'Jane Doe',
     email: 'jane@example.com',
     message: 'Hello! This is a perfectly fine and well-formed contact submission.',
   }).toString()
+  const restoreFetch = stubResendFetch()
 
-  const res = await callContactApi(body)
-  assert.equal(res.status, 200)
-  const data = await res.json()
-  assert.equal(data.ok, true)
-  assert.equal(data.name, 'Jane Doe')
+  try {
+    const res = await callContactApi(body)
+    assert.equal(res.status, 200)
+    const data = await res.json()
+    assert.equal(data.ok, true)
+    assert.equal(data.name, 'Jane Doe')
+  } finally {
+    restoreFetch()
+  }
 })
 
 test('POST /api/contact - rejects invalid submission with 422', async () => {
@@ -120,14 +138,7 @@ test('POST /api/contact - throttles once the per-IP rate limit is exceeded', asy
   // Isolated IP so this does not interfere with the shared 127.0.0.1 counter.
   const ip = '203.0.113.7'
 
-  // Stub fetch so the endpoint never reaches the live Resend API even if a real
-  // RESEND_API_KEY is present in a local .env (each allowed request tries to send).
-  const originalFetch = globalThis.fetch
-  globalThis.fetch = async () =>
-    new Response(JSON.stringify({ id: 'email_stub' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    })
+  const restoreFetch = stubResendFetch()
 
   try {
     for (let i = 0; i < 5; i++) {
@@ -141,7 +152,40 @@ test('POST /api/contact - throttles once the per-IP rate limit is exceeded', asy
     assert.equal(data.ok, false)
     assert.match(data.errors.message, /too many requests/i)
   } finally {
-    globalThis.fetch = originalFetch
+    restoreFetch()
+  }
+})
+
+test('POST /api/contact - evicts old rate-limit entries when the cache is full', async () => {
+  const body = new URLSearchParams({
+    name: 'Cache Bound',
+    email: 'cache@example.com',
+    message: 'Exercising bounded cache behavior on the contact endpoint.',
+  }).toString()
+  const oldestIp = '198.51.100.10'
+  const originalConsoleLog = console.log
+  const restoreFetch = stubResendFetch()
+  console.log = (): void => {}
+
+  try {
+    for (let i = 0; i < 5; i++) {
+      const allowed = await callContactApi(body, {}, oldestIp)
+      assert.equal(allowed.status, 200, `oldest request ${i + 1} should be allowed`)
+    }
+
+    const initiallyThrottled = await callContactApi(body, {}, oldestIp)
+    assert.equal(initiallyThrottled.status, 429)
+
+    for (let i = 0; i < 1000; i++) {
+      const allowed = await callContactApi(body, {}, `198.51.${Math.floor(i / 256)}.${i % 256}`)
+      assert.equal(allowed.status, 200, `cache-fill request ${i + 1} should be allowed`)
+    }
+
+    const afterEviction = await callContactApi(body, {}, oldestIp)
+    assert.equal(afterEviction.status, 200)
+  } finally {
+    console.log = originalConsoleLog
+    restoreFetch()
   }
 })
 

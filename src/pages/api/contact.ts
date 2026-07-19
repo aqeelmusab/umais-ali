@@ -13,9 +13,36 @@ interface RateLimitInfo {
   resetAt: number
 }
 const rateLimiterCache = new Map<string, RateLimitInfo>()
+const RATE_LIMIT_CACHE_MAX_ENTRIES = 1000
+const RATE_LIMIT_PRUNE_INTERVAL_MS = 60 * 1000
+let rateLimitLastPrunedAt = 0
+
+function pruneRateLimiterCache(now: number): void {
+  if (
+    now - rateLimitLastPrunedAt < RATE_LIMIT_PRUNE_INTERVAL_MS &&
+    rateLimiterCache.size < RATE_LIMIT_CACHE_MAX_ENTRIES
+  ) {
+    return
+  }
+
+  rateLimitLastPrunedAt = now
+  for (const [ip, info] of rateLimiterCache) {
+    if (now > info.resetAt) {
+      rateLimiterCache.delete(ip)
+    }
+  }
+
+  while (rateLimiterCache.size >= RATE_LIMIT_CACHE_MAX_ENTRIES) {
+    const oldestIp = rateLimiterCache.keys().next().value
+    if (oldestIp === undefined) break
+    rateLimiterCache.delete(oldestIp)
+  }
+}
 
 function isThrottled(ip: string): { throttled: boolean; retryAfter: number } {
   const now = Date.now()
+  pruneRateLimiterCache(now)
+
   const windowMs = env.CONTACT_RATE_WINDOW_MS
   const maxRequests = env.CONTACT_RATE_MAX
 
