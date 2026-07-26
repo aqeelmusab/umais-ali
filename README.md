@@ -1,15 +1,15 @@
 # Umais Ali Portfolio
 
-A client portfolio site for Umais Ali, an SEO Executive. It is a highly optimized, modern static site built on Astro, Svelte 5 (islands), and TypeScript, using Tailwind CSS 4 for styling, and Motion for animation.
+A client portfolio site for Umais Ali, an SEO Executive. It is a highly optimized static site built with Astro, Svelte 5 islands, TypeScript, Tailwind CSS 4, and Motion.
 
-All content pages are prerendered and served from the edge. The only server side behavior is a single on-demand serverless endpoint for the contact form submissions.
+All content pages are prerendered and served from the edge. The only server-side behavior is a single on-demand serverless endpoint for contact form submissions.
 
 ## Features
 
 * Responsive, high performance portfolio landing page
 * Fully pre-rendered static routes with Astro layouts, pages, and components
 * Progressive enhancement Svelte 5 island for accessible, stateful project dialogs and URL/history synchronization
-* Independent static project detail routes for rich SEO indexation
+* Independent static project detail routes for strong SEO coverage
 * Contact form validation, honeypot field, and exact Origin/Referer CSRF check
 * Outbound email through Resend, including dashboard templates when configured
 * Per-IP rate limiting on the form submissions
@@ -50,7 +50,7 @@ tests/                        Instant native Node test suite (unit and endpoint 
 ## Requirements
 
 * Node.js 24.x (see `.nvmrc`)
-* pnpm: pin to `pnpm@11.11.0` via `packageManager` field in `package.json`
+* pnpm: use the version pinned in `package.json` (`pnpm@11.17.0`)
 
 ## Local Setup
 
@@ -80,7 +80,6 @@ Required for production contact delivery:
 
 ```env
 RESEND_API_KEY=
-CONTACT_FROM=
 CONTACT_TO=
 CONTACT_TEMPLATE_ID=
 ```
@@ -88,6 +87,7 @@ CONTACT_TEMPLATE_ID=
 Optional:
 
 ```env
+CONTACT_FROM=
 CONTACT_REPLY_TO=
 CONTACT_RATE_WINDOW_MS=600000
 CONTACT_RATE_MAX=5
@@ -136,23 +136,29 @@ Default URL: `http://localhost:4321`.
 
 ### Before You Push
 
-Build and run locally, then run the full check verification:
+Run the verification pipeline before pushing:
 
 ```bash
-pnpm run preview
 pnpm run verify
+```
+
+If you want to inspect the production build locally first:
+
+```bash
+pnpm run build
+pnpm run preview
 ```
 
 `verify` runs Astro sync, typecheck (including tests), Node unit & endpoint tests, Biome linting, and Astro production compilation in one go.
 
 ## Push and CI
 
-1. **Pre-push hook:** `simple-git-hooks` runs on the push event. It checks lockfile consistency, then runs `pnpm run typecheck` and `pnpm test`.
-2. **GitHub Actions:** Verify workflow runs on all pushes or PRs to `main` with Node 24.
+1. **Pre-push hook:** `simple-git-hooks` runs on push. It checks lockfile consistency, then runs `pnpm run typecheck` and `pnpm run test`.
+2. **GitHub Actions:** The `verify` workflow runs on pushes and PRs to `main` with Node 24. It installs dependencies, runs `pnpm run audit`, then runs `pnpm run verify`. A separate `e2e` job runs Playwright Chromium tests after `verify` passes.
 
 ## Deployment
 
-Hosting is Vercel. CI and deploy are separate concerns. Astro's Vercel adapter generates edge-ready pre-rendered assets and endpoints automatically.
+The site is deployed on Vercel. CI and deployment are separate concerns. Astro's Vercel adapter generates the prerendered assets and serverless endpoint automatically.
 
 ## Content Updates
 
@@ -166,10 +172,7 @@ After editing data or stylesheet classes, run `pnpm run verify` to test.
 ## Security Notes
 
 * Security headers and a strict Content Security Policy are served directly from the Vercel CDN layer via `vercel.json` for ultimate edge speed.
-* The contact endpoint is protected by:
-  * A honeypot field (`website`). Submissions that fill it get a fake success response to bot crawlers.
-  * Per-IP rate limiting.
-  * Stateless CSRF check on `Origin` and `Referer`.
-  * Server-side validation.
+* The contact endpoint is protected by a honeypot field (`website`), per-IP rate limiting, a stateless CSRF check on `Origin` and `Referer`, and server-side validation.
 * User-supplied email content is escaped before going into the inline HTML fallback. Header values are stripped of CR/LF and length-capped.
-* `sendContactEmail` no-ops (returns `skipped`) when `RESEND_API_KEY`/`CONTACT_TO` are unset, which is what keeps CI from sending real email. There is no mock in `tests/server.test.ts`: if your local `.env` has real Resend credentials, running `pnpm test`/`pnpm run verify` will send a real email on every run.
+* `sendContactEmail` no-ops (returns `skipped`) when `RESEND_API_KEY`/`CONTACT_TO` are unset, which is what keeps CI from sending real email.
+* `tests/server.test.ts` and `tests/email.test.ts` stub the Resend fetch path, so local `pnpm run test` and `pnpm run verify` do not send live email even if your `.env` contains real Resend credentials.
