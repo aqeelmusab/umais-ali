@@ -154,7 +154,7 @@ pnpm run preview
 ## Push and CI
 
 1. **Pre-push hook:** `simple-git-hooks` runs on push. It checks lockfile consistency, then runs `pnpm run typecheck` and `pnpm run test`.
-2. **GitHub Actions:** The `verify` workflow runs on pushes and PRs to `main` with Node 24. It installs dependencies, runs `pnpm run audit`, then runs `pnpm run verify`. A separate `e2e` job runs Playwright Chromium tests after `verify` passes.
+2. **GitHub Actions:** The `verify` workflow runs on pushes and PRs to `main` with Node 24. It installs dependencies, then runs `pnpm run verify`. A separate `e2e` job runs Playwright Chromium tests after `verify` passes. Dependency vulnerability coverage comes from Dependabot security updates and CodeQL, not `pnpm audit`.
 
 ## Deployment
 
