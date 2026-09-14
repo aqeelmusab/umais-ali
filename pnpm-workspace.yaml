@@ -34,9 +34,9 @@ minimumReleaseAgeExclude:
   - '@astrojs/vercel@11.0.3 || 11.0.4'
   - svelte@5.56.6
   - '@astrojs/internal-helpers@0.10.2'
-  - framer-motion@12.43.0
-  - motion-dom@12.43.0
-  - motion@12.43.0
+  - framer-motion@12.43.0 || 13.3.0
+  - motion-dom@12.43.0 || 13.3.0
+  - motion@12.43.0 || 13.3.0
   - '@img/sharp-darwin-arm64@0.35.4'
   - '@img/sharp-darwin-x64@0.35.4'
   - '@img/sharp-freebsd-wasm32@0.35.4'
@@ -64,3 +64,4 @@ minimumReleaseAgeExclude:
   - '@img/sharp-win32-ia32@0.35.4'
   - '@img/sharp-win32-x64@0.35.4'
   - sharp@0.35.4
+  - motion-utils@13.3.0
