@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Umais Ali: SEO Executive portfolio (Astro + Svelte 5 + Tailwind CSS 4).",
-  "packageManager": "pnpm@12.4.2+sha512.08adc6613180275c7c9edada39dcf08c9c61ad4e7eaf330a4f3461f102b0f907423454d117f98e72d47fef0616070644d7bffc973a6a57f5090a6d7c368b07c9",
+  "packageManager": "pnpm@12.8.1+sha512.f64ba907507f5ceafe06c8d38e6052d0179444580ec1279ddd5bfc11cb48aa8a2644b66598e07e761da84872a9fc57d5f902b87fa49d024198d558612aabbe45",
   "engines": {
     "node": ">=24.0.0 <25.0.0"
   },
@@ -34,9 +34,9 @@
     "@tailwindcss/vite": "4.3.3",
     "@types/node": "24.19.0",
     "astro": "7.3.5",
-    "dotenv": "18.0.4",
-    "motion": "13.4.4",
-    "resend": "6.30.0",
+    "dotenv": "18.0.5",
+    "motion": "13.5.0",
+    "resend": "6.31.0",
     "satori": "0.33.5",
     "svelte": "5.57.1",
     "tailwindcss": "4.3.3",
@@ -45,7 +45,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
-    "@biomejs/biome": "2.5.14",
+    "@biomejs/biome": "2.5.15",
     "@playwright/test": "1.63.0",
     "simple-git-hooks": "2.14.0",
     "tsx": "4.23.15"

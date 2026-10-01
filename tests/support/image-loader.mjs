@@ -9,7 +9,7 @@
 
 const IMAGE_RE = /\.(jpe?g|png|webp|avif|gif|svg)(\?.*)?$/i
 
-export async function load(url, context, nextLoad) {
+export function load(url, context, nextLoad) {
   if (IMAGE_RE.test(url)) {
     return {
       format: 'module',
