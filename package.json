@@ -29,15 +29,15 @@
   "dependencies": {
     "@astrojs/sitemap": "3.7.4",
     "@astrojs/svelte": "9.0.1",
-    "@astrojs/vercel": "11.0.10",
+    "@astrojs/vercel": "11.0.11",
     "@resvg/resvg-js": "2.6.2",
     "@tailwindcss/vite": "4.3.3",
-    "@types/node": "24.13.6",
-    "astro": "7.3.3",
-    "dotenv": "18.0.2",
-    "motion": "13.4.0",
-    "resend": "6.28.1",
-    "satori": "0.33.4",
+    "@types/node": "24.19.0",
+    "astro": "7.3.5",
+    "dotenv": "18.0.4",
+    "motion": "13.4.4",
+    "resend": "6.30.0",
+    "satori": "0.33.5",
     "svelte": "5.57.1",
     "tailwindcss": "4.3.3",
     "typescript": "6.0.3",
@@ -48,7 +48,7 @@
     "@biomejs/biome": "2.5.14",
     "@playwright/test": "1.63.0",
     "simple-git-hooks": "2.14.0",
-    "tsx": "4.23.13"
+    "tsx": "4.23.15"
   },
   "simple-git-hooks": {
     "pre-push": "(pnpm install --frozen-lockfile --lockfile-only || (echo 'Lockfile out of sync. Run pnpm install.' && exit 1)) && pnpm run typecheck && pnpm run test"
