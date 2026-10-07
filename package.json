@@ -35,7 +35,7 @@
     "@types/node": "24.19.0",
     "astro": "7.3.5",
     "dotenv": "18.0.5",
-    "motion": "13.5.0",
+    "motion": "14.0.0",
     "resend": "6.31.0",
     "satori": "0.33.5",
     "svelte": "5.57.1",
