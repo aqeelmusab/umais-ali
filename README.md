@@ -6,28 +6,28 @@ All content pages are prerendered and served from the edge. The only server-side
 
 ## Features
 
-* Responsive, high performance portfolio landing page
-* Fully pre-rendered static routes with Astro layouts, pages, and components
-* Progressive enhancement Svelte 5 island for accessible, stateful project dialogs and URL/history synchronization
-* Independent static project detail routes for strong SEO coverage
-* Contact form validation, honeypot field, and exact Origin/Referer CSRF check
-* Outbound email through Resend, including dashboard templates when configured
-* Per-IP rate limiting on the form submissions
-* Vercel Web Analytics and Speed Insights when deployed
-* Edge-native security headers and Content Security Policy configured in `vercel.json`
-* Native browser scripts for frictionless theme persistence and sticky layouts
-* Tailwind CSS v4 Vite compilation integration
-* Fast, lightweight tests with Node's built-in test runner and `tsx`
+- Responsive, high performance portfolio landing page
+- Fully pre-rendered static routes with Astro layouts, pages, and components
+- Progressive enhancement Svelte 5 island for accessible, stateful project dialogs and URL/history synchronization
+- Independent static project detail routes for strong SEO coverage
+- Contact form validation, honeypot field, and exact Origin/Referer CSRF check
+- Outbound email through Resend, including dashboard templates when configured
+- Per-IP rate limiting on the form submissions
+- Vercel Web Analytics and Speed Insights when deployed
+- Edge-native security headers and Content Security Policy configured in `vercel.json`
+- Native browser scripts for frictionless theme persistence and sticky layouts
+- Tailwind CSS v4 Vite compilation integration
+- Fast, lightweight tests with Node's built-in test runner and `tsx`
 
 ## Tech Stack
 
-* **Build & SSG:** Astro
-* **Client Island:** Svelte 5
-* **Interactions & Animation:** Motion
-* **CSS & Style Compilation:** Tailwind CSS 4, `@tailwindcss/vite`
-* **Language:** TypeScript
-* **Email:** Resend
-* **Hosting Adapter:** `@astrojs/vercel`
+- **Build & SSG:** Astro
+- **Client Island:** Svelte 5
+- **Interactions & Animation:** Motion
+- **CSS & Style Compilation:** Tailwind CSS 4, `@tailwindcss/vite`
+- **Language:** TypeScript
+- **Email:** Resend
+- **Hosting Adapter:** `@astrojs/vercel`
 
 ## Project Structure
 
@@ -49,8 +49,8 @@ tests/                        Instant native Node test suite (unit and endpoint 
 
 ## Requirements
 
-* Node.js 24.x (see `.nvmrc`)
-* pnpm: use the version pinned in `package.json` (`pnpm@11.17.0`)
+- Node.js 24.x (see `.nvmrc`)
+- pnpm: use the version pinned in `package.json` (`pnpm@12.15.0`)
 
 ## Local Setup
 
@@ -118,11 +118,11 @@ userAgent
 
 Notes:
 
-* The template must be published, not left as a draft only.
-* `subject` is supplied as a variable so the template can use it (`{{ subject }}`).
-* `from` is also deferred to the template when one is configured. Set the From address in the Resend dashboard.
-* Leave Reply-To empty in the dashboard template. After validation, the app sets `replyTo` from the submitter's address. Both are sanitized to strip stray newlines before sending.
-* Resend caps template variable length at 2,000 characters.
+- The template must be published, not left as a draft only.
+- `subject` is supplied as a variable so the template can use it (`{{ subject }}`).
+- `from` is also deferred to the template when one is configured. Set the From address in the Resend dashboard.
+- Leave Reply-To empty in the dashboard template. After validation, the app sets `replyTo` from the submitter's address. Both are sanitized to strip stray newlines before sending.
+- Resend caps template variable length at 2,000 characters.
 
 ## Local Development
 
@@ -164,15 +164,15 @@ The site is deployed on Vercel. CI and deployment are separate concerns. Astro's
 
 Most copy and structured content lives in:
 
-* `src/data/site.ts`
-* `src/data/projects.ts`
+- `src/data/site.ts`
+- `src/data/projects.ts`
 
 After editing data or stylesheet classes, run `pnpm run verify` to test.
 
 ## Security Notes
 
-* Security headers and a strict Content Security Policy are served directly from the Vercel CDN layer via `vercel.json` for ultimate edge speed.
-* The contact endpoint is protected by a honeypot field (`website`), per-IP rate limiting, a stateless CSRF check on `Origin` and `Referer`, and server-side validation.
-* User-supplied email content is escaped before going into the inline HTML fallback. Header values are stripped of CR/LF and length-capped.
-* `sendContactEmail` no-ops (returns `skipped`) when `RESEND_API_KEY`/`CONTACT_TO` are unset, which is what keeps CI from sending real email.
-* `tests/server.test.ts` and `tests/email.test.ts` stub the Resend fetch path, so local `pnpm run test` and `pnpm run verify` do not send live email even if your `.env` contains real Resend credentials.
+- Security headers and a strict Content Security Policy are served directly from the Vercel CDN layer via `vercel.json` for ultimate edge speed.
+- The contact endpoint is protected by a honeypot field (`website`), per-IP rate limiting, a stateless CSRF check on `Origin` and `Referer`, and server-side validation.
+- User-supplied email content is escaped before going into the inline HTML fallback. Header values are stripped of CR/LF and length-capped.
+- `sendContactEmail` no-ops (returns `skipped`) when `RESEND_API_KEY`/`CONTACT_TO` are unset, which is what keeps CI from sending real email.
+- `tests/server.test.ts` and `tests/email.test.ts` stub the Resend fetch path, so local `pnpm run test` and `pnpm run verify` do not send live email even if your `.env` contains real Resend credentials.
