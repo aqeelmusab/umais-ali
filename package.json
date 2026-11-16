@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Umais Ali: SEO Executive portfolio (Astro + Svelte 5 + Tailwind CSS 4).",
-  "packageManager": "pnpm@12.18.0+sha512.9d7882d5dc82147ecfc4e062aa34834e0ad0296710a1837a1115ae012127d36b7109e321ac1598a1dd0a65597681b1e99917e12ed0d749eae91187943363beb3",
+  "packageManager": "pnpm@12.21.0+sha512.66fd8278ee28935ce951792d34367ff3af5c432a2756445823029533835b8da529bbe0be5130afd56ed0713fb8789e47bad82d93bd5ae2fe54b15562d6276ef0",
   "engines": {
     "node": ">=24.0.0 <25.0.0"
   },
@@ -27,16 +27,16 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.7.4",
-    "@astrojs/svelte": "9.1.5",
-    "@astrojs/vercel": "11.0.21",
+    "@astrojs/sitemap": "3.7.5",
+    "@astrojs/svelte": "9.1.6",
+    "@astrojs/vercel": "11.0.22",
     "@resvg/resvg-js": "2.6.2",
     "@tailwindcss/vite": "4.3.5",
     "@types/node": "24.19.2",
-    "astro": "7.4.11",
+    "astro": "7.4.12",
     "dotenv": "18.0.10",
-    "motion": "14.12.0",
-    "resend": "6.38.0",
+    "motion": "14.14.0",
+    "resend": "6.38.1",
     "satori": "0.63.2",
     "svelte": "5.57.3",
     "tailwindcss": "4.3.5",
@@ -45,8 +45,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "0.9.12",
-    "@biomejs/biome": "2.6.7",
-    "@playwright/test": "1.65.0",
+    "@biomejs/biome": "2.6.8",
+    "@playwright/test": "1.65.1",
     "simple-git-hooks": "2.14.0",
     "tsx": "4.23.15"
   },
