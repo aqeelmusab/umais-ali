@@ -50,7 +50,7 @@ tests/                        Instant native Node test suite (unit and endpoint 
 ## Requirements
 
 - Node.js 24.x (see `.nvmrc`)
-- pnpm: use the version pinned in `package.json` (`pnpm@12.21.0`)
+- pnpm: use the version pinned in `package.json` (`pnpm@12.23.0`)
 
 ## Local Setup
 
